@@ -1,0 +1,162 @@
+{% extends 'trainers/base.html' %}
+{% block head %}
+<link rel="stylesheet" href="../../../static/css/students.css">
+<link rel="stylesheet" href="../../../static/css/form.css">
+<link rel="stylesheet" href="../../../static/css/edit_modal.css">
+<link rel="stylesheet" href="../../../static/css/btns.css">
+<link rel="stylesheet" href="../../../static/css/search.css">
+{% endblock %}
+
+{% block content %}
+<div id="search_div">
+    <h3>Поиск</h3>
+    <form method="get">
+        <div class="sub">
+            <input type="text" placeholder="Кого желаете найти?" name="q">
+            <button type="submit">Найти</button>
+        </div>
+    </form>
+</div>
+{%if trainers_search %}
+<div id="search_cards" class="cards">
+    <div class="cards_elements">
+        {% for trainer in trainers_search %}
+        <div class="card">
+            <div class="front">
+                <p>{{trainer.birthdate}}
+                    {% if trainer in upcoming_birthdays %} 🍰 {% endif %}
+                    {% if trainer in today_birthdays %} 🎂 {% endif %}
+                </p>
+                <h2>
+                    {{trainer.user.last_name}} <br> {{trainer.user.first_name}} <br> {{trainer.otchestv}}
+                </h2>
+                <p> {{trainer.status}}
+                </p>
+            </div>
+            <div class="back">
+                <p>{{trainer.birthdate}}
+                    {% if trainer in upcoming_birthdays %} 🍰 {% endif %}
+                    {% if trainer in today_birthdays %} 🎂 {% endif %}
+                </p>
+                <h2>
+                    {{trainer.user.last_name}} <br> {{trainer.user.first_name}} <br> {{trainer.otchestv}}
+                </h2>
+                <p> {% if trainer.team_set.all %}
+                <ul>
+                    {% for team in trainer.team_set.all %}
+                    <li><a href="#">{{ team.name }} </a></li>
+                    {% endfor %}
+                </ul>
+
+                {% else %}
+                <p>У тренера ещё нет групп.</p>
+                {% endif %}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{%endif%}
+
+
+<div class="sort">
+    <h3>Сортировать по:</h3>
+    <button class="change_btn">Статусу</button>
+    <button class="change_btn">Виду спорта</button>
+    <button class="change_btn">Загружености</button>
+</div>
+
+<div id="trainers_content">
+    <button class="change_btn add_button" onclick="modal_trainer()"> Добавить тренера</button>
+    <div class="modal" id="modal_trainer">
+        <div class="modal-content">
+            <div class="close" id="close_trainer">&times;</div>
+            <div class="form">
+                <form class="decor" action="{% url 'trainers_add_action' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        <h3>Добавление тренера</h3>
+                        <input type="text" name="name" placeholder="Имя">
+                        <input type="text" name="last_name" placeholder="Фамилия">
+                        <input type="text" name="otchestv" placeholder="Отчество">
+                        <input type="email" name="mail" placeholder="Почта">
+                        <input type="date" name="birth_date" placeholder="Дата рождения">
+                        <input type="text" name="password" placeholder="Пароль">
+                            <select name="status" required>
+                                <option value="Тренер" selected>Тренер</option>
+                                <option value="Менеджер">Менеджер</option>
+                                {% if user.is_superuser %}<option value="Директор">Директор</option> {% endif %}
+                            </select>
+                        <input type="submit" value="Добавить">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {%if trainers %}
+    <div class="cards">
+        <div class="cards_elements">
+            {% for trainer in trainers %}
+            <div class="card">
+                <div class="front">
+                    <p>{{trainer.birthdate}}
+                        {% if trainer in upcoming_birthdays %} 🍰 {% endif %}
+                        {% if trainer in today_birthdays %} 🎂 {% endif %}
+                    </p>
+                    <h2>
+                        {{trainer.user.last_name}} <br> {{trainer.user.first_name}} <br> {{trainer.otchestv}}
+                    </h2>
+                    <p> {{trainer.status}}
+                    </p>
+                </div>
+                <div class="back">
+                    <p>{{trainer.birthdate}}
+                        {% if trainer in upcoming_birthdays %} 🍰 {% endif %}
+                        {% if trainer in today_birthdays %} 🎂 {% endif %}
+                    </p>
+                    <h2>
+                        {{trainer.user.last_name}} <br> {{trainer.user.first_name}} <br> {{trainer.otchestv}}
+                    </h2>
+                    <p> {% if trainer.team_set.all %}
+                    <ul>
+                        {% for team in trainer.team_set.all %}
+                        <li><a href="#">{{ team.name }} </a></li>
+                        {% endfor %}
+                    </ul>
+
+                    {% else %}
+                    <p>У тренера ещё нет групп.</p>
+                    {% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <p>Коллег нет :(</p>
+    {%endif%}
+</div>
+
+
+{% endblock %}
+
+{% block js%}
+<script>
+    let modal3 = document.querySelector('#modal_trainer');
+
+    function modal_trainer() {
+        modal3.style.display = 'block';
+    }
+
+    let btn3 = document.querySelector('#close_trainer');
+    btn3.onclick = function () {
+        modal3.style.display = 'none';
+    }
+</script>
+<script src="../../../static/js/buttons.js"></script>
+{% endblock %}

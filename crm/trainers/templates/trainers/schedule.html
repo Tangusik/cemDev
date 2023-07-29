@@ -1,0 +1,20 @@
+{% extends 'trainers/base.html' %}
+
+{% block head %}
+<link href="../../../static/css/schedule.css" rel="stylesheet">
+<link rel="stylesheet" href="../../../static/css/btns.css">
+
+{% endblock %}
+{% block content %}
+
+<h1 style="color:black">Расписание</h1>
+
+{% if activities %}
+    {% for act in activities %}
+        <p style="color:black">{{ act.act_date }} - {{ act.act_time_begin }}</p>
+    {% endfor %}
+{% else %}
+    <p style="color:black">no activities</p>
+{% endif %}
+
+{% endblock %}

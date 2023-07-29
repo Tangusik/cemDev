@@ -1,0 +1,218 @@
+{% extends 'trainers/base.html' %}
+{% block head %}
+<link rel="stylesheet" href="../../../static/css/index.css">
+<link rel="stylesheet" href="../../../static/css/slider.css">
+<link rel="stylesheet" href="../../../static/css/rectangles.css">
+<link rel="stylesheet" href="../../../static/css/form.css">
+<link rel="stylesheet" href="../../../static/css/edit_modal.css">
+<link rel="stylesheet" href="../../../static/css/btns.css">
+<link rel="stylesheet" href="../../../static/css/search.css">
+{% endblock %}
+
+{% block content %}
+<div class="container" style="background-color:  #98C1D9">
+    <div>
+        <div class="photo"></div>
+    </div>
+    <div class="container-text">
+        <h3>{{userinfo.last_name}} {{userinfo.first_name}} {{trainer.otchestv}}</h3>
+        <h4>{{trainer.status}}</h4>
+
+        <br>
+        <h4>{{userinfo.email}}</h4>
+        <h4>{{trainer.birthdate}}</h4>
+        <button class="change_btn" style="margin-top: 30px" onclick="edit_data_modal()">Редактировать</button>
+    </div>
+</div>
+
+<div class="modal" id="modal_edit_data">
+    <div class="modal-content">
+        <div class="close" id="close_edit_data">&times;</div>
+        <div class="form">
+            <form class="decor" action="#" method="post">
+                {% csrf_token %}
+                <div class="form-left-decoration"></div>
+                <div class="form-right-decoration"></div>
+                <div class="circle"></div>
+                <div class="form-inner">
+                    <h3>Редактирование пользователя</h3>
+                    <input type="text" id="name" value="{{userinfo.first_name}}" placeholder="Имя">
+                    <input type="text" id="last_name" value="{{userinfo.last_name}}" placeholder="Фамилия">
+                    <input type="text" id="otchestcv" value="{{trainer.otchestv}}" placeholder="Отчество">
+                    <input type="text" id="email" value="{{userinfo.email}}" placeholder="Почта">
+                    <input type="submit" value="Добавить">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div id="todo">
+    <h3>Трекер задач</h3>
+    <div class="inputField">
+        <input type="text" id="myInput" placeholder="Add your new todo">
+        <button class="addBtn">Добавить</button>
+    </div>
+    <ul id="myUL" class="todoList">
+    </ul>
+    <div class="footer">
+        <span>You have <span class="pendingTasks"></span> pending tasks</span>
+        <button>Clear All</button>
+    </div>
+
+
+    <h1>Площадки</h1>
+
+{% if areas %}
+    {% for area in areas %}
+        <p>  {{area.adres}}  </p>
+    {% endfor %}
+{% else %}
+    <p>Нет площадок</p>
+{% endif %}
+
+<p>Добавить площадку</p>
+<p>
+    <form action="{% url 'area_creation' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+        <input type="text" name="adres" placeholder="Адрес площадки" required>
+        <button type="submit"> Добавить </button>
+    </form>
+</p>
+
+
+<h1>Виды спорта</h1>
+
+{% if sport_types %}
+    {% for type in sport_types %}
+        <p> {{type.title}} </p>
+    {% endfor %}
+{% else %}
+    <p>Нет видов спорта</p>
+{% endif %}
+
+<p>Добавить вид спорта </p>
+<p>
+    <form action="{% url 'sport_type_creation' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Вид спорта" required>
+        <button type="submit"> Добавить </button>
+    </form>
+</p>
+
+    <h1>Абонементы</h1>
+
+{% if abonements %}
+    {% for abonement in abonements %}
+        <p> {{abonement.title}}: {{ abonement.price }} </p>
+    {% endfor %}
+{% else %}
+    <p>Нет абонементов</p>
+{% endif %}
+
+<p>Добавить абонемент </p>
+<p>
+    <form action="{% url 'abonement_creation' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+    <p><input type="text" name="title" placeholder="Название абонемента" required></p>
+    <p><input type="text" name="price" placeholder="Цена абонемента" required></p>
+
+    <p>
+        <input type="checkbox" name="duration_check" checked>
+        <input type="text" name="duration" placeholder="Длительность">
+        <select required name="duration_type">
+            <option value="days" selected> Дней </option>
+            <option value="weeks" > Недель </option>
+            <option value="month" > Месяцев </option>
+        </select>
+    </p>
+
+    <p>
+        <input type="checkbox" name="count_check" checked>
+        <input type="text" name="count" placeholder="Количество занятий">
+    </p>
+
+        <button type="submit"> Добавить </button>
+    </form>
+</p>
+
+</div>
+
+
+<div class="container">
+    <div>
+        <div class="rectangle rectangle-left rectangle-back">
+            <a href="#"><h2 style="font-size: 1.2em">Реестр проведенных уроков</h2></a>
+        </div>
+        <div class="rectangle rectangle-right rectangle-front">
+            <a href="#"><h2 style="font-size: 1.2em; padding-top: 3em">Статистика доходов</h2></a>
+        </div>
+    </div>
+    <div class="container-text">
+        <h3>Отчеты</h3>
+        <h4 class="link">Перейдите по ссылке и откроется интересующий вас документ</h4>
+        <ul>
+            <li><a>Реестр проведенных уроков</a></li>
+            <li><a>Статистика доходов</a></li>
+        </ul>
+    </div>
+</div>
+
+
+<div id="search_div">
+    <h3>Поиск</h3>
+    <div class="sub">
+        <input type="text" placeholder="Что желаете найти?">
+        <button>Найти</button>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="container-text">
+        <h3>Что-то еще</h3>
+        <h4 class="link">Тут очень увлекательный текст про что-то еще</h4>
+    </div>
+    <div>
+        <div class="rectangle rectangle-right rectangle-back">
+            <a href="#"><h2 style="padding-top: 1em">Вот это цифры:</h2>
+                <h1>28</h1></a></div>
+        <div class="rectangle rectangle-left rectangle-front">
+            <a href="#"><h2 style="padding-top: 2em">Ого</h2>
+                <h1>39</h1></a></div>
+    </div>
+</div>
+
+<div class="slider">
+    {% for new in news %}
+    <div class="slider-field">
+        <h2 class="name">{{new.title}}</h2>
+        <div class="slider-text">
+            <h3>{{new.text}}</h3>
+        </div>
+    </div>
+     {% endfor %}
+    <button class="prevSlider">Prev</button>
+    <button class="nextSlider">Next</button>
+</div>
+
+
+{% endblock %}
+
+{% block js%}
+<script src="../../../static/js/slider.js"></script>
+<script src="../../../static/js/todo.js"></script>
+<script>
+    let modal = document.querySelector('#modal_edit_data');
+
+    function edit_data_modal() {
+        modal.style.display = 'block';
+    }
+
+    let btn = document.querySelector('#close_edit_data');
+    btn.onclick = function () {
+        modal.style.display = 'none';
+    }
+</script>
+{% endblock %}
