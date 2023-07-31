@@ -62,13 +62,6 @@
     </div>
 
 
-
-
-
-
-{% if trainer.status == "Директор" %}
-
-
     <h1>Площадки</h1>
 
 {% if areas %}
@@ -145,36 +138,6 @@
 </p>
 
 </div>
-{% endif %}
-
-
-
-
-{% if trainer.status == "Тренер" %}
-
-    <h1>Ближайшее занятие:</h1>
-    <h2>{{act.act_date}}: с {{act.act_time_begin}} до {{act.act_time_end}} в {{act.area.adres}}</h2>
-
-    <form  action="{% url 'mark' %}" method="post"></form>
-            {% csrf_token %}
-        {% for client in clients %}
-            <p> <input type="checkbox" value="{{ client.id }}" name="clients[]"> {{ client.first_name }} {{ client.last_name }} </p>
-        {% endfor %}
-        <button type="submit">Сохранить</button>
-    </form>
-
-{% endif %}
-
-
-
-
-
-
-
-
-
-
-
 
 
 <div class="container">

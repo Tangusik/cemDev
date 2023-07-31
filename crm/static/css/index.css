@@ -218,7 +218,25 @@
 }
 
 
+.areas{
+    padding-top: 5em;
+    min-height: 10em;
+    margin-bottom: 3em;
+}
 
+.areas h3{
+    text-align: center;
+    color: #3D5A80;
+    margin-bottom: 2em;
+}
 
+.areas p{
+    text-align: left;
+    color: #3D5A80;
+    padding-left: 2em;
+    padding-bottom: 1em;
+}
 
-
+.list{
+    margin-bottom: 2em;
+}

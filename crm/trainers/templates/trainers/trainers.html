@@ -86,18 +86,19 @@
                         <input type="email" name="mail" placeholder="Почта">
                         <input type="date" name="birth_date" placeholder="Дата рождения">
                         <input type="text" name="password" placeholder="Пароль">
-                            <select name="status" required>
-                                <option value="Тренер" selected>Тренер</option>
-                                <option value="Менеджер">Менеджер</option>
-                                {% if user.is_superuser %}<option value="Директор">Директор</option> {% endif %}
-                            </select>
+                        <select name="status" required>
+                            <option value="Тренер" selected>Тренер</option>
+                            <option value="Менеджер">Менеджер</option>
+                            {% if user.is_superuser %}
+                            <option value="Директор">Директор</option>
+                            {% endif %}
+                        </select>
                         <input type="submit" value="Добавить">
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    {%if trainers %}
     <div class="cards">
         <div class="cards_elements">
             {% for trainer in trainers %}
