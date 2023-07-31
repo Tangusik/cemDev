@@ -7,6 +7,7 @@ urlpatterns = [
     path('login', views.log_in, name='login'),
     path('logout', views.log_out, name='logout'),
     path('main', views.main, name='main'),
+    path('main/mark', views.mark, name='mark'),
     path('main/area_creation', views.area_creation, name='area_creation'),
     path('main/abonement_creation', views.abonement_creation, name='abonement_creation'),
     path('main/sport_type_creation', views.sport_type_creation, name='sport_type_creation'),
@@ -16,5 +17,5 @@ urlpatterns = [
     path('clients/team_creation', views.team_creation, name='team_creation'),
     path('trainers', views.trainers, name='trainers'),
     path('trainers/add_action', views.trainers_add_action, name='trainers_add_action'),
-    path('schedule', views.schedule, name='schedule'),
+    path('schedule', views.schedule, name='schedule')
     ]

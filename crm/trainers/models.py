@@ -4,7 +4,6 @@ import datetime
 
 
 class Client(models.Model):
-    balance = models.IntegerField(blank=False, default=0)
     first_name = models.CharField(blank=False, max_length=30, default='qwerty')
     last_name = models.CharField(blank=True, max_length=30)
     reg_date = models.DateField(auto_now=True, blank=True)
@@ -86,10 +85,19 @@ class News(models.Model):
     class Meta:
         ordering = ['-pub_date']
 
-
 class Abonement(models.Model):
     title = models.CharField(max_length=50, blank=False, default="имя абонемента")
     price = models.IntegerField(blank=False, default=0)
     duration = models.DurationField(blank=False, null=True)
     lesson_count = models.IntegerField(blank=False, null=True)
-    clients = models.ManyToManyField(Client)
+    clients = models.ManyToManyField(Client, through="PurchaseHistory")
+
+class PurchaseHistory(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
+    abonement = models.ForeignKey(Abonement, on_delete=models.DO_NOTHING)
+    date_end = models.DateField(blank=False, null=True)
+    activitys_left = models.IntegerField(blank=False, null=True)
+
+
+
+

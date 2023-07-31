@@ -1,16 +1,13 @@
 import datetime
 from datetime import date, timedelta
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.shortcuts import get_object_or_404
-import json
 from django.db.models import Q
 from django.utils import timezone
-from django.db.models import Count
 
 
 def login_page(request):
@@ -50,6 +47,19 @@ def main(request):
                        'areas': areas,
                        'sport_types': sport_types,
                        'abonements': abonements}
+
+        elif request.user.trainer.status == "Тренер":
+            """вставить проверку просроченных занятий"""
+
+            clients = Client.objects.all()
+            near_act = Activity.objects.filter(trainer=request.user.trainer, status="Состоится").order_by('act_date', 'act_time_begin')[:1]
+            near_act = near_act[0]
+
+            context = {'userinfo': request.user,
+                       'trainer': request.user.trainer,
+                       'news': news,
+                       'act': near_act,
+                       'clients': clients}
 
         return render(request, 'trainers/main.html', context)
     else:
@@ -242,3 +252,10 @@ def abonement_creation(request):
 
     return HttpResponseRedirect(reverse('main'))
 
+def mark(request):
+    near_act = Activity.objects.filter(trainer=request.user.trainer,
+                                       status="Состоится").order_by('act_date', 'act_time_begin')[:1]
+    near_act = near_act[0]
+    clients = request.POST.getlist('clients[]')
+    print(clients)
+    return HttpResponseRedirect(reverse('main'))
