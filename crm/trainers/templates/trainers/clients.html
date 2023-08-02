@@ -75,30 +75,14 @@
         <div class="modal" id="modal_group">
             <div class="modal-content">
                 <div class="close" id="close_group">&times;</div>
-                <form class="decor" action="{% url 'team_creation' %}" method="post">
+                <form class="decor" action="#" method="post">
                     {% csrf_token %}
                     <div class="form-left-decoration"></div>
                     <div class="form-right-decoration"></div>
                     <div class="circle"></div>
                     <div class="form-inner">
                         <h3>Добавление группы</h3>
-                        <input type="text" name="title" id="name" placeholder="Название" required>
-                        <p>
-                            <select name="sport_type" required>
-                               {% for type in sport_types %}
-                                    <option value="{{ type.id }}">{{ type.title }}</option>
-                               {% endfor %}
-                            </select>
-                        </p>
-
-                        <p>
-                            <select name="area" required>
-                               {% for area in areas %}
-                                    <option value="{{ area.id }}">{{ area.adres }}</option>
-                               {% endfor %}
-                            </select>
-                        </p>
-
+                        <input type="text" id="name" placeholder="Название">
                         <p>
                             <select multiple name="members" class="select">
                                 {% for client in clients %}
@@ -116,7 +100,6 @@
                                 {% endfor %}
                             </select>
                         </p>
-
                         <p>Занятия:</p>
                         <p>До какого числа будут проходить занятия: <input type="date" name="date_end"></p>
                         <p>Дни недели:
@@ -131,6 +114,7 @@
                             </select></p>
                         <input type="time" name="act_begin_time" placeholder="Время начала занятий">
                         <input type="time" name="act_end_time" placeholder="Время конца занятий">
+                        <input type="text" maxlength="20" name="price" placeholder="Цена">
 
                         <input type="submit" value="Добавить">
                     </div>

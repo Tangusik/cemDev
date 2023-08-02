@@ -1,7 +1,7 @@
 import datetime
 from datetime import date, timedelta
 from django.shortcuts import render, get_object_or_404
-from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement
+from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement, TrainerState
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -40,26 +40,27 @@ def main(request):
         sport_types = SportType.objects.all()
         abonements = Abonement.objects.all()
 
-        if request.user.trainer.status == "Директор":
-            context = {'userinfo': request.user,
-                       'trainer': request.user.trainer,
-                       'news': news,
-                       'areas': areas,
-                       'sport_types': sport_types,
-                       'abonements': abonements}
+        if request.user.trainer.role.name == "директор":
+            context = {
+                'userinfo': request.user,
+                'trainer': request.user.trainer,
+                'news': news,
+                'areas': areas,
+                'sport_types': sport_types,
+                'abonements': abonements
+            }
 
-        elif request.user.trainer.status == "Тренер":
+        elif request.user.trainer.role.name == "тренер":
             """вставить проверку просроченных занятий"""
 
             clients = Client.objects.all()
             near_act = Activity.objects.filter(trainer=request.user.trainer, status="Состоится").order_by('act_date', 'act_time_begin')[:1]
             near_act = near_act[0]
-
-            context = {'userinfo': request.user,
+            context = { 'userinfo': request.user,
                        'trainer': request.user.trainer,
                        'news': news,
                        'act': near_act,
-                       'clients': clients}
+                       'clients': clients }
 
         return render(request, 'trainers/main.html', context)
     else:
@@ -70,7 +71,7 @@ def clients(request):
     if request.user.is_authenticated:
         clients = Client.objects.all()
         teams = Team.objects.all()
-        trainers = Trainer.objects.filter(status="Тренер")
+        trainers = Trainer.objects.filter(role__name="тренер")
         sport_types = SportType.objects.all()
         areas = Area.objects.all()
 
@@ -145,8 +146,9 @@ def team_creation(request):
 
 def trainers(request):
     if request.user.is_authenticated:
-        trainers = Trainer.objects.filter(status__in=['Тренер', 'Менеджер'])
 
+        status = TrainerState.objects.all()
+        sport = SportType.objects.all()
         today = date.today()
         trainers_birth = Trainer.objects.order_by('birthdate')
         upcoming_birthdays = []
@@ -169,6 +171,8 @@ def trainers(request):
                 Q(user__first_name__icontains=query) | Q(user__email__icontains=query))
 
         context = {'trainers': trainers,
+                   'status': status,
+                   'sport': sport,
                    'upcoming_birthdays': upcoming_birthdays,
                    'today_birthdays': today_birthdays,
                    'trainers_search': trainers_search,
