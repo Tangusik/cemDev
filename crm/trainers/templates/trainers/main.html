@@ -62,12 +62,114 @@
     </div>
 </div>
 
+
+<div class="areas">
+    <h3>Роли сотрудников</h3>
+    <div class="list">
+        {% if roles %}
+        {% for role in roles %}
+        <p> {{role.name}} </p>
+        {% endfor %}
+        {% else %}
+        <p>Нет ролей</p>
+        {% endif %}
+    </div>
+    <button class="change_btn add_button" onclick="modal_role()">Добавить роль</button>
+    <div class="modal" id="modal_role">
+        <div class="modal-content">
+            <div class="close" id="close_role">&times;</div>
+            <div class="form">
+                <form class="decor" action="{% url 'role_creation' %}" method="post" autocomplete="off">
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        {% csrf_token %}
+                        <input type="text" name="role" placeholder="Название роли" required>
+                        <input type="submit" value="Добавить">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="polosa"></div>
+
+
+<div class="areas">
+    <h3>Статусы сотрудников</h3>
+    <div class="list">
+        {% if trainer_states %}
+        {% for state in trainer_states %}
+        <p> {{state.name}} </p>
+        {% endfor %}
+        {% else %}
+        <p>Пока нет статусов</p>
+        {% endif %}
+    </div>
+    <button class="change_btn add_button" onclick="modal_trainer_state()">Добавить статус</button>
+    <div class="modal" id="modal_trainer_state">
+        <div class="modal-content">
+            <div class="close" id="close_trainer_state">&times;</div>
+            <div class="form">
+                <form class="decor" action="{% url 'trainer_state_creation' %}" method="post" autocomplete="off">
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        {% csrf_token %}
+                        <input type="text" name="trainer_state" placeholder="Название статуса" required>
+                        <input type="submit" value="Добавить">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="polosa"></div>
+
+
+<div class="areas">
+    <h3>Статусы клиентов</h3>
+    <div class="list">
+        {% if clients_states %}
+        {% for state in clients_states %}
+        <p> {{state.name}} </p>
+        {% endfor %}
+        {% else %}
+        <p>Пока нет статусов</p>
+        {% endif %}
+    </div>
+    <button class="change_btn add_button" onclick="modal_client_state()">Добавить статус</button>
+    <div class="modal" id="modal_client_state">
+        <div class="modal-content">
+            <div class="close" id="close_client_state">&times;</div>
+            <div class="form">
+                <form class="decor" action="{% url 'client_state_creation' %}" method="post" autocomplete="off">
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        {% csrf_token %}
+                        <input type="text" name="client_state" placeholder="Название статуса" required>
+                        <input type="submit" value="Добавить">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="polosa"></div>
+
 <div class="areas">
     <h3>Площадки</h3>
     <div class="list">
         {% if areas %}
         {% for area in areas %}
-        <p> {{area.adres}} </p>
+        <p> {{area.address}} </p>
         {% endfor %}
         {% else %}
         <p>Нет площадок</p>
@@ -84,7 +186,7 @@
                     <div class="circle"></div>
                     <div class="form-inner">
                         {% csrf_token %}
-                        <input type="text" name="adres" placeholder="Адрес площадки" required>
+                        <input type="text" name="address" placeholder="Адрес площадки" required>
                         <input type="submit" value="Добавить">
                     </div>
                 </form>
@@ -238,14 +340,70 @@
 <script src="../../../static/js/todo.js"></script>
 <script>
     let modal = document.querySelector('#modal_edit_data');
-
     function edit_data_modal() {
         modal.style.display = 'block';
     }
-
     let btn = document.querySelector('#close_edit_data');
     btn.onclick = function () {
         modal.style.display = 'none';
     }
+
+    let modal1 = document.querySelector('#modal_area');
+    function modal_area() {
+        modal1.style.display = 'block';
+    }
+    let btn1 = document.querySelector('#close_area');
+    btn1.onclick = function () {
+        modal1.style.display = 'none';
+    }
+
+    let modal2 = document.querySelector('#modal_sports');
+    function modal_sports() {
+        modal2.style.display = 'block';
+    }
+    let btn2 = document.querySelector('#close_sports');
+    btn2.onclick = function () {
+        modal2.style.display = 'none';
+    }
+
+    let modal3 = document.querySelector('#modal_abonements');
+    function modal_abonements() {
+        modal3.style.display = 'block';
+    }
+    let btn3 = document.querySelector('#close_abonements');
+    btn3.onclick = function () {
+        modal3.style.display = 'none';
+    }
+
+
+    let modal4 = document.querySelector('#modal_role');
+    function modal_role() {
+        modal4.style.display = 'block';
+    }
+    let btn4 = document.querySelector('#close_role');
+    btn4.onclick = function () {
+        modal4.style.display = 'none';
+    }
+
+
+    let modal5 = document.querySelector('#modal_trainer_state');
+    function modal_trainer_state() {
+        modal5.style.display = 'block';
+    }
+    let btn5 = document.querySelector('#close_trainer_state');
+    btn5.onclick = function () {
+        modal5.style.display = 'none';
+    }
+
+
+    let modal6 = document.querySelector('#modal_client_state');
+    function modal_client_state() {
+        modal6.style.display = 'block';
+    }
+    let btn6 = document.querySelector('#close_client_state');
+    btn5.onclick = function () {
+        modal6.style.display = 'none';
+    }
+
 </script>
 {% endblock %}

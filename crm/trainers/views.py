@@ -1,7 +1,7 @@
 import datetime
 from datetime import date, timedelta
 from django.shortcuts import render, get_object_or_404
-from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement, TrainerState
+from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement, TrainerState, ClientState, Role
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -39,6 +39,9 @@ def main(request):
         areas = Area.objects.all()
         sport_types = SportType.objects.all()
         abonements = Abonement.objects.all()
+        roles = Role.objects.all()
+        trainer_states = TrainerState.objects.all()
+        clients_states = ClientState.objects.all()
 
         if request.user.trainer.role.name == "директор":
             context = {
@@ -47,7 +50,10 @@ def main(request):
                 'news': news,
                 'areas': areas,
                 'sport_types': sport_types,
-                'abonements': abonements
+                'abonements': abonements,
+                'roles': roles,
+                'trainer_states': trainer_states,
+                'clients_states': clients_states
             }
 
         elif request.user.trainer.role.name == "тренер":
@@ -222,9 +228,30 @@ def sport_type_creation(request):
 
 
 def area_creation(request):
-    adres = request.POST['adres']
-    area = Area(adres=adres)
+    address = request.POST['address']
+    area = Area(address=address)
     area.save()
+    return HttpResponseRedirect(reverse('main'))
+
+
+def role_creation(request):
+    role_name = request.POST['role']
+    role = Role(name=role_name)
+    role.save()
+    return HttpResponseRedirect(reverse('main'))
+
+
+def trainer_state_creation(request):
+    state_name = request.POST['trainer_state']
+    state = TrainerState(name=state_name)
+    state.save()
+    return HttpResponseRedirect(reverse('main'))
+
+
+def client_state_creation(request):
+    state_name = request.POST['client_state']
+    state = ClientState(name=state_name)
+    state.save()
     return HttpResponseRedirect(reverse('main'))
 
 
