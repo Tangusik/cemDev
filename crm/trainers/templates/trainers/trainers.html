@@ -67,7 +67,7 @@
             <li class="drop"><a href="{% url 'trainers' %}">Cтатус</a>
                 <ul class="sub_menu">
                     {% for st in status %}
-                    <li><a href="{% url 'trainers' %}?status={{ st.name }}">{{st.name}}</a></li>
+                    <li><a href="{% url 'trainers' %}?state={{ st.name }}">{{st.name}}</a></li>
                     {% endfor %}
                 </ul>
             </li>
@@ -82,12 +82,7 @@
     </nav>
 
 
-
-
-
     <button id="add_trainer" class="change_btn add_button" onclick="modal_trainer()"> Добавить тренера</button>
-
-
     <div class="modal" id="modal_trainer">
         <div class="modal-content">
             <div class="close" id="close_trainer">&times;</div>

@@ -152,9 +152,16 @@ def team_creation(request):
 
 def trainers(request):
     if request.user.is_authenticated:
-
         status = TrainerState.objects.all()
         sport = SportType.objects.all()
+        trainers = Trainer.objects.all()
+
+        if request.GET.get('state'):
+            trainers = trainers.filter(state__name=request.GET.get('state'))
+
+        if request.GET.get('sports'):
+            trainers = trainers.filter(sports__name=request.GET.get('sports'))
+
         today = date.today()
         trainers_birth = Trainer.objects.order_by('birthdate')
         upcoming_birthdays = []
@@ -170,11 +177,14 @@ def trainers(request):
                 upcoming_birthdays.append(trainer)
             if time_to_birthday == 0:
                 today_birthdays.append(trainer)
+
         trainers_search = []
         query = request.GET.get('q')
         if query:
             trainers_search = Trainer.objects.filter(
                 Q(user__first_name__icontains=query) | Q(user__email__icontains=query))
+
+
 
         context = {'trainers': trainers,
                    'status': status,
