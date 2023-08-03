@@ -50,7 +50,7 @@
                             <h1>
                                 {{client.first_name}} {{client.last_name}}
                             </h1>
-                            <p>{{client.status}}
+                            <p>{{client.state}}
                             </p>
                         </div>
                         <div class="back">
@@ -136,7 +136,7 @@
                             <h1>
                                 {{client.first_name}} {{client.last_name}}
                             </h1>
-                            <p>{{client.status}}
+                            <p>{{client.state}}
                             </p>
                         </div>
                         <div class="back">
@@ -158,9 +158,9 @@
     </div>
 
     <div id="all_sports" class="hidden">
-        {% for sport in sports %}
+        {% for sport in sport_types %}
         <details>
-            <summary> {{ sport.name }} ({{ sport.team_set.all.count }})
+            <summary> {{ sport.title }} ({{ sport.team_set.all.count }})
             </summary>
             {% for t in teams%}
             {%if sport.name == t.sport.name %}
