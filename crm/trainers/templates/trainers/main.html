@@ -65,11 +65,41 @@
 {% if role_trainer %}
 <div class="areas">
     <h3>Мои группы и клиенты</h3>
+    <div class="clients_cards">
+        {% if teams %}
+        {% for team in teams %}
+        <div class="simple_card">
+            {{team.name}}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Нет учеников и групп</p>
+        {% endif %}
+    </div>
 </div>
 
 <div class="areas">
     <h3>Ближайшие занятия</h3>
+    <div class="clients_cards">
+    {% if near_act %}
+    {% for act in near_act %}
+        <div class="simple_card_near_act">
+            {{act.act_date}}
+            <br>
+            {{act.area.address}}
+            <br>{{act.act_time_begin}} -
+            {{act.act_time_end}}
+            <br>
+        </div>
+            {% endfor %}
+            {% else %}
+            <p>Нет ролей</p>
+            {% endif %}
+    </div>
 </div>
+
+
+
 
 {% else %}
 <div class="areas">
@@ -353,36 +383,44 @@
 <script src="../../../static/js/todo.js"></script>
 <script>
     let modal = document.querySelector('#modal_edit_data');
+
     function edit_data_modal() {
         modal.style.display = 'block';
     }
+
     let btn = document.querySelector('#close_edit_data');
     btn.onclick = function () {
         modal.style.display = 'none';
     }
 
     let modal1 = document.querySelector('#modal_area');
+
     function modal_area() {
         modal1.style.display = 'block';
     }
+
     let btn1 = document.querySelector('#close_area');
     btn1.onclick = function () {
         modal1.style.display = 'none';
     }
 
     let modal2 = document.querySelector('#modal_sports');
+
     function modal_sports() {
         modal2.style.display = 'block';
     }
+
     let btn2 = document.querySelector('#close_sports');
     btn2.onclick = function () {
         modal2.style.display = 'none';
     }
 
     let modal3 = document.querySelector('#modal_abonements');
+
     function modal_abonements() {
         modal3.style.display = 'block';
     }
+
     let btn3 = document.querySelector('#close_abonements');
     btn3.onclick = function () {
         modal3.style.display = 'none';
@@ -390,9 +428,11 @@
 
 
     let modal4 = document.querySelector('#modal_role');
+
     function modal_role() {
         modal4.style.display = 'block';
     }
+
     let btn4 = document.querySelector('#close_role');
     btn4.onclick = function () {
         modal4.style.display = 'none';
@@ -400,9 +440,11 @@
 
 
     let modal5 = document.querySelector('#modal_trainer_state');
+
     function modal_trainer_state() {
         modal5.style.display = 'block';
     }
+
     let btn5 = document.querySelector('#close_trainer_state');
     btn5.onclick = function () {
         modal5.style.display = 'none';
@@ -410,9 +452,11 @@
 
 
     let modal6 = document.querySelector('#modal_client_state');
+
     function modal_client_state() {
         modal6.style.display = 'block';
     }
+
     let btn6 = document.querySelector('#close_client_state');
     btn5.onclick = function () {
         modal6.style.display = 'none';

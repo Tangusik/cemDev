@@ -57,17 +57,18 @@ def main(request):
             }
 
         elif request.user.trainer.role.name == "тренер":
-            """вставить проверку просроченных занятий"""
 
+            teams = Team.objects.filter(trainer=request.user.trainer)
             clients = Client.objects.all()
-            near_act = Activity.objects.filter(trainer=request.user.trainer, status="Состоится").order_by('act_date', 'act_time_begin')[:1]
-#             near_act = near_act[0]
+            near_act = Activity.objects.filter(trainer=request.user.trainer, status="Состоится").order_by('act_date', 'act_time_begin')
             context = { 'userinfo': request.user,
+                        'near_act': near_act,
                         'role_trainer': request.user.trainer,
-                       'trainer': request.user.trainer,
-                       'news': news,
-                       'act': near_act,
-                       'clients': clients }
+                        'trainer': request.user.trainer,
+                        'news': news,
+                        'teams': teams,
+                        'act': near_act,
+                        'clients': clients }
 
         return render(request, 'trainers/main.html', context)
     else:

@@ -235,7 +235,6 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    /*background-color: #6f94c6;*/
 }
 
 
@@ -243,3 +242,53 @@
     height: 2em;
     background-color: #3D5A80;
 }
+
+
+.clients_cards{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.simple_card{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #d87d56;
+    height: 4em;
+    width: 6em;
+    border-radius: 0.5em;
+    text-align: center;
+}
+
+
+.simple_card_near_act{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #d87d56;
+    height: 6em;
+    width: 12em;
+    border-radius: 0.5em;
+    text-align: center;
+    transition: transform .2s;
+}
+
+.simple_card_near_act:hover {
+    transform: scale(1.5);
+}
+
+/*.hidden_near_act{*/
+/*    visibility: visible;*/
+/*    position: absolute;*/
+/*    opacity: 0;*/
+/*}*/
+
+/*.hidden_near_act:hover{*/
+/*    visibility: visible;*/
+/*    opacity: 1;*/
+/*}*/
+
