@@ -1,5 +1,6 @@
 {% extends 'trainers/base.html' %}
 {% block head %}
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">-->
 <link rel="stylesheet" href="../../../static/css/edit_modal.css">
 <link rel="stylesheet" href="../../../static/css/index.css">
 <link rel="stylesheet" href="../../../static/css/slider.css">
@@ -70,6 +71,12 @@
         {% for team in teams %}
         <div class="simple_card">
             {{team.name}}
+            <div class="dropdown">
+            {% for client in team.clients.all %}
+            {{client.first_name}}
+                <br>
+            {% endfor %}
+            </div>
         </div>
         {% endfor %}
         {% else %}
@@ -81,24 +88,32 @@
 <div class="areas">
     <h3>Ближайшие занятия</h3>
     <div class="clients_cards">
-    {% if near_act %}
-    {% for act in near_act %}
+        {% if near_act %}
+        {% for act in near_act %}
         <div class="simple_card_near_act">
-            {{act.act_date}}
-            <br>
-            {{act.area.address}}
-            <br>{{act.act_time_begin}} -
-            {{act.act_time_end}}
-            <br>
+            <div>
+                {{act.act_date}}
+                <br>
+                {{act.area.address}}
+                <br>
+                {{act.act_time_begin}} - {{act.act_time_end}}
+                <br>
+            </div>
+            <div>
+                {% for client in act.clients.all %}
+                {{client.first_name}}
+                <input type="checkbox">
+                <br>
+                {% endfor %}
+
+            </div>
         </div>
-            {% endfor %}
-            {% else %}
-            <p>Нет ролей</p>
-            {% endif %}
+        {% endfor %}
+        {% else %}
+        <p>Нет ролей</p>
+        {% endif %}
     </div>
 </div>
-
-
 
 
 {% else %}
