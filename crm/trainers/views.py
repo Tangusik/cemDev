@@ -63,6 +63,7 @@ def main(request):
             near_act = Activity.objects.filter(trainer=request.user.trainer, status="Состоится").order_by('act_date', 'act_time_begin')[:1]
 #             near_act = near_act[0]
             context = { 'userinfo': request.user,
+                        'role_trainer': request.user.trainer,
                        'trainer': request.user.trainer,
                        'news': news,
                        'act': near_act,
@@ -154,13 +155,16 @@ def trainers(request):
     if request.user.is_authenticated:
         status = TrainerState.objects.all()
         sport = SportType.objects.all()
-        trainers = Trainer.objects.all()
+        director = Trainer.objects.filter(role__name="директор")
+        trainers = Trainer.objects.exclude(role__name="директор")
 
         if request.GET.get('state'):
             trainers = trainers.filter(state__name=request.GET.get('state'))
 
-        if request.GET.get('sports'):
-            trainers = trainers.filter(sports__name=request.GET.get('sports'))
+        if request.GET.get('sport'):
+            sp = sport.filter(title=request.GET.get('sport'))
+            trainers = sp.filter()
+
 
         today = date.today()
         trainers_birth = Trainer.objects.order_by('birthdate')
@@ -193,7 +197,9 @@ def trainers(request):
                    'today_birthdays': today_birthdays,
                    'trainers_search': trainers_search,
                    'query': query,
-                   'user': request.user}
+                   'user': request.user,
+                   'director': director
+                   }
 
 
         return render(request, "trainers/trainers.html", context)

@@ -71,10 +71,10 @@
                     {% endfor %}
                 </ul>
             </li>
-            <li class="drop"><a href="#">Вид спорта</a>
+            <li class="drop"><a href="{% url 'trainers' %}">Вид спорта</a>
                 <ul class="sub_menu">
                     {% for sp in sport%}
-                    <li><a href="{% url 'trainers' %}?sports={{ sp.name }}">{{sp.title}}</a></li>
+                    <li><a href="{% url 'trainers' %}?sport={{ sp.title }}">{{sp.title}}</a></li>
                     {% endfor %}
                 </ul>
             </li>
@@ -156,6 +156,10 @@
     {% else %}
     <p>Коллег нет :(</p>
     {%endif%}
+
+
+
+
 </div>
 {% endblock %}
 

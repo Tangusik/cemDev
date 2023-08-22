@@ -231,6 +231,11 @@
 
 .list{
     margin-bottom: 2em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    /*background-color: #6f94c6;*/
 }
 
 
