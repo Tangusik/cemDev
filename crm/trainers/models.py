@@ -90,7 +90,7 @@ class Activity(models.Model):
     trainer = models.ForeignKey(Trainer, on_delete=models.DO_NOTHING)
     status = models.CharField(max_length=20, default="Состоится")
 
-    '''def to_json(self):
+    def to_json(self):
         return {
             'act_date': self.act_date.strftime('%Y-%m-%d'),
             'act_time_begin': self.act_time_begin.strftime('%H:%M:%S'),
@@ -98,7 +98,7 @@ class Activity(models.Model):
             'clients': [client.id for client in self.clients.all()],
             'trainer': self.trainer.user.first_name,
             'status': self.status
-        }'''
+        }
 
 
 class News(models.Model):

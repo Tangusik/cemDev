@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
+import json
 from django.utils import timezone
 
 
@@ -231,8 +232,9 @@ def trainers_add_action(request):
 def schedule(request):
     if request.user.is_authenticated:
         activities = Activity.objects.all()
-        context = {'activities': activities}
-        return render(request, "trainers/schedule.html", context)
+        context = [activity.to_json() for activity in activities]
+        context = json.dumps(context)
+        return render(request, "trainers/schedule.html", {'activities': context})
     else:
         return HttpResponseRedirect(reverse('login_page'))
 
