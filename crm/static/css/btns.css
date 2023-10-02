@@ -6,6 +6,7 @@
 }
 
 #trainers_content {
+    min-height: 30em;
     padding-top: 1em;
     padding-bottom: 2em;
     background-color: rgb(152, 193, 217, 0.7);
@@ -42,4 +43,26 @@
 .add_button{
     display: block;
     margin: 0 auto;
+}
+
+#add_trainer{
+    margin-top: 20px;
+}
+
+.del_btn{
+    border-radius: 2em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    display: block;
+    margin-left: 10px;
+    margin-top: -1em;
+}
+
+.save_btn{
+    margin-top: 2em;
+    border-radius: 1em;
+    padding-right: 1em;
+    padding-left: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
 }

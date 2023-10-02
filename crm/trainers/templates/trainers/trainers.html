@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="../../../static/css/edit_modal.css">
 <link rel="stylesheet" href="../../../static/css/btns.css">
 <link rel="stylesheet" href="../../../static/css/search.css">
+<link rel="stylesheet" href="../../../static/css/list.css">
 {% endblock %}
 
 {% block content %}
@@ -30,7 +31,7 @@
                 <h2>
                     {{trainer.user.last_name}} <br> {{trainer.user.first_name}} <br> {{trainer.otchestv}}
                 </h2>
-                <p> {{trainer.status}}
+                <p> {{trainer.state}}
                 </p>
             </div>
             <div class="back">
@@ -60,15 +61,28 @@
 {%endif%}
 
 
-<div class="sort">
-    <h3>Сортировать по:</h3>
-    <button class="change_btn">Статусу</button>
-    <button class="change_btn">Виду спорта</button>
-    <button class="change_btn">Загружености</button>
-</div>
-
 <div id="trainers_content">
-    <button class="change_btn add_button" onclick="modal_trainer()"> Добавить тренера</button>
+    <nav>
+        <ul class="dropdown">
+            <li class="drop"><a href="{% url 'trainers' %}">Cтатус</a>
+                <ul class="sub_menu">
+                    {% for st in status %}
+                    <li><a href="{% url 'trainers' %}?state={{ st.name }}">{{st.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li class="drop"><a href="{% url 'trainers' %}">Вид спорта</a>
+                <ul class="sub_menu">
+                    {% for sp in sport%}
+                    <li><a href="{% url 'trainers' %}?sport={{ sp.title }}">{{sp.title}}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+
+    <button id="add_trainer" class="change_btn add_button" onclick="modal_trainer()"> Добавить тренера</button>
     <div class="modal" id="modal_trainer">
         <div class="modal-content">
             <div class="close" id="close_trainer">&times;</div>
@@ -86,19 +100,16 @@
                         <input type="email" name="mail" placeholder="Почта">
                         <input type="date" name="birth_date" placeholder="Дата рождения">
                         <input type="text" name="password" placeholder="Пароль">
-                        <select name="status" required>
-                            <option value="Тренер" selected>Тренер</option>
-                            <option value="Менеджер">Менеджер</option>
-                            {% if user.is_superuser %}
-                            <option value="Директор">Директор</option>
-                            {% endif %}
-                        </select>
                         <input type="submit" value="Добавить">
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+
+
+    {%if trainers %}
     <div class="cards">
         <div class="cards_elements">
             {% for trainer in trainers %}
@@ -111,8 +122,12 @@
                     <h2>
                         {{trainer.user.last_name}} <br> {{trainer.user.first_name}} <br> {{trainer.otchestv}}
                     </h2>
-                    <p> {{trainer.status}}
+                    <p> {{trainer.state}}
                     </p>
+                    <br>
+                    {% for sp in trainer.sports.all %}
+                    {{sp.name}}
+                    {% endfor %}
                 </div>
                 <div class="back">
                     <p>{{trainer.birthdate}}
@@ -141,10 +156,14 @@
     {% else %}
     <p>Коллег нет :(</p>
     {%endif%}
+
+
+
+
 </div>
-
-
 {% endblock %}
+
+
 
 {% block js%}
 <script>
@@ -160,4 +179,5 @@
     }
 </script>
 <script src="../../../static/js/buttons.js"></script>
+<script src="../../../static/js/ddd.js"></script>
 {% endblock %}

@@ -1,10 +1,11 @@
 {% extends 'trainers/base.html' %}
 {% block head %}
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">-->
+<link rel="stylesheet" href="../../../static/css/edit_modal.css">
 <link rel="stylesheet" href="../../../static/css/index.css">
 <link rel="stylesheet" href="../../../static/css/slider.css">
 <link rel="stylesheet" href="../../../static/css/rectangles.css">
 <link rel="stylesheet" href="../../../static/css/form.css">
-<link rel="stylesheet" href="../../../static/css/edit_modal.css">
 <link rel="stylesheet" href="../../../static/css/btns.css">
 <link rel="stylesheet" href="../../../static/css/search.css">
 {% endblock %}
@@ -16,14 +17,14 @@
     </div>
     <div class="container-text">
         <h3>{{userinfo.last_name}} {{userinfo.first_name}} {{trainer.otchestv}}</h3>
-        <h4>{{trainer.status}}</h4>
-
-        <br>
-        <h4>{{userinfo.email}}</h4>
-        <h4>{{trainer.birthdate}}</h4>
+        <h4>Роль: {{trainer.role}}</h4>
+        <h4>Почта: {{userinfo.email}}</h4>
+        <h4>День рождения: {{trainer.birthdate}}</h4>
+        <h4>Статус: {{trainer.state}}</h4>
         <button class="change_btn" style="margin-top: 30px" onclick="edit_data_modal()">Редактировать</button>
     </div>
 </div>
+
 
 <div class="modal" id="modal_edit_data">
     <div class="modal-content">
@@ -62,120 +63,275 @@
     </div>
 </div>
 
-    <div class="areas">
-        <h3>Площадки</h3>
-        <div class="list">
-            {% if areas %}
-            {% for area in areas %}
-            <p> {{area.adres}} </p>
+{% if role_trainer %}
+<div class="areas">
+    <h3>Мои группы и клиенты</h3>
+    <div class="clients_cards">
+        {% if teams %}
+        {% for team in teams %}
+        <div class="simple_card">
+            {{team.name}}
+            <div class="dropdown">
+            {% for client in team.clients.all %}
+            {{client.first_name}}
+                <br>
             {% endfor %}
-            {% else %}
-            <p>Нет площадок</p>
-            {% endif %}
+            </div>
         </div>
+        {% endfor %}
+        {% else %}
+        <p>Нет учеников и групп</p>
+        {% endif %}
+    </div>
+</div>
 
-        <button class="change_btn add_button" onclick="modal_area()">Добавить площадку</button>
-        <div class="modal" id="modal_area">
-            <div class="modal-content">
-                <div class="close" id="close_area">&times;</div>
-                <div class="form">
-                    <form class="decor" action="{% url 'area_creation' %}" method="post" autocomplete="off">
-                        <div class="form-left-decoration"></div>
-                        <div class="form-right-decoration"></div>
-                        <div class="circle"></div>
-                        <div class="form-inner">
-                            {% csrf_token %}
-                            <input type="text" name="adres" placeholder="Адрес площадки" required>
-                            <input type="submit" value="Добавить">
-                        </div>
-                    </form>
-                </div>
+<div class="areas">
+    <h3>Ближайшие занятия</h3>
+    <div class="clients_cards">
+        {% if near_act %}
+        {% for act in near_act %}
+        <div class="simple_card_near_act">
+            <div>
+                {{act.act_date}}
+                <br>
+                {{act.area.address}}
+                <br>
+                {{act.act_time_begin}} - {{act.act_time_end}}
+                <br>
+            </div>
+            <div>
+                {% for client in act.clients.all %}
+                {{client.first_name}}
+                <input type="checkbox">
+                <br>
+                {% endfor %}
+                <button class="save_btn">Сохранить</button>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Нет ролей</p>
+        {% endif %}
+    </div>
+</div>
+
+
+{% else %}
+<div class="areas">
+    <h3>Роли сотрудников</h3>
+    <div class="list">
+        {% if roles %}
+        {% for role in roles %}
+        <p>{{role.name}} </p>
+        <button class="del_btn">удалить</button>
+        {% endfor %}
+        {% else %}
+        <p>Нет ролей</p>
+        {% endif %}
+    </div>
+    <button class="change_btn add_button" onclick="modal_role()">Добавить роль</button>
+    <div class="modal" id="modal_role">
+        <div class="modal-content">
+            <div class="close" id="close_role">&times;</div>
+            <div class="form">
+                <form class="decor" action="{% url 'role_creation' %}" method="post" autocomplete="off">
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        {% csrf_token %}
+                        <input type="text" name="role" placeholder="Название роли" required>
+                        <input type="submit" value="Добавить">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="polosa"></div>
+
+<div class="areas">
+    <h3>Статусы сотрудников</h3>
+    <div class="list">
+        {% if trainer_states %}
+        {% for state in trainer_states %}
+        <p> {{state.name}} </p>
+        <button class="del_btn">удалить</button>
+        {% endfor %}
+        {% else %}
+        <p>Пока нет статусов</p>
+        {% endif %}
+    </div>
+    <button class="change_btn add_button" onclick="modal_trainer_state()">Добавить статус</button>
+    <div class="modal" id="modal_trainer_state">
+        <div class="modal-content">
+            <div class="close" id="close_trainer_state">&times;</div>
+            <div class="form">
+                <form class="decor" action="{% url 'trainer_state_creation' %}" method="post" autocomplete="off">
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        {% csrf_token %}
+                        <input type="text" name="trainer_state" placeholder="Название статуса" required>
+                        <input type="submit" value="Добавить">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="polosa"></div>
+
+<div class="areas">
+    <h3>Статусы клиентов</h3>
+    <div class="list">
+        {% if clients_states %}
+        {% for state in clients_states %}
+        <p> {{state.name}} </p>
+        <button class="del_btn">удалить</button>
+        {% endfor %}
+        {% else %}
+        <p>Пока нет статусов</p>
+        {% endif %}
+    </div>
+    <button class="change_btn add_button" onclick="modal_client_state()">Добавить статус</button>
+    <div class="modal" id="modal_client_state">
+        <div class="modal-content">
+            <div class="close" id="close_client_state">&times;</div>
+            <div class="form">
+                <form class="decor" action="{% url 'client_state_creation' %}" method="post" autocomplete="off">
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        {% csrf_token %}
+                        <input type="text" name="client_state" placeholder="Название статуса" required>
+                        <input type="submit" value="Добавить">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="polosa"></div>
+
+<div class="areas">
+    <h3>Площадки</h3>
+    <div class="list">
+        {% if areas %}
+        {% for area in areas %}
+        <p> {{area.address}} </p>
+        <button class="del_btn">удалить</button>
+        {% endfor %}
+        {% else %}
+        <p>Нет площадок</p>
+        {% endif %}
+    </div>
+    <button class="change_btn add_button" onclick="modal_area()">Добавить площадку</button>
+    <div class="modal" id="modal_area">
+        <div class="modal-content">
+            <div class="close" id="close_area">&times;</div>
+            <div class="form">
+                <form class="decor" action="{% url 'area_creation' %}" method="post" autocomplete="off">
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        {% csrf_token %}
+                        <input type="text" name="address" placeholder="Адрес площадки" required>
+                        <input type="submit" value="Добавить">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="polosa"></div>
+
+<div class="areas">
+    <h3>Виды спорта</h3>
+    <div class="list">
+        {% if sport_types %}
+        {% for type in sport_types %}
+        <p> {{type.title}} </p>
+        <button class="del_btn">удалить</button>
+        {% endfor %}
+        {% else %}
+        <p>Нет видов спорта</p>
+        {% endif %}
+    </div>
+    <button class="change_btn add_button" onclick="modal_sports()">Добавить вид спорта</button>
+    <div class="modal" id="modal_sports">
+        <div class="modal-content">
+            <div class="close" id="close_sports">&times;</div>
+            <div class="form">
+                <form class="decor" action="{% url 'sport_type_creation' %}" method="post" autocomplete="off">
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        {% csrf_token %}
+                        <input type="text" name="title" placeholder="Вид спорта" required>
+                        <input type="submit" value="Добавить">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="polosa"></div>
+
+<div class="areas">
+    <h3>Абонементы</h3>
+    <div class="list">
+        {% if abonements %}
+        {% for abonement in abonements %}
+        <p> {{abonement.title}}: {{ abonement.price }} </p>
+        <button class="del_btn">удалить</button>
+        {% endfor %}
+        {% else %}
+        <p>Нет абонементов</p>
+        {% endif %}
+    </div>
+    <button class="change_btn add_button" onclick="modal_abonements()">Добавить абонемент</button>
+    <div class="modal" id="modal_abonements">
+        <div class="modal-content">
+            <div class="close" id="close_abonements">&times;</div>
+            <div class="form">
+
+                <form class="decor" action="{% url 'abonement_creation' %}" method="post" autocomplete="off">
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        {% csrf_token %}
+                        <p><input type="text" name="title" placeholder="Название абонемента" required></p>
+                        <p><input type="text" name="price" placeholder="Цена абонемента" required></p>
+                        <input type="checkbox" name="duration_check" checked>
+                        <input type="text" name="duration" placeholder="Длительность">
+                        <select required name="duration_type">
+                            <option value="days" selected> Дней</option>
+                            <option value="weeks"> Недель</option>
+                            <option value="month"> Месяцев</option>
+                        </select>
+                        <input type="checkbox" name="count_check" checked>
+                        <input type="text" name="count" placeholder="Количество занятий">
+
+                        <input type="submit" value="Добавить">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <div class="areas">
-        <h3>Виды спорта</h3>
-        <div class="list">
-            {% if sport_types %}
-            {% for type in sport_types %}
-            <p> {{type.title}} </p>
-            {% endfor %}
-            {% else %}
-            <p>Нет видов спорта</p>
-            {% endif %}
-        </div>
-        <button class="change_btn add_button" onclick="modal_sports()">Добавить вид спорта</button>
-
-        <div class="modal" id="modal_sports">
-            <div class="modal-content">
-                <div class="close" id="close_sports">&times;</div>
-                <div class="form">
-                    <form class="decor" action="{% url 'sport_type_creation' %}" method="post" autocomplete="off">
-                        <div class="form-left-decoration"></div>
-                        <div class="form-right-decoration"></div>
-                        <div class="circle"></div>
-                        <div class="form-inner">
-                            {% csrf_token %}
-                            <input type="text" name="title" placeholder="Вид спорта" required>
-                            <input type="submit" value="Добавить">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="areas">
-        <h3>Абонементы</h3>
-        <div class="list">
-            {% if abonements %}
-            {% for abonement in abonements %}
-            <p> {{abonement.title}}: {{ abonement.price }} </p>
-            {% endfor %}
-            {% else %}
-            <p>Нет абонементов</p>
-            {% endif %}
-        </div>
-
-        <button class="change_btn add_button" onclick="modal_abonements()">Добавить абонемент</button>
-
-        <div class="modal" id="modal_abonements">
-            <div class="modal-content">
-                <div class="close" id="close_abonements">&times;</div>
-                <div class="form">
-
-                    <form class="decor"action="{% url 'abonement_creation' %}" method="post" autocomplete="off">
-                        <div class="form-left-decoration"></div>
-                        <div class="form-right-decoration"></div>
-                        <div class="circle"></div>
-                        <div class="form-inner">
-                            {% csrf_token %}
-                            <p><input type="text" name="title" placeholder="Название абонемента" required></p>
-                            <p><input type="text" name="price" placeholder="Цена абонемента" required></p>
-                            <input type="checkbox" name="duration_check" checked>
-                            <input type="text" name="duration" placeholder="Длительность">
-                            <select required name="duration_type">
-                                <option value="days" selected> Дней</option>
-                                <option value="weeks"> Недель</option>
-                                <option value="month"> Месяцев</option>
-                            </select>
-                            <input type="checkbox" name="count_check" checked>
-                            <input type="text" name="count" placeholder="Количество занятий">
-
-                            <input type="submit" value="Добавить">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-
-
+</div>
+{% endif %}
 
 <div class="container">
     <div>
@@ -226,10 +382,10 @@
     <div class="slider-field">
         <h2 class="name">{{new.title}}</h2>
         <div class="slider-text">
-            <h3>{{new.text}}</h3>
+            <h4>{{new.text}}</h4>
         </div>
     </div>
-     {% endfor %}
+    {% endfor %}
     <button class="prevSlider">Prev</button>
     <button class="nextSlider">Next</button>
 </div>
@@ -242,42 +398,83 @@
 <script src="../../../static/js/todo.js"></script>
 <script>
     let modal = document.querySelector('#modal_edit_data');
+
     function edit_data_modal() {
         modal.style.display = 'block';
     }
+
     let btn = document.querySelector('#close_edit_data');
     btn.onclick = function () {
         modal.style.display = 'none';
     }
 
-
     let modal1 = document.querySelector('#modal_area');
+
     function modal_area() {
         modal1.style.display = 'block';
     }
+
     let btn1 = document.querySelector('#close_area');
     btn1.onclick = function () {
         modal1.style.display = 'none';
     }
 
-
     let modal2 = document.querySelector('#modal_sports');
+
     function modal_sports() {
         modal2.style.display = 'block';
     }
+
     let btn2 = document.querySelector('#close_sports');
     btn2.onclick = function () {
         modal2.style.display = 'none';
     }
 
-
     let modal3 = document.querySelector('#modal_abonements');
+
     function modal_abonements() {
         modal3.style.display = 'block';
     }
+
     let btn3 = document.querySelector('#close_abonements');
     btn3.onclick = function () {
         modal3.style.display = 'none';
+    }
+
+
+    let modal4 = document.querySelector('#modal_role');
+
+    function modal_role() {
+        modal4.style.display = 'block';
+    }
+
+    let btn4 = document.querySelector('#close_role');
+    btn4.onclick = function () {
+        modal4.style.display = 'none';
+    }
+
+
+    let modal5 = document.querySelector('#modal_trainer_state');
+
+    function modal_trainer_state() {
+        modal5.style.display = 'block';
+    }
+
+    let btn5 = document.querySelector('#close_trainer_state');
+    btn5.onclick = function () {
+        modal5.style.display = 'none';
+    }
+
+
+    let modal6 = document.querySelector('#modal_client_state');
+
+    function modal_client_state() {
+        modal6.style.display = 'block';
+    }
+
+    let btn6 = document.querySelector('#close_client_state');
+    btn5.onclick = function () {
+        modal6.style.display = 'none';
     }
 
 </script>

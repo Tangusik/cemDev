@@ -32,7 +32,7 @@ h1{
     z-index: 1;
 }
 
-#signin input:first-of-type{
+#username{
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
 }
@@ -47,6 +47,7 @@ h1{
     display: block;
     width: 280px;
     height: 80px;
+    margin-top: 2px;
     border: 0;
     outline: 0;
     top: -2px;

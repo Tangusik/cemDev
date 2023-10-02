@@ -1,12 +1,13 @@
 import datetime
 from datetime import date, timedelta
 from django.shortcuts import render, get_object_or_404
-from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement
+from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement, TrainerState, ClientState, Role
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
+import json
 from django.utils import timezone
 
 
@@ -39,27 +40,36 @@ def main(request):
         areas = Area.objects.all()
         sport_types = SportType.objects.all()
         abonements = Abonement.objects.all()
+        roles = Role.objects.all()
+        trainer_states = TrainerState.objects.all()
+        clients_states = ClientState.objects.all()
 
-        if request.user.trainer.status == "Директор":
-            context = {'userinfo': request.user,
-                       'trainer': request.user.trainer,
-                       'news': news,
-                       'areas': areas,
-                       'sport_types': sport_types,
-                       'abonements': abonements}
+        if request.user.trainer.role.name == "директор":
+            context = {
+                'userinfo': request.user,
+                'trainer': request.user.trainer,
+                'news': news,
+                'areas': areas,
+                'sport_types': sport_types,
+                'abonements': abonements,
+                'roles': roles,
+                'trainer_states': trainer_states,
+                'clients_states': clients_states
+            }
 
-        elif request.user.trainer.status == "Тренер":
-            """вставить проверку просроченных занятий"""
+        elif request.user.trainer.role.name == "тренер":
 
+            teams = Team.objects.filter(trainer=request.user.trainer)
             clients = Client.objects.all()
-            near_act = Activity.objects.filter(trainer=request.user.trainer, status="Состоится").order_by('act_date', 'act_time_begin')[:1]
-            near_act = near_act[0]
-
-            context = {'userinfo': request.user,
-                       'trainer': request.user.trainer,
-                       'news': news,
-                       'act': near_act,
-                       'clients': clients}
+            near_act = Activity.objects.filter(trainer=request.user.trainer, status="Состоится").order_by('act_date', 'act_time_begin')
+            context = { 'userinfo': request.user,
+                        'near_act': near_act,
+                        'role_trainer': request.user.trainer,
+                        'trainer': request.user.trainer,
+                        'news': news,
+                        'teams': teams,
+                        'act': near_act,
+                        'clients': clients }
 
         return render(request, 'trainers/main.html', context)
     else:
@@ -70,7 +80,7 @@ def clients(request):
     if request.user.is_authenticated:
         clients = Client.objects.all()
         teams = Team.objects.all()
-        trainers = Trainer.objects.filter(status="Тренер")
+        trainers = Trainer.objects.filter(role__name="тренер")
         sport_types = SportType.objects.all()
         areas = Area.objects.all()
 
@@ -145,7 +155,18 @@ def team_creation(request):
 
 def trainers(request):
     if request.user.is_authenticated:
-        trainers = Trainer.objects.filter(status__in=['Тренер', 'Менеджер'])
+        status = TrainerState.objects.all()
+        sport = SportType.objects.all()
+        director = Trainer.objects.filter(role__name="директор")
+        trainers = Trainer.objects.exclude(role__name="директор")
+
+        if request.GET.get('state'):
+            trainers = trainers.filter(state__name=request.GET.get('state'))
+
+        if request.GET.get('sport'):
+            sp = sport.filter(title=request.GET.get('sport'))
+            trainers = sp.filter()
+
 
         today = date.today()
         trainers_birth = Trainer.objects.order_by('birthdate')
@@ -162,18 +183,25 @@ def trainers(request):
                 upcoming_birthdays.append(trainer)
             if time_to_birthday == 0:
                 today_birthdays.append(trainer)
+
         trainers_search = []
         query = request.GET.get('q')
         if query:
             trainers_search = Trainer.objects.filter(
                 Q(user__first_name__icontains=query) | Q(user__email__icontains=query))
 
+
+
         context = {'trainers': trainers,
+                   'status': status,
+                   'sport': sport,
                    'upcoming_birthdays': upcoming_birthdays,
                    'today_birthdays': today_birthdays,
                    'trainers_search': trainers_search,
                    'query': query,
-                   'user': request.user}
+                   'user': request.user,
+                   'director': director
+                   }
 
 
         return render(request, "trainers/trainers.html", context)
@@ -204,8 +232,9 @@ def trainers_add_action(request):
 def schedule(request):
     if request.user.is_authenticated:
         activities = Activity.objects.all()
-        context = {'activities': activities}
-        return render(request, "trainers/schedule.html", context)
+        context = [activity.to_json() for activity in activities]
+        context = json.dumps(context)
+        return render(request, "trainers/schedule.html", {'activities': context})
     else:
         return HttpResponseRedirect(reverse('login_page'))
 
@@ -218,9 +247,30 @@ def sport_type_creation(request):
 
 
 def area_creation(request):
-    adres = request.POST['adres']
-    area = Area(adres=adres)
+    address = request.POST['address']
+    area = Area(address=address)
     area.save()
+    return HttpResponseRedirect(reverse('main'))
+
+
+def role_creation(request):
+    role_name = request.POST['role']
+    role = Role(name=role_name)
+    role.save()
+    return HttpResponseRedirect(reverse('main'))
+
+
+def trainer_state_creation(request):
+    state_name = request.POST['trainer_state']
+    state = TrainerState(name=state_name)
+    state.save()
+    return HttpResponseRedirect(reverse('main'))
+
+
+def client_state_creation(request):
+    state_name = request.POST['client_state']
+    state = ClientState(name=state_name)
+    state.save()
     return HttpResponseRedirect(reverse('main'))
 
 
