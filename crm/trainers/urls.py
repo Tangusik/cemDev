@@ -20,5 +20,6 @@ urlpatterns = [
     path('clients/team_creation', views.team_creation, name='team_creation'),
     path('trainers', views.trainers, name='trainers'),
     path('trainers/add_action', views.trainers_add_action, name='trainers_add_action'),
-    path('schedule', views.schedule, name='schedule')
+    path('schedule', views.schedule, name='schedule'),
+    path('main/edit_profile', views.edit, name="profile_edit")
     ]

@@ -30,17 +30,17 @@
     <div class="modal-content">
         <div class="close" id="close_edit_data">&times;</div>
         <div class="form">
-            <form class="decor" action="#" method="post">
+            <form class="decor" action="{% url 'profile_edit' %}" method="post">
                 {% csrf_token %}
                 <div class="form-left-decoration"></div>
                 <div class="form-right-decoration"></div>
                 <div class="circle"></div>
                 <div class="form-inner">
                     <h3>Редактирование пользователя</h3>
-                    <input type="text" id="name" value="{{userinfo.first_name}}" placeholder="Имя">
-                    <input type="text" id="last_name" value="{{userinfo.last_name}}" placeholder="Фамилия">
-                    <input type="text" id="otchestcv" value="{{trainer.otchestv}}" placeholder="Отчество">
-                    <input type="text" id="email" value="{{userinfo.email}}" placeholder="Почта">
+                    <input type="text" id="name" name="name" value="{{userinfo.first_name}}" placeholder="Имя">
+                    <input type="text" id="last_name" name="last_name" value="{{userinfo.last_name}}" placeholder="Фамилия">
+                    <input type="text" id="otchestcv" name="otchestcv" value="{{trainer.otchestv}}" placeholder="Отчество">
+                    <input type="text" id="email" name="email" value="{{userinfo.email}}" placeholder="Почта">
                     <input type="submit" value="Добавить">
                 </div>
             </form>
