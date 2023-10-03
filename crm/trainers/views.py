@@ -245,6 +245,16 @@ def sport_type_creation(request):
     sport_type.save()
     return HttpResponseRedirect(reverse('main'))
 
+def sport_type_delete(request):
+    if request.method == 'POST':
+        type_title = request.POST.get('type_title')
+        try:
+            sport_type = SportType.objects.get(title=type_title)
+            sport_type.delete()
+            return HttpResponseRedirect(reverse('main'))
+        except SportType.DoesNotExist:
+            pass
+    return HttpResponseRedirect(reverse('main'))
 
 def area_creation(request):
     address = request.POST['address']
@@ -252,6 +262,16 @@ def area_creation(request):
     area.save()
     return HttpResponseRedirect(reverse('main'))
 
+def area_delete(request):
+    if request.method == 'POST':
+        area_address = request.POST.get('area_address')
+        try:
+            area = Area.objects.get(address=area_address)
+            area.delete()
+            return HttpResponseRedirect(reverse('main'))
+        except Area.DoesNotExist:
+            pass
+    return HttpResponseRedirect(reverse('main'))
 
 def role_creation(request):
     role_name = request.POST['role']
@@ -259,6 +279,16 @@ def role_creation(request):
     role.save()
     return HttpResponseRedirect(reverse('main'))
 
+def role_delete(request):
+    if request.method == 'POST':
+        role_name = request.POST.get('role_name')
+        try:
+            role = Role.objects.get(name=role_name)
+            role.delete()
+            return HttpResponseRedirect(reverse('main'))
+        except Role.DoesNotExist:
+            pass
+    return HttpResponseRedirect(reverse('main'))
 
 def trainer_state_creation(request):
     state_name = request.POST['trainer_state']
@@ -266,6 +296,16 @@ def trainer_state_creation(request):
     state.save()
     return HttpResponseRedirect(reverse('main'))
 
+def trainer_state_delete(request):
+    if request.method == 'POST':
+        trainer_state = request.POST.get('trainer_state')
+        try:
+            state = TrainerState.objects.get(name=trainer_state)
+            state.delete()
+            return HttpResponseRedirect(reverse('main'))
+        except TrainerState.DoesNotExist:
+            pass
+    return HttpResponseRedirect(reverse('main'))
 
 def client_state_creation(request):
     state_name = request.POST['client_state']
@@ -273,6 +313,16 @@ def client_state_creation(request):
     state.save()
     return HttpResponseRedirect(reverse('main'))
 
+def client_state_delete(request):
+    if request.method == 'POST':
+        client_state = request.POST.get('client_state')
+        try:
+            state = ClientState.objects.get(name=client_state)
+            state.delete()
+            return HttpResponseRedirect(reverse('main'))
+        except ClientState.DoesNotExist:
+            pass
+    return HttpResponseRedirect(reverse('main'))
 
 def abonement_creation(request):
     title = request.POST['title']
@@ -300,6 +350,18 @@ def abonement_creation(request):
     abonement = Abonement.objects.create(title=title, price=price, lesson_count=count, duration=dur)
     abonement.save()
 
+    return HttpResponseRedirect(reverse('main'))
+
+
+def abonement_delete(request):
+    if request.method == 'POST':
+        abonement_title = request.POST.get('abonement_title')
+        try:
+            abonement = Abonement.objects.get(title=abonement_title)
+            abonement.delete()
+            return HttpResponseRedirect(reverse('main'))
+        except Abonement.DoesNotExist:
+            pass
     return HttpResponseRedirect(reverse('main'))
 
 def mark(request):
