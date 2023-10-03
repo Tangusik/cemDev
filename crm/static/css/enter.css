@@ -63,7 +63,7 @@ h1{
     color: #3D5A80;
 }
 
-#signin button[type="submit"]{
+#btn{
     display: block;
     position: absolute;
     width: 52px;
@@ -73,16 +73,24 @@ h1{
     z-index: 2;
     top: 19px;
     right: -24px;
-    font-size: 25px;
-    text-indent: 0px;
-    padding-left: 9px;
-    padding-bottom: 3px;
     text-align: center;
-    background-color: rgb(227, 227, 227);
 }
 
-#signin button[type="submit"]:hover{
+#btn:hover{
     cursor: pointer;
+}
+
+#btn_img{
+    width: 52px;
+    height: 52px;
+    top: 14px;
+    right: -14px;
+    text-align: center;
+    display: block;
+    position: absolute;
+    background: url("../img/enter.png") no-repeat;
+    background-size: 20px 20px;
+    z-index: 5;
 }
 
 #signin a {
@@ -91,5 +99,3 @@ h1{
     font-size: 18px;
     color: #293241;
 }
-
-
