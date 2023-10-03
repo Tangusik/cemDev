@@ -69,7 +69,7 @@ def main(request):
                         'news': news,
                         'teams': teams,
                         'act': near_act,
-                        'clients': clients }
+                        'clients': clients}
 
         return render(request, 'trainers/main.html', context)
     else:
@@ -308,4 +308,21 @@ def mark(request):
     near_act = near_act[0]
     clients = request.POST.getlist('clients[]')
     print(clients)
+    return HttpResponseRedirect(reverse('main'))
+
+def edit(request):
+    name=request.POST['name']
+    last_name=request.POST['last_name']
+    otchestv = request.POST['otchestcv']
+    email = request.POST['email']
+
+
+    request.user.first_name=name
+    request.user.last_name=last_name
+    request.user.email=email
+    request.user.username=email
+    request.user.save()
+
+    request.user.trainer.otchestv=otchestv
+    request.user.trainer.save()
     return HttpResponseRedirect(reverse('main'))
