@@ -1,6 +1,5 @@
 {% extends 'trainers/base.html' %}
 {% block head %}
-<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">-->
 <link rel="stylesheet" href="../../../static/css/edit_modal.css">
 <link rel="stylesheet" href="../../../static/css/index.css">
 <link rel="stylesheet" href="../../../static/css/slider.css">
@@ -122,8 +121,13 @@
     <div class="list">
         {% if roles %}
         {% for role in roles %}
-        <p>{{role.name}} </p>
-        <button class="del_btn">удалить</button>
+        <p>{{role.name}}</p>
+        <form action="{% url 'role_delete' %}" method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="role_name" value="{{ role.name }}">
+            <button class="del_btn" type="submit">удалить</button>
+        </form>
+
         {% endfor %}
         {% else %}
         <p>Нет ролей</p>
@@ -157,7 +161,11 @@
         {% if trainer_states %}
         {% for state in trainer_states %}
         <p> {{state.name}} </p>
-        <button class="del_btn">удалить</button>
+        <form action="{% url 'trainer_state_delete' %}" method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="trainer_state" value="{{ state.name }}">
+            <button class="del_btn" type="submit">удалить</button>
+        </form>
         {% endfor %}
         {% else %}
         <p>Пока нет статусов</p>
@@ -191,7 +199,11 @@
         {% if clients_states %}
         {% for state in clients_states %}
         <p> {{state.name}} </p>
-        <button class="del_btn">удалить</button>
+        <form action="{% url 'client_state_delete' %}" method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="client_state" value="{{ state.name }}">
+            <button class="del_btn" type="submit">удалить</button>
+        </form>
         {% endfor %}
         {% else %}
         <p>Пока нет статусов</p>
@@ -225,7 +237,11 @@
         {% if areas %}
         {% for area in areas %}
         <p> {{area.address}} </p>
-        <button class="del_btn">удалить</button>
+        <form action="{% url 'area_delete' %}" method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="area_address" value="{{ area.address }}">
+            <button class="del_btn" type="submit">удалить</button>
+        </form>
         {% endfor %}
         {% else %}
         <p>Нет площадок</p>
@@ -259,7 +275,11 @@
         {% if sport_types %}
         {% for type in sport_types %}
         <p> {{type.title}} </p>
-        <button class="del_btn">удалить</button>
+        <form action="{% url 'sport_type_delete' %}" method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="type_title" value="{{ type.title }}">
+            <button class="del_btn" type="submit">удалить</button>
+        </form>
         {% endfor %}
         {% else %}
         <p>Нет видов спорта</p>
@@ -293,7 +313,11 @@
         {% if abonements %}
         {% for abonement in abonements %}
         <p> {{abonement.title}}: {{ abonement.price }} </p>
-        <button class="del_btn">удалить</button>
+        <form action="{% url 'abonement_delete' %}" method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="abonement_title" value="{{ abonement.title }}">
+            <button class="del_btn" type="submit">удалить</button>
+        </form>
         {% endfor %}
         {% else %}
         <p>Нет абонементов</p>
