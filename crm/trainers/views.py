@@ -62,7 +62,6 @@ def main(request):
             teams = Team.objects.filter(trainer=request.user.trainer)
             clients = Client.objects.all()
             near_act = Activity.objects.filter(trainer=request.user.trainer, status="Состоится").order_by('act_date', 'act_time_begin')[:1]
-            print(near_act)
             context = { 'userinfo': request.user,
                         'near_act': near_act,
                         'role_trainer': request.user.trainer,
