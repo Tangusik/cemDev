@@ -85,7 +85,7 @@
 </div>
 
 <div class="areas">
-    <h3>Ближайшие занятия</h3>
+    <h3>Ближайшее занятия</h3>
     <div class="clients_cards">
         {% if near_act %}
         {% for act in near_act %}
@@ -99,20 +99,53 @@
                 <br>
             </div>
             <div>
-                <form  action="{% url 'mark' %}" method="post">
+             <form  action="{% url 'mark' act.id %}" method="post">
                 {% csrf_token %}
                 {% for client in clients %}
                     <input type="checkbox" value="{{ client.id }}" name="clients">
                         {{ client.first_name }}
-                        {{ client.last_name }} </p>
+                    {{ client.last_name }} </p>
                 {% endfor %}
                 <button type="submit"> Сохранить</button>
-                </form>
+            </form>
             </div>
         </div>
         {% endfor %}
         {% else %}
         <p>Нет ближайших занятий =(</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="areas">
+    <h3>Прошедшие занятия</h3>
+    <div class="clients_cards">
+        {% if ended_acts %}
+        {% for act in ended_acts %}
+        <div class="simple_card_near_act">
+            <div>
+                {{act.act_date}}
+                <br>
+                {{act.area.address}}
+                <br>
+                {{act.act_time_begin}} - {{act.act_time_end}}
+                <br>
+            </div>
+            <div>
+             <form  action="{% url 'mark' act.id %}" method="post">
+                {% csrf_token %}
+                {% for client in clients %}
+                    <input type="checkbox" value="{{ client.id }}" name="clients">
+                        {{ client.first_name }}
+                    {{ client.last_name }} </p>
+                {% endfor %}
+                <button type="submit"> Сохранить</button>
+            </form>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Нет неотмеченных занятий =(</p>
         {% endif %}
     </div>
 </div>

@@ -5,6 +5,7 @@ from .models import Client, Address, Team, \
     ClientState, Role, Area, News, Presence
 
 admin.site.register(Activity)
+admin.site.register(Presence)
 admin.site.register(Client)
 admin.site.register(Address)
 admin.site.register(Team)

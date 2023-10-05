@@ -61,19 +61,24 @@ def main(request):
 
             teams = Team.objects.filter(trainer=request.user.trainer)
             clients = Client.objects.all()
+            current_time = datetime.datetime.now()
+            current_time = current_time.time()
             near_act = Activity.objects.filter(trainer=request.user.trainer,
                                                status="Состоится",
-                                               act_date__gte=datetime.date.today()).order_by('act_date',
-                                                                                      'act_time_begin')[:1]
-
+                                               act_date__gte=datetime.date.today(),
+                                               act_time_end__gte=current_time).order_by('act_date','act_time_begin')[:1]
+            ended_acts =Activity.objects.filter(trainer=request.user.trainer,
+                                               status="Состоится",
+                                               act_date__lt=datetime.date.today(),
+                                               act_time_end__lt=current_time).order_by('act_date','act_time_begin')
             context = { 'userinfo': request.user,
                         'near_act': near_act,
                         'role_trainer': request.user.trainer,
                         'trainer': request.user.trainer,
                         'news': news,
                         'teams': teams,
-                        'act': near_act,
-                        'clients': clients}
+                        'clients': clients,
+                        'ended_acts': ended_acts}
 
         return render(request, 'trainers/main.html', context)
     else:
@@ -194,6 +199,7 @@ def trainers(request):
             trainers_search = Trainer.objects.filter(
                 Q(user__first_name__icontains=query) | Q(user__email__icontains=query))
 
+        roles = Role.objects.all()
 
 
         context = {'trainers': trainers,
@@ -204,8 +210,8 @@ def trainers(request):
                    'trainers_search': trainers_search,
                    'query': query,
                    'user': request.user,
-                   'director': director
-                   }
+                   'director': director,
+                   'roles':roles}
 
 
         return render(request, "trainers/trainers.html", context)
@@ -220,7 +226,8 @@ def trainers_add_action(request):
     trainer_mail = request.POST['mail']
     trainer_pass = request.POST['password']
     trainer_birthdate = request.POST['birth_date']
-
+    role = request.POST['role']
+    role = get_object_or_404(Role, pk=role)
     try:
         user = User.objects.create_user(username=trainer_mail, email=trainer_mail, password=trainer_pass)
         user.last_name = trainer_last_name
@@ -228,8 +235,8 @@ def trainers_add_action(request):
         user.save()
         trainer = Trainer(user=user, otchestv=trainer_otchestv,
                           birthdate=trainer_birthdate,
-                          role=Role.objects.get(name='тренер'),
-                          state=TrainerState.objects.get(name='Жив'))
+                          role=role,
+                          state=TrainerState.objects.get(id=1))
         trainer.save()
         return HttpResponseRedirect(reverse('trainers'))
     except:
@@ -372,10 +379,8 @@ def abonement_delete(request):
             pass
     return HttpResponseRedirect(reverse('main'))
 
-def mark(request):
-    near_act = Activity.objects.filter(trainer=request.user.trainer,
-                                       status="Состоится").order_by('act_date', 'act_time_begin')[:1]
-    near_act = near_act[0]
+def mark(request,activity_id):
+    near_act = Activity.objects.get(id=activity_id)
     clients_id = request.POST.getlist('clients')
     print(near_act.clients.all())
     for client in clients_id:
