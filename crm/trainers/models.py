@@ -100,6 +100,10 @@ class Activity(models.Model):
             'status': self.status
         }
 
+class Presence(models.Model):
+    activity = models.ForeignKey(Activity, on_delete=models.DO_NOTHING)
+    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
+    presence = models.BooleanField(blank=False, null=True, default=False)
 
 class News(models.Model):
     title = models.CharField(max_length=200)

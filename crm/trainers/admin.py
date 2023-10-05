@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Client, Address, Team, Trainer, Activity, Abonement, SportType, TrainerState, ClientState, Role, Area, News
+from .models import Client, Address, Team, \
+    Trainer, Activity, Abonement, \
+    SportType, TrainerState, \
+    ClientState, Role, Area, News, Presence
 
 admin.site.register(Activity)
 admin.site.register(Client)
