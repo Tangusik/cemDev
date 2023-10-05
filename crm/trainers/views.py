@@ -1,7 +1,7 @@
 import datetime
 from datetime import date, timedelta
 from django.shortcuts import render, get_object_or_404
-from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement, TrainerState, ClientState, Role
+from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement, TrainerState, ClientState, Role, Presence
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -122,7 +122,7 @@ def client_add_action(request):
 
 
 def team_creation(request):
-    team_name = request.POST.get('title')
+    team_name = request.POST.get('title', 'group')
     sport_type = request.POST['sport_type']
     members = request.POST.getlist('members')
     trainer = request.POST['trainer']
@@ -147,7 +147,7 @@ def team_creation(request):
     while date1 <= date2.date():
         if str(date1.weekday()) in days:
             act = Activity(act_date=date1, act_time_begin=act_begin_time,
-                            act_time_end=act_end_time, trainer=tr, area=area)
+                            act_time_end=act_end_time, trainer=tr, area=area, status="Состоится")
             act.save()
             for client in members:
                 act.clients.add(client)
@@ -220,16 +220,20 @@ def trainers_add_action(request):
     trainer_mail = request.POST['mail']
     trainer_pass = request.POST['password']
     trainer_birthdate = request.POST['birth_date']
-    status = request.POST['status']
+
     try:
         user = User.objects.create_user(username=trainer_mail, email=trainer_mail, password=trainer_pass)
         user.last_name = trainer_last_name
         user.first_name = trainer_name
         user.save()
-        trainer = Trainer(user=user, otchestv=trainer_otchestv, birthdate=trainer_birthdate, status=status)
+        trainer = Trainer(user=user, otchestv=trainer_otchestv,
+                          birthdate=trainer_birthdate,
+                          role=Role.objects.get(name='тренер'),
+                          state=TrainerState.objects.get(name='Жив'))
         trainer.save()
         return HttpResponseRedirect(reverse('trainers'))
     except:
+        print("не удалось создать тренера")
         return HttpResponseRedirect(reverse('trainers'))
 
 
@@ -372,9 +376,23 @@ def mark(request):
     near_act = Activity.objects.filter(trainer=request.user.trainer,
                                        status="Состоится").order_by('act_date', 'act_time_begin')[:1]
     near_act = near_act[0]
-    clients = request.POST.getlist('clients[]')
-    print(clients)
-    return HttpResponseRedirect(reverse('main'))
+    clients_id = request.POST.getlist('clients')
+    print(near_act.clients.all())
+    for client in clients_id:
+
+        if client not in near_act.clients.all():
+            client = get_object_or_404(Client, pk=client)
+            client_presence = Presence(client=client, activity=near_act, presence=True)
+            client_presence.save()
+        else:
+            client = get_object_or_404(Client, pk=client)
+            presence = Presence.objects.get(client=client, activity = near_act)
+            presence.presence = True
+            presence.save()
+
+        near_act.status = 'Проведено'
+        near_act.save()
+        return HttpResponseRedirect(reverse('main'))
 
 def edit(request):
     name=request.POST['name']

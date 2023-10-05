@@ -99,12 +99,15 @@
                 <br>
             </div>
             <div>
-                {% for client in act.clients.all %}
-                {{client.first_name}}
-                <input type="checkbox">
-                <br>
+                <form  action="{% url 'mark' %}" method="post">
+                {% csrf_token %}
+                {% for client in clients %}
+                    <input type="checkbox" value="{{ client.id }}" name="clients">
+                        {{ client.first_name }}
+                        {{ client.last_name }} </p>
                 {% endfor %}
-                <button class="save_btn">Сохранить</button>
+                <button type="submit"> Сохранить</button>
+                </form>
             </div>
         </div>
         {% endfor %}
