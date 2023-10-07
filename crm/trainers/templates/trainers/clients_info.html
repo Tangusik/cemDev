@@ -23,6 +23,8 @@
             <p> {{adres.city}}, {{adres.street}}, {{adres.house}}, {{adres.building}}, {{adres.flat}} </p>
             {% endfor %}
             <button class="change_btn" style="margin-top: 30px" onclick="edit_data_modal()">Редактировать</button>
+            <button class="change_btn" style="margin-top: 30px" onclick="top_up_balance_btn()">Пополнить</button>
+
         </div>
     </div>
 
@@ -48,6 +50,25 @@
         </div>
     </div>
 
+
+    <div class="modal" id="top_up_balance_modal">
+        <div class="modal-content">
+            <div class="close" id="close_top_up_balance_modal">&times;</div>
+            <div class="form">
+                <form class="decor" action="#" method="post">
+                    {% csrf_token %}
+                    <div class="form-left-decoration"></div>
+                    <div class="form-right-decoration"></div>
+                    <div class="circle"></div>
+                    <div class="form-inner">
+                        <h3>Добавить денег!</h3>
+                        <input type="text" id="money" placeholder="Сумма">
+                        <input type="submit" value="Добавить">g
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="main">
 
@@ -121,14 +142,24 @@
 {% block js%}
 <script>
  let modal = document.querySelector('#modal_edit_data');
-
-    function edit_data_modal() {
+ function edit_data_modal() {
         modal.style.display = 'block';
     }
 
-    let btn = document.querySelector('#close_edit_data');
-    btn.onclick = function () {
+ let btn1 = document.querySelector('#close_edit_data');
+ btn1.onclick = function () {
         modal.style.display = 'none';
     }
+
+ let top_up_balance = document.querySelector('#top_up_balance_modal')
+ function  top_up_balance_btn() {
+     top_up_balance.style.display = 'block';
+ }
+
+ let btn2 = document.querySelector('#close_top_up_balance_modal');
+ btn2.onclick = function () {
+     top_up_balance.style.display = 'none';
+ }
+
 </script>
 {% endblock %}
