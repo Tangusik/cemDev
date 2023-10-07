@@ -25,7 +25,6 @@
             {% endfor %}
             <button class="change_btn" style="margin-top: 30px" onclick="edit_data_modal()">Редактировать</button>
             <button class="change_btn" style="margin-top: 30px" onclick="top_up_balance_btn()">Пополнить</button>
-
         </div>
     </div>
 
@@ -64,7 +63,7 @@
                     <div class="form-inner">
                         <h3>Добавить денег!</h3>
                         <input type="text" id="money" placeholder="Сумма">
-                        <input type="submit" value="Добавить">g
+                        <input type="submit" value="Добавить">
                     </div>
                 </form>
             </div>
@@ -72,6 +71,39 @@
     </div>
 
     <div class="main">
+
+        <div class="" style="text-align: center">
+            <div class="container-text">
+                <h3>Активные абонементы</h3>
+            </div>
+            <div class="list" style="display: flex; flex-direction: column">
+                <div style="height: 400px; width: 300px; background-color: #43638d; border-radius: 10px;" >
+                    <button class="btn" style="float: right; padding: 10px; border-radius:0 10px 0 10px;">Удалить</button>
+                    <h3 style="color: white; margin-top: 50px";>Название</h3>
+                    <h3 style="color: white; margin-top: 50px";>Количество занятий?</h3>
+                    <h5 style="color: white; margin-top: 50px";>Время действия абонемента?</h5>
+                    <h3 style="color: white; margin-top: 50px";>Спорт</h3>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="container-text">
+                <h3>Другие абонементы</h3>
+                <h4>Нажми на интересующий тип абонементов и узнай больше!</h4>
+            </div>
+            <div>
+                <div class="rectangle rectangle-right rectangle-back" style="width: 12em; margin-left: 10em;">
+                    <h2 style="font-size: 1.2em; padding-top: 3em;" onclick="completed_abonements()">Завершенные</h2>
+                        <h1>39</h1>
+                </div>
+                <div class="rectangle rectangle-left rectangle-front" style="width: 12em">
+                    <h2 style="font-size: 1.2em; padding-top: 3em;" onclick="stopped_abonements()">Остановленные</h2>
+                    <h1>9</h1>
+                </div>
+            </div>
+        </div>
 
         <div class="container">
             <div>
@@ -86,7 +118,6 @@
             </div>
             <div class="container-text">
                 <h3>Занятия</h3>
-                <h4>Как выводить инфу об абонементе?</h4>
             </div>
         </div>
 
@@ -99,10 +130,12 @@
             <div>
                 <div class="rectangle rectangle-right rectangle-back">
                     <a href="#"><h2 style="font-size: 1.2em; padding-top: 2em">Награды</h2>
-                        <h1>28</h1></a></div>
+                        <h1>28</h1></a>
+                </div>
                 <div class="rectangle rectangle-left rectangle-front">
                     <a href="#"><h2 style="font-size: 1.2em; padding-top: 3em">Участие</h2>
-                        <h1>39</h1></a></div>
+                        <h1>39</h1></a>
+                </div>
             </div>
         </div>
 
