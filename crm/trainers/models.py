@@ -21,7 +21,7 @@ class Client(models.Model):
     reg_date = models.DateField(auto_now=True, blank=True)
     birth_date = models.DateField(auto_now=False, blank=True, default=datetime.date(2023, 1, 1))
     state = models.ForeignKey(ClientState, models.CASCADE, blank=True, null=True)
-
+    balance = models.IntegerField(default=0, blank=False)
     def __str__(self):
         return self.first_name
 

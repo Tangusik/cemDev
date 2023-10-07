@@ -87,8 +87,7 @@
 <div class="areas">
     <h3>Ближайшее занятия</h3>
     <div class="clients_cards">
-        {% if near_act %}
-        {% for act in near_act %}
+        {% if act %}
         <div class="simple_card_near_act">
             <div>
                 {{act.act_date}}
@@ -105,12 +104,11 @@
                     <input type="checkbox" value="{{ client.id }}" name="clients">
                         {{ client.first_name }}
                     {{ client.last_name }} </p>
-                {% endfor %}
+                 {% endfor %}
                 <button type="submit"> Сохранить</button>
             </form>
             </div>
         </div>
-        {% endfor %}
         {% else %}
         <p>Нет ближайших занятий =(</p>
         {% endif %}

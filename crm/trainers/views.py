@@ -1,7 +1,8 @@
 import datetime
 from datetime import date, timedelta
 from django.shortcuts import render, get_object_or_404
-from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement, TrainerState, ClientState, Role, Presence
+from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement, TrainerState, ClientState, Role, \
+    Presence
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -63,22 +64,26 @@ def main(request):
             clients = Client.objects.all()
             current_time = datetime.datetime.now()
             current_time = current_time.time()
-            near_act = Activity.objects.filter(trainer=request.user.trainer,
-                                               status="Состоится",
-                                               act_date__gte=datetime.date.today(),
-                                               act_time_end__gte=current_time).order_by('act_date','act_time_begin')[:1]
-            ended_acts =Activity.objects.filter(trainer=request.user.trainer,
-                                               status="Состоится",
-                                               act_date__lt=datetime.date.today(),
-                                               act_time_end__lt=current_time).order_by('act_date','act_time_begin')
-            context = { 'userinfo': request.user,
-                        'near_act': near_act,
-                        'role_trainer': request.user.trainer,
-                        'trainer': request.user.trainer,
-                        'news': news,
-                        'teams': teams,
-                        'clients': clients,
-                        'ended_acts': ended_acts}
+            try:
+                act = Activity.objects.filter(trainer=request.user.trainer,
+                                              status="Состоится",
+                                              act_date__gte=datetime.date.today()).order_by('act_date', 'act_time_begin')[0]
+
+            except :
+                act = None
+
+            ended_acts = Activity.objects.filter(trainer=request.user.trainer,
+                                                 status="Состоится",
+                                                 act_date__lt=datetime.date.today(),
+                                                 act_time_end__lt=current_time).order_by('act_date', 'act_time_begin')
+            context = {'userinfo': request.user,
+                       'act': act,
+                       'role_trainer': request.user.trainer,
+                       'trainer': request.user.trainer,
+                       'news': news,
+                       'teams': teams,
+                       'clients': clients,
+                       'ended_acts': ended_acts}
 
         return render(request, 'trainers/main.html', context)
     else:
@@ -92,12 +97,11 @@ def clients(request):
         trainers = Trainer.objects.filter(role__name="тренер")
         sport_types = SportType.objects.all()
         areas = Area.objects.all()
-
         context = {'clients': clients,
                    'teams': teams,
-                   'trainers':trainers,
-                   'sport_types':sport_types,
-                   'areas':areas}
+                   'trainers': trainers,
+                   'sport_types': sport_types,
+                   'areas': areas}
 
         return render(request, "trainers/clients.html", context)
     else:
@@ -107,9 +111,8 @@ def clients(request):
 def client_info(request, client_id):
     if request.user.is_authenticated:
         client = get_object_or_404(Client, pk=client_id)
-        adr = client.address_set.all()
-        context = {'client': client,
-                   'adr': adr}
+
+        context = {'client': client}
         return render(request, "trainers/clients_info.html", context)
     else:
         return HttpResponseRedirect(reverse('login_page'))
@@ -133,11 +136,11 @@ def team_creation(request):
     trainer = request.POST['trainer']
     date_end = request.POST['date_end']
     area = request.POST['area']
-    #___________________Нужно изменить
+    # ___________________Нужно изменить
     days = request.POST.getlist('days')
     act_begin_time = request.POST['act_begin_time']
     act_end_time = request.POST['act_end_time']
-    #__________________________________
+    # __________________________________
 
     tr = get_object_or_404(Trainer, pk=trainer)
     sp_type = get_object_or_404(SportType, pk=sport_type)
@@ -152,7 +155,7 @@ def team_creation(request):
     while date1 <= date2.date():
         if str(date1.weekday()) in days:
             act = Activity(act_date=date1, act_time_begin=act_begin_time,
-                            act_time_end=act_end_time, trainer=tr, area=area, status="Состоится")
+                           act_time_end=act_end_time, trainer=tr, area=area, status="Состоится")
             act.save()
             for client in members:
                 act.clients.add(client)
@@ -175,7 +178,6 @@ def trainers(request):
         if request.GET.get('sport'):
             sp = sport.filter(title=request.GET.get('sport'))
             trainers = sp.filter()
-
 
         today = date.today()
         trainers_birth = Trainer.objects.order_by('birthdate')
@@ -201,7 +203,6 @@ def trainers(request):
 
         roles = Role.objects.all()
 
-
         context = {'trainers': trainers,
                    'status': status,
                    'sport': sport,
@@ -211,8 +212,7 @@ def trainers(request):
                    'query': query,
                    'user': request.user,
                    'director': director,
-                   'roles':roles}
-
+                   'roles': roles}
 
         return render(request, "trainers/trainers.html", context)
     else:
@@ -260,6 +260,7 @@ def sport_type_creation(request):
     sport_type.save()
     return HttpResponseRedirect(reverse('main'))
 
+
 def sport_type_delete(request):
     if request.method == 'POST':
         type_title = request.POST.get('type_title')
@@ -271,11 +272,13 @@ def sport_type_delete(request):
             pass
     return HttpResponseRedirect(reverse('main'))
 
+
 def area_creation(request):
     address = request.POST['address']
     area = Area(address=address)
     area.save()
     return HttpResponseRedirect(reverse('main'))
+
 
 def area_delete(request):
     if request.method == 'POST':
@@ -288,11 +291,13 @@ def area_delete(request):
             pass
     return HttpResponseRedirect(reverse('main'))
 
+
 def role_creation(request):
     role_name = request.POST['role']
     role = Role(name=role_name)
     role.save()
     return HttpResponseRedirect(reverse('main'))
+
 
 def role_delete(request):
     if request.method == 'POST':
@@ -305,11 +310,13 @@ def role_delete(request):
             pass
     return HttpResponseRedirect(reverse('main'))
 
+
 def trainer_state_creation(request):
     state_name = request.POST['trainer_state']
     state = TrainerState(name=state_name)
     state.save()
     return HttpResponseRedirect(reverse('main'))
+
 
 def trainer_state_delete(request):
     if request.method == 'POST':
@@ -322,11 +329,13 @@ def trainer_state_delete(request):
             pass
     return HttpResponseRedirect(reverse('main'))
 
+
 def client_state_creation(request):
     state_name = request.POST['client_state']
     state = ClientState(name=state_name)
     state.save()
     return HttpResponseRedirect(reverse('main'))
+
 
 def client_state_delete(request):
     if request.method == 'POST':
@@ -338,6 +347,7 @@ def client_state_delete(request):
         except ClientState.DoesNotExist:
             pass
     return HttpResponseRedirect(reverse('main'))
+
 
 def abonement_creation(request):
     title = request.POST['title']
@@ -358,9 +368,9 @@ def abonement_creation(request):
         elif duration_type == 'weeks':
             dur = timedelta(weeks=int(duration))
         elif duration_type == 'month':
-            dur = timedelta(days=int(duration)*30)
+            dur = timedelta(days=int(duration) * 30)
     else:
-        dur=None
+        dur = None
 
     abonement = Abonement.objects.create(title=title, price=price, lesson_count=count, duration=dur)
     abonement.save()
@@ -370,7 +380,7 @@ def abonement_creation(request):
 
 def abonement_delete(request):
     if request.method == 'POST':
-        abonement_title = request.POST.get('abonement_title')
+        abonement_title = request.POST.get("abonement_title")
         try:
             abonement = Abonement.objects.get(title=abonement_title)
             abonement.delete()
@@ -379,7 +389,8 @@ def abonement_delete(request):
             pass
     return HttpResponseRedirect(reverse('main'))
 
-def mark(request,activity_id):
+
+def mark(request, activity_id):
     near_act = Activity.objects.get(id=activity_id)
     clients_id = request.POST.getlist('clients')
     print(near_act.clients.all())
@@ -391,7 +402,7 @@ def mark(request,activity_id):
             client_presence.save()
         else:
             client = get_object_or_404(Client, pk=client)
-            presence = Presence.objects.get(client=client, activity = near_act)
+            presence = Presence.objects.get(client=client, activity=near_act)
             presence.presence = True
             presence.save()
 
@@ -399,19 +410,31 @@ def mark(request,activity_id):
         near_act.save()
         return HttpResponseRedirect(reverse('main'))
 
+
 def edit(request):
-    name=request.POST['name']
-    last_name=request.POST['last_name']
+    name = request.POST['name']
+    last_name = request.POST['last_name']
     otchestv = request.POST['otchestcv']
     email = request.POST['email']
 
-
-    request.user.first_name=name
-    request.user.last_name=last_name
-    request.user.email=email
-    request.user.username=email
+    request.user.first_name = name
+    request.user.last_name = last_name
+    request.user.email = email
+    request.user.username = email
     request.user.save()
 
-    request.user.trainer.otchestv=otchestv
+    request.user.trainer.otchestv = otchestv
     request.user.trainer.save()
     return HttpResponseRedirect(reverse('main'))
+
+
+def add_balance(request, client_id):
+    added_money = request.POST['added_money']
+    client=get_object_or_404(Client, pk=client_id)
+    client.balance += added_money
+    client.save()
+
+def buy_abonement(request, client_id):
+    pass
+def checkout_balance(client_id):
+    pass
