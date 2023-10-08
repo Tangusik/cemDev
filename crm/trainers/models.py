@@ -89,6 +89,7 @@ class Activity(models.Model):
     clients = models.ManyToManyField(Client)
     trainer = models.ForeignKey(Trainer, on_delete=models.DO_NOTHING)
     status = models.CharField(max_length=20, default="Состоится")
+    sport = models.ForeignKey(SportType, models.DO_NOTHING, blank=False, null=True)
 
     def to_json(self):
         return {
@@ -119,17 +120,21 @@ class News(models.Model):
 
 class Abonement(models.Model):
     title = models.CharField(max_length=50, blank=False, default="имя абонемента")
-    price = models.IntegerField(blank=False, default=0)
-    duration = models.DurationField(blank=False, null=True)
-    lesson_count = models.IntegerField(blank=False, null=True)
+    price = models.IntegerField(blank=False, default=0, null=True)
+    duration = models.DurationField(blank=True, null=True)
+    lesson_count = models.IntegerField(blank=True, null=True)
     clients = models.ManyToManyField(Client, through="PurchaseHistory")
+    sport = models.ForeignKey(SportType, on_delete=models.CASCADE, blank=True)
 
 
 class PurchaseHistory(models.Model):
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
     abonement = models.ForeignKey(Abonement, on_delete=models.DO_NOTHING)
-    date_end = models.DateField(blank=False, null=True)
-    activitys_left = models.IntegerField(blank=False, null=True)
+    purchase_date = models.DateField(blank=False, auto_now=True)
+    status = models.CharField(max_length=20, blank=False, default="активен")
+    activities_left = models.IntegerField(blank=True, null=True)
+    date_of_end = models.DateField(blank=True, null=True)
+
 
 
 

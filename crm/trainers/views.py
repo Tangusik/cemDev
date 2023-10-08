@@ -2,7 +2,7 @@ import datetime
 from datetime import date, timedelta
 from django.shortcuts import render, get_object_or_404
 from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement, TrainerState, ClientState, Role, \
-    Presence
+    Presence, PurchaseHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -64,6 +64,7 @@ def main(request):
             clients = Client.objects.all()
             current_time = datetime.datetime.now()
             current_time = current_time.time()
+
             try:
                 act = Activity.objects.filter(trainer=request.user.trainer,
                                               status="Состоится",
@@ -155,7 +156,10 @@ def team_creation(request):
     while date1 <= date2.date():
         if str(date1.weekday()) in days:
             act = Activity(act_date=date1, act_time_begin=act_begin_time,
-                           act_time_end=act_end_time, trainer=tr, area=area, status="Состоится")
+                           act_time_end=act_end_time,
+                           trainer=tr, area=area,
+                           status="Состоится",
+                           sport_type=sp_type)
             act.save()
             for client in members:
                 act.clients.add(client)
@@ -240,7 +244,6 @@ def trainers_add_action(request):
         trainer.save()
         return HttpResponseRedirect(reverse('trainers'))
     except:
-        print("не удалось создать тренера")
         return HttpResponseRedirect(reverse('trainers'))
 
 
@@ -393,7 +396,6 @@ def abonement_delete(request):
 def mark(request, activity_id):
     near_act = Activity.objects.get(id=activity_id)
     clients_id = request.POST.getlist('clients')
-    print(near_act.clients.all())
     for client in clients_id:
 
         if client not in near_act.clients.all():
@@ -431,10 +433,34 @@ def edit(request):
 def add_balance(request, client_id):
     added_money = request.POST['added_money']
     client=get_object_or_404(Client, pk=client_id)
-    client.balance += added_money
+    client.balance += int(added_money)
     client.save()
+    return HttpResponseRedirect(reverse('client_info', args=[client_id]))
+def buy_abonement(request, client_id, abonement_id):
+    client = get_object_or_404(Client, pk = client_id)
+    abonement = get_object_or_404(Abonement, pk = abonement_id)
 
-def buy_abonement(request, client_id):
-    pass
-def checkout_balance(client_id):
-    pass
+    PurchaseHistory.create(client=client, abonement=abonement, status="активен",
+                                           activities_left=abonement.lesson_count,
+                                           days_left=abonement.duration)
+    return HttpResponseRedirect(reverse('client_info', args=[client_id]))
+def checkout_abonement(client_id):
+    client = get_object_or_404(Client, pk=client_id)
+    active_abonements = PurchaseHistory.oblects.filter(client=client, status="активен")
+    for abonement in active_abonements:
+
+        if abonement.abonement.duration != 0:
+            if datetime.date.today() > abonement.days.left:
+                abonement.status = 'прошедший'
+
+        if abonement.abonement.lesson_count != 0:
+            lessons = 0
+            all_activities = Presence.objects.filter(client=client)
+            for act in all_activities:
+                if act.activity.act_date > abonement.purchase_date and act.activity.sport == abonement.abonement.sport:
+                    lessons += 1
+
+            abonement.activities_left = abonement.abonement.lesson_count - lessons
+            if abonement.activities_left == 0:
+                abonement.status = 'прошедший'
+            abonement.save()

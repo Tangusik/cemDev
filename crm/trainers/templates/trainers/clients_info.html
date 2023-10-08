@@ -55,14 +55,14 @@
         <div class="modal-content">
             <div class="close" id="close_top_up_balance_modal">&times;</div>
             <div class="form">
-                <form class="decor" action="#" method="post">
+                <form class="decor" action="{% url 'add_balance' client.id %}" method="post">
                     {% csrf_token %}
                     <div class="form-left-decoration"></div>
                     <div class="form-right-decoration"></div>
                     <div class="circle"></div>
                     <div class="form-inner">
                         <h3>Добавить денег!</h3>
-                        <input type="text" id="money" placeholder="Сумма">
+                        <input type="text" id="money" name="added_money" placeholder="Сумма">
                         <input type="submit" value="Добавить">
                     </div>
                 </form>
