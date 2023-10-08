@@ -36,5 +36,5 @@ urlpatterns = [
     path('schedule', views.schedule, name='schedule'),
     path('main/edit_profile', views.edit, name="profile_edit"),
     path('client/<int:client_id>/add_balance', views.add_balance, name='add_balance'),
-    path('client/<int:client_id>/buy_abonement', views.buy_abonement, name='buy_abonement'),
+    path('client/<int:client_id>/buy_abonement/<int:abonement_id>', views.buy_abonement, name='buy_abonement'),
     ]
