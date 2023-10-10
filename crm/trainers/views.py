@@ -112,8 +112,11 @@ def clients(request):
 def client_info(request, client_id):
     if request.user.is_authenticated:
         client = get_object_or_404(Client, pk=client_id)
-
-        context = {'client': client}
+        active_abonements = PurchaseHistory.objects.filter(client=client, status="активен")
+        abonements = Abonement.objects.all()
+        context = {'client': client,
+                   'active_abonements': active_abonements,
+                   'abonements':abonements}
         return render(request, "trainers/clients_info.html", context)
     else:
         return HttpResponseRedirect(reverse('login_page'))
@@ -159,7 +162,7 @@ def team_creation(request):
                            act_time_end=act_end_time,
                            trainer=tr, area=area,
                            status="Состоится",
-                           sport_type=sp_type)
+                           sport=sp_type)
             act.save()
             for client in members:
                 act.clients.add(client)
@@ -355,6 +358,8 @@ def client_state_delete(request):
 def abonement_creation(request):
     title = request.POST['title']
     price = request.POST['price']
+    sport = request.POST['sport']
+    sport = get_object_or_404(SportType, pk=sport)
     is_duration = request.POST.get('duration_check', False)
     is_count = request.POST.get('count_check', False)
 
@@ -375,7 +380,7 @@ def abonement_creation(request):
     else:
         dur = None
 
-    abonement = Abonement.objects.create(title=title, price=price, lesson_count=count, duration=dur)
+    abonement = Abonement.objects.create(title=title, price=price, lesson_count=count, duration=dur, sport=sport)
     abonement.save()
 
     return HttpResponseRedirect(reverse('main'))
@@ -404,9 +409,10 @@ def mark(request, activity_id):
             client_presence.save()
         else:
             client = get_object_or_404(Client, pk=client)
-            presence = Presence.objects.get(client=client, activity=near_act)
-            presence.presence = True
+            presence = Presence.objects.create(client=client, activity=near_act,presence = True)
             presence.save()
+
+        checkout_abonement(client.id)
 
         near_act.status = 'Проведено'
         near_act.save()
@@ -436,28 +442,48 @@ def add_balance(request, client_id):
     client.balance += int(added_money)
     client.save()
     return HttpResponseRedirect(reverse('client_info', args=[client_id]))
-def buy_abonement(request, client_id, abonement_id):
+def buy_abonement(request, client_id):
     client = get_object_or_404(Client, pk = client_id)
+    abonement_id = request.POST['abonement']
     abonement = get_object_or_404(Abonement, pk = abonement_id)
 
-    PurchaseHistory.create(client=client, abonement=abonement, status="активен",
+    purchase_date = request.POST['date']
+    purchase_date=datetime.datetime.strptime(purchase_date, "%Y-%m-%d").date()
+
+    if purchase_date >datetime.date.today():
+        PurchaseHistory.objects.create(client=client, abonement=abonement, status="на будущее",
                                            activities_left=abonement.lesson_count,
-                                           days_left=abonement.duration)
+                                           date_of_end=purchase_date + abonement.duration,
+                                   purchase_date=purchase_date)
+    else:
+        PurchaseHistory.objects.create(client=client, abonement=abonement, status="активен",
+                                       activities_left=abonement.lesson_count,
+                                       date_of_end=purchase_date + abonement.duration,
+                                       purchase_date=purchase_date)
+
+    client.balance -= abonement.price
+    client.save()
     return HttpResponseRedirect(reverse('client_info', args=[client_id]))
+
+def delete_abonement(request, abonement_id, client_id):
+    ab = PurchaseHistory.objects.get(id=abonement_id)
+    ab.delete()
+    return HttpResponseRedirect(reverse('client_info', args=[client_id]))
+
 def checkout_abonement(client_id):
     client = get_object_or_404(Client, pk=client_id)
-    active_abonements = PurchaseHistory.oblects.filter(client=client, status="активен")
+    active_abonements = PurchaseHistory.objects.filter(client=client, status="активен")
     for abonement in active_abonements:
 
         if abonement.abonement.duration != 0:
-            if datetime.date.today() > abonement.days.left:
+            if datetime.date.today() > abonement.date_of_end:
                 abonement.status = 'прошедший'
 
         if abonement.abonement.lesson_count != 0:
             lessons = 0
             all_activities = Presence.objects.filter(client=client)
             for act in all_activities:
-                if act.activity.act_date > abonement.purchase_date and act.activity.sport == abonement.abonement.sport:
+                if act.activity.act_date > abonement.purchase_date and act.activity.sport == abonement.abonement.sport :
                     lessons += 1
 
             abonement.activities_left = abonement.abonement.lesson_count - lessons

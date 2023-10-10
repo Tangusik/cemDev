@@ -379,7 +379,11 @@
                         </select>
                         <input type="checkbox" name="count_check" checked>
                         <input type="text" name="count" placeholder="Количество занятий">
-
+                        <select name="sport">
+                            {% for sport in sport_types %}
+                            <option value="{{sport.id}}"> {{sport.title}} </option>
+                            {% endfor %}
+                        </select>
                         <input type="submit" value="Добавить">
                     </div>
                 </form>
