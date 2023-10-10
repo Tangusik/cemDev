@@ -77,32 +77,50 @@
                 <h3 style="margin-top: 30px;">Активные абонементы</h3>
                 <button class="btn" style="padding: 10px; border-radius:30px; margin-bottom: 50px; font-size: medium" onclick="add_abonement_modal()">Добавить</button>
             </div>
+            {% if active_abonements %}
+            {% for abonement in active_abonements %}
             <div class="list" style="display: flex; flex-direction: column">
                 <div style="height: 400px; width: 300px; background-color: #43638d; border-radius: 10px;" >
-                    <button class="btn" style="float: right; padding: 10px; border-radius:0 30px 0 30px;">Удалить</button>
-                    <h3 style="color: white; margin-top: 50px";>Название</h3>
-                    <h3 style="color: white; margin-top: 50px";>Количество занятий?</h3>
-                    <h5 style="color: white; margin-top: 50px";>Время действия абонемента?</h5>
-                    <h3 style="color: white; margin-top: 50px";>Спорт</h3>
+                    <form action="{% url 'delete_abonement' client.id abonement.id %}">
+                        {% csrf_token %}
+                        <button  class="btn" style="float: right; padding: 10px; border-radius:0 30px 0 30px;">Удалить</button>
+                    </form>
+                    <h3 style="color: white; margin-top: 50px";>{{ abonement.abonement.title }}</h3>
+                    {% if abonement.activities_left > 0 %}
+                    <h3 style="color: white; margin-top: 50px";>{{ abonement.activities_left }}</h3>
+                    {% endif %}
+
+                    {% if abonement.abonement.duration %}
+                    <h5 style="color: white; margin-top: 50px";>До {{abonement.date_of_end}} </h5>
+                    {% endif %}
+                    <h3 style="color: white; margin-top: 50px";>{{ abonement.abonement.sport.title }}</h3>
                 </div>
             </div>
+            {% endfor %}
+            {% else %}
+                Нет активных абонеменнтов
+            {% endif %}
         </div>
 
         <div class="modal" id="add_abonement_modal">
             <div class="modal-content">
                 <div class="close" id="close_add_abonement_modal">&times;</div>
                 <div class="form">
-                    <form class="decor" action="#" method="post">
+                    <form class="decor" action="{% url 'buy_abonement' client.id %}" method="post">
                         {% csrf_token %}
                         <div class="form-left-decoration"></div>
                         <div class="form-right-decoration"></div>
                         <div class="circle"></div>
                         <div class="form-inner">
                             <h3>Добавление абонемента</h3>
-                            <input type="text" id="name" placeholder="Название">
-                            <select>
-                                <option value="value1">Значение 1</option>
+                            <input type="date" id="date" name="date" placeholder="Дата начала абонемента">
+
+                            <select name="abonement">
+                                {% for abonement in abonements %}
+                                    <option value="{{abonement.id}}">{{abonement.title}}</option>
+                                {% endfor %}
                             </select>
+
                             <input type="submit" value="Добавить">
                         </div>
                     </form>

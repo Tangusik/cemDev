@@ -23,7 +23,7 @@ class Client(models.Model):
     state = models.ForeignKey(ClientState, models.CASCADE, blank=True, null=True)
     balance = models.IntegerField(default=0, blank=False)
     def __str__(self):
-        return self.first_name
+        return self.first_name + self.last_name
 
 
 class TrainerState(models.Model):

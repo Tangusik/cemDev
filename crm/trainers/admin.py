@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Client, Address, Team, \
     Trainer, Activity, Abonement, \
     SportType, TrainerState, \
-    ClientState, Role, Area, News, Presence
+    ClientState, Role, Area, News, Presence, PurchaseHistory
 
 admin.site.register(Activity)
 admin.site.register(Presence)
@@ -17,3 +17,4 @@ admin.site.register(ClientState)
 admin.site.register(Role)
 admin.site.register(Area)
 admin.site.register(News)
+admin.site.register(PurchaseHistory)
