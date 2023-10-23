@@ -96,9 +96,11 @@ class Activity(models.Model):
             'act_date': self.act_date.strftime('%Y-%m-%d'),
             'act_time_begin': self.act_time_begin.strftime('%H:%M:%S'),
             'act_time_end': self.act_time_end.strftime('%H:%M:%S'),
-            'clients': [client.id for client in self.clients.all()],
+            'area': self.area.address,
+#             'clients': [client.id for client in self.clients.all()],
             'trainer': self.trainer.user.first_name,
-            'status': self.status
+            'status': self.status,
+            'sport': self.sport.title,
         }
 
 class Presence(models.Model):

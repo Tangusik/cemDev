@@ -1,8 +1,3 @@
-// for (let activity of window.activities) {
-//   console.log(activity.price);
-// }
-console.log(window.activities[0].price);
-
 let cal = {
 // ХАРАКТЕРИСТИКИ
 // ОБЩИЙ КАЛЕНДАРЬ

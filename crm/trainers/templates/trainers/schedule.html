@@ -3,20 +3,9 @@
 {% block head %}
 <link href="../../../static/css/schedule.css" rel="stylesheet">
 <link rel="stylesheet" href="../../../static/css/btns.css">
-
 {% endblock %}
 {% block content %}
 <script>
-    window.activities = JSON.parse('{{ activities|safe }}');
-</script>
-<script>
-    // console.log(JSON.parse('{{ activities|safe }}'));
-    // console.log(window.activities[0].price);
-    // console.log(window.activities[0].status);
-    // console.log(window.activities[0].act_time_begin);
-    // console.log(window.activities[0].trainer);
-
-
     let cal = {
 // ХАРАКТЕРИСТИКИ
 // ОБЩИЙ КАЛЕНДАРЬ
@@ -47,13 +36,19 @@
                 opt.innerHTML = cal.mName[i];
                 if (i === nowMth) {
                     opt.selected = true;
+                    getMonth(i);
                 }
                 cal.hMth.appendChild(opt);
             }
+            // cal.hMth.onchange = cal.list;
+            cal.hMth.onchange = function() {
+                let selectedMonth = parseInt(cal.hMth.value);
+                getMonth(selectedMonth)
+            }
             cal.hMth.onchange = cal.list;
 // ДОБАВИТЬ ВЫБОР ГОДОВ
-// Установим в диапазоне 10 лет. Измените это, как вам нравится.
-            for (let i = nowYear - 10; i <= nowYear + 10; i++) {
+// Установим в диапазоне 4 лет. Измените это, как вам нравится.
+            for (let i = nowYear - 4; i <= nowYear + 4; i++) {
                 let opt = document.createElement("option");
                 opt.value = i;
                 opt.innerHTML = i;
@@ -66,6 +61,8 @@
 // СТАРТ - ВЫВОДА КАЛЕНДАРЯ
             cal.list();
         },
+
+
 
 
 // СОЗДАТЬ КАЛЕНДАРЬ НА ВЫБРАННЫЙ МЕСЯЦ
@@ -160,7 +157,7 @@
                     }
                     cCell.innerHTML = `<div class="dd">${squares[i]}</div>`;
                     if (cal.data[squares[i]]) {
-                        cCell.innerHTML += "<div class ='evt'>" + cal.data[squares[i]] + "</div>";
+                        cCell.innerHTML += "<div class='evt'>" + cal.data[squares[i]] + "</div>";
                     }
                     cCell.onclick = () => {
                         cal.show(cCell);
@@ -174,40 +171,67 @@
                 }
             }
         },
-
-        data: () => {
-            let ddElements = document.querySelectorAll("#calendar .day div.dd");
-
-            for (let i = 0; i < ddElements.length; i++) {
-                if (ddElements[i].textContent === "6") {
-                    let newDiv = document.createElement("div");
-                    newDiv.innerHTML = "цена: " + window.activities[0].price + "<br>" +
-                        "начало: " + window.activities[0].act_time_begin + "<br>" +
-                        "конец: " + window.activities[0].act_time_end + "<br>" +
-                         "тренер: " + window.activities[0].trainer;
-                    newDiv.classList.add("desc");
-                    ddElements[i].insertAdjacentElement("beforeend", newDiv);
-                    break;
-                }
-            }
-        }
     };
 
+
     window.addEventListener("load", cal.init);
-    window.addEventListener("load", cal.data);
 </script>
+
 
 
 <div id="cal-wrap">
     <h1>Расписание</h1>
-    <!-- ВЫБОР ПЕРИОДА -->
     <div id="cal-date">
-        <select id="cal-mth"></select>
+<!--        <form id="monthForm" method="GET" action="{% url 'schedule' %} ">-->
+            <select id="cal-mth" onchange="submitForm()"></select>
+<!--        </form>-->
         <select id="cal-yr"></select>
     </div>
-    <!-- КАЛЕНДАРЬ -->
+
+
+    <form method="GET" action="{% url 'schedule' %}">
+        <label for="selectedMonth">Выберите месяц:</label>
+        <select name="selectedMonth" id="selectedMonth">
+            <option value="1">Январь</option>
+            <option value="2">Февраль</option>
+            <option value="10">Октябрь</option>
+        </select>
+        <button type="submit">Показать расписание</button>
+    </form>
+
     <div id="cal-container"></div>
+    <button id="showSchedule" onclick="processActivities()">rtr</button>
 </div>
+<script>
+
+    function submitForm() {
+        document.getElementById("monthForm").submit();
+    }
+
+    window.activities = JSON.parse('{{ activities|safe}}');
 
 
+    console.log(window.activities)
+
+    function getMonth(month){
+        month += 1
+        console.log(month)
+    }
+
+    function processActivities() {
+        for (let activity of window.activities) {
+            var activityDate = new Date(activity.act_date);
+            var day = activityDate.getDate();
+
+            const elements = document.querySelectorAll('.dd');
+
+            elements.forEach(element => {
+                let number = element.innerText.match(/\d+/)[0];
+                if (number === day.toString()) {
+                    element.innerHTML += `<div style="background-color: darkgray; height: 20px; width: 50px; font-size: small">${activity.sport}</div>`;
+                }
+            });
+        }
+    }
+</script>
 {% endblock %}
