@@ -30,20 +30,15 @@
                 nowMth = now.getMonth(),
                 nowYear = parseInt(now.getFullYear());
 // ДОБАВИТЬ ВЫБОР МЕСЯЦЕВ
-            for (let i = 0; i < 12; i++) {
+            for (let i = 0; i <= 11; i++) {
                 let opt = document.createElement("option");
                 opt.value = i;
                 opt.innerHTML = cal.mName[i];
                 if (i === nowMth) {
                     opt.selected = true;
-                    getMonth(i);
                 }
+
                 cal.hMth.appendChild(opt);
-            }
-            // cal.hMth.onchange = cal.list;
-            cal.hMth.onchange = function() {
-                let selectedMonth = parseInt(cal.hMth.value);
-                getMonth(selectedMonth)
             }
             cal.hMth.onchange = cal.list;
 // ДОБАВИТЬ ВЫБОР ГОДОВ
@@ -182,41 +177,27 @@
 <div id="cal-wrap">
     <h1>Расписание</h1>
     <div id="cal-date">
-<!--        <form id="monthForm" method="GET" action="{% url 'schedule' %} ">-->
-            <select id="cal-mth" onchange="submitForm()"></select>
-<!--        </form>-->
+        <form id="monthForm" method="GET" action="{% url 'schedule' %} ">
+            <select name="selectedMonth" id="cal-mth"></select>
+        </form>
         <select id="cal-yr"></select>
     </div>
 
-
-    <form method="GET" action="{% url 'schedule' %}">
-        <label for="selectedMonth">Выберите месяц:</label>
-        <select name="selectedMonth" id="selectedMonth">
-            <option value="1">Январь</option>
-            <option value="2">Февраль</option>
-            <option value="10">Октябрь</option>
-        </select>
-        <button type="submit">Показать расписание</button>
-    </form>
+<!--    получить на фронт все данные и отслортировать-->
 
     <div id="cal-container"></div>
     <button id="showSchedule" onclick="processActivities()">rtr</button>
 </div>
 <script>
 
-    function submitForm() {
-        document.getElementById("monthForm").submit();
-    }
+    document.getElementById('cal-mth').addEventListener('change', function() {
+        document.getElementById('monthForm').submit();
+    });
 
     window.activities = JSON.parse('{{ activities|safe}}');
 
 
     console.log(window.activities)
-
-    function getMonth(month){
-        month += 1
-        console.log(month)
-    }
 
     function processActivities() {
         for (let activity of window.activities) {
