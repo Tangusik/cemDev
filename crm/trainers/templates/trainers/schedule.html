@@ -186,7 +186,7 @@
 <!--    получить на фронт все данные и отслортировать-->
 
     <div id="cal-container"></div>
-    <button id="showSchedule" onclick="processActivities()">rtr</button>
+<!--    <button id="showSchedule" onclick="processActivities()">показать расписание</button>-->
 </div>
 <script>
 
@@ -195,24 +195,27 @@
     });
 
     window.activities = JSON.parse('{{ activities|safe}}');
-
-
-    console.log(window.activities)
+    window.addEventListener('load', function() {
+        processActivities();
+    });
 
     function processActivities() {
         for (let activity of window.activities) {
+            console.log(window.activities);
             var activityDate = new Date(activity.act_date);
             var day = activityDate.getDate();
 
             const elements = document.querySelectorAll('.dd');
-
+            console.log(elements)
             elements.forEach(element => {
                 let number = element.innerText.match(/\d+/)[0];
                 if (number === day.toString()) {
+                    console.log('done')
                     element.innerHTML += `<div style="background-color: darkgray; height: 20px; width: 50px; font-size: small">${activity.sport}</div>`;
                 }
             });
         }
     }
+
 </script>
 {% endblock %}
