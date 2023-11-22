@@ -40,7 +40,11 @@
 
                 cal.hMth.appendChild(opt);
             }
-            cal.hMth.onchange = cal.list;
+            // cal.hMth.onchange = cal.list;
+            cal.hMth.onchange = function(event) {
+                event.preventDefault();
+                cal.list();
+            };
 // ДОБАВИТЬ ВЫБОР ГОДОВ
 // Установим в диапазоне 4 лет. Измените это, как вам нравится.
             for (let i = nowYear - 4; i <= nowYear + 4; i++) {
@@ -176,7 +180,7 @@
 
 <div id="cal-wrap">
     <h1>Расписание</h1>
-    <div id="cal-date">
+    <div id="cal-date" style="margin-bottom: 50px">
         <form id="monthForm" method="GET" action="{% url 'schedule' %} ">
             <select name="selectedMonth" id="cal-mth"></select>
         </form>
@@ -186,7 +190,6 @@
 <!--    получить на фронт все данные и отслортировать-->
 
     <div id="cal-container"></div>
-<!--    <button id="showSchedule" onclick="processActivities()">показать расписание</button>-->
 </div>
 <script>
 
