@@ -1,14 +1,22 @@
+import { Link } from 'react-router-dom';
 import './App.css';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header>
-        <p>
-          Arena
-        </p>
-      </header>
-    </div>
+          <div className="App">
+              <header>
+                  <p>
+                      Arena
+                  </p>
+                  <nav>
+                      <ul>
+                          <li>
+                              <Link to="/trainers">Trainers</Link>
+                          </li>
+                      </ul>
+                  </nav>
+              </header>
+          </div>
   );
 }
 
