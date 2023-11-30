@@ -5,13 +5,16 @@ from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abon
     Presence, PurchaseHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.db.models import Q
+from .serializers import ClientSerializer
 import json
 from django.utils import timezone
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 
 
 def login_page(request):
@@ -538,3 +541,19 @@ def checkout_abonement(client_id):
             if abonement.activities_left == 0:
                 abonement.status = 'прошедший'
             abonement.save()
+
+@api_view(['GET','POST'])
+def client_list(request):
+    if request.method == 'GET':
+        clients = Client.objects.all()
+        serializer = ClientSerializer(clients, context={'request': request},many=True)
+        return JsonResponse(serializer.data, safe = False)
+
+    elif request.method == 'POST':
+        serializer = ClientSerializer(data=request.data)
+        print(request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status = status.HTTP_201_CREATED)
+        else:
+             Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
