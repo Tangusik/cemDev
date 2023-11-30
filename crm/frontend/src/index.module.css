@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
+
+/* ОБЩИЕ СТИЛИ */
+:global(html) {
+    font-size: 20px;
+}
+
+:global(body) {
+    font-size: 1em;
+}
+
+:global(*) {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    border: none;
+}
+
+:global(a) {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+:global(button) {
+    border: none;
+    outline: none;
+    background-color: #98C1D9;
+    color: #293241;
+    text-align: center;
+}
