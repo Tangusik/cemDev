@@ -10,57 +10,57 @@
 {% endblock %}
 
 {% block content %}
-<div class="container" style="background-color:  #98C1D9">
-    <div>
-        <div class="photo"></div>
-    </div>
-    <div class="container-text">
-        <h3>{{userinfo.last_name}} {{userinfo.first_name}} {{trainer.otchestv}}</h3>
-        <h4>Роль: {{trainer.role}}</h4>
-        <h4>Почта: {{userinfo.email}}</h4>
-        <h4>День рождения: {{trainer.birthdate}}</h4>
-        <h4>Статус: {{trainer.state}}</h4>
-        <button class="change_btn" style="margin-top: 30px" onclick="edit_data_modal()">Редактировать</button>
-    </div>
-</div>
+<!--<div class="container" style="background-color:  #98C1D9">-->
+<!--    <div>-->
+<!--        <div class="photo"></div>-->
+<!--    </div>-->
+<!--    <div class="container-text">-->
+<!--        <h3>{{userinfo.last_name}} {{userinfo.first_name}} {{trainer.otchestv}}</h3>-->
+<!--        <h4>Роль: {{trainer.role}}</h4>-->
+<!--        <h4>Почта: {{userinfo.email}}</h4>-->
+<!--        <h4>День рождения: {{trainer.birthdate}}</h4>-->
+<!--        <h4>Статус: {{trainer.state}}</h4>-->
+<!--        <button class="change_btn" style="margin-top: 30px" onclick="edit_data_modal()">Редактировать</button>-->
+<!--    </div>-->
+<!--</div>-->
 
 
-<div class="modal" id="modal_edit_data">
-    <div class="modal-content">
-        <div class="close" id="close_edit_data">&times;</div>
-        <div class="form">
-            <form class="decor" action="{% url 'profile_edit' %}" method="post">
-                {% csrf_token %}
-                <div class="form-left-decoration"></div>
-                <div class="form-right-decoration"></div>
-                <div class="circle"></div>
-                <div class="form-inner">
-                    <h3>Редактирование пользователя</h3>
-                    <input type="text" id="name" name="name" value="{{userinfo.first_name}}" placeholder="Имя">
-                    <input type="text" id="last_name" name="last_name" value="{{userinfo.last_name}}" placeholder="Фамилия">
-                    <input type="text" id="otchestcv" name="otchestcv" value="{{trainer.otchestv}}" placeholder="Отчество">
-                    <input type="text" id="email" name="email" value="{{userinfo.email}}" placeholder="Почта">
-                    <input type="submit" value="Добавить">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<!--<div class="modal" id="modal_edit_data">-->
+<!--    <div class="modal-content">-->
+<!--        <div class="close" id="close_edit_data">&times;</div>-->
+<!--        <div class="form">-->
+<!--            <form class="decor" action="{% url 'profile_edit' %}" method="post">-->
+<!--                {% csrf_token %}-->
+<!--                <div class="form-left-decoration"></div>-->
+<!--                <div class="form-right-decoration"></div>-->
+<!--                <div class="circle"></div>-->
+<!--                <div class="form-inner">-->
+<!--                    <h3>Редактирование пользователя</h3>-->
+<!--                    <input type="text" id="name" name="name" value="{{userinfo.first_name}}" placeholder="Имя">-->
+<!--                    <input type="text" id="last_name" name="last_name" value="{{userinfo.last_name}}" placeholder="Фамилия">-->
+<!--                    <input type="text" id="otchestcv" name="otchestcv" value="{{trainer.otchestv}}" placeholder="Отчество">-->
+<!--                    <input type="text" id="email" name="email" value="{{userinfo.email}}" placeholder="Почта">-->
+<!--                    <input type="submit" value="Добавить">-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
 
-<div id="todo">
-    <h3>Трекер задач</h3>
-    <div class="inputField">
-        <input type="text" id="myInput" placeholder="Add your new todo">
-        <button class="addBtn">Добавить</button>
-    </div>
-    <ul id="myUL" class="todoList">
-    </ul>
-    <div class="footer">
-        <span>You have <span class="pendingTasks"></span> pending tasks</span>
-        <button>Clear All</button>
-    </div>
-</div>
+<!--<div id="todo">-->
+<!--    <h3>Трекер задач</h3>-->
+<!--    <div class="inputField">-->
+<!--        <input type="text" id="myInput" placeholder="Add your new todo">-->
+<!--        <button class="addBtn">Добавить</button>-->
+<!--    </div>-->
+<!--    <ul id="myUL" class="todoList">-->
+<!--    </ul>-->
+<!--    <div class="footer">-->
+<!--        <span>You have <span class="pendingTasks"></span> pending tasks</span>-->
+<!--        <button>Clear All</button>-->
+<!--    </div>-->
+<!--</div>-->
 
 {% if role_trainer %}
 <div class="areas">
@@ -433,13 +433,13 @@
 </div>
 
 
-<div id="search_div">
-    <h3>Поиск</h3>
-    <div class="sub">
-        <input type="text" placeholder="Что желаете найти?">
-        <button>Найти</button>
-    </div>
-</div>
+<!--<div id="search_div">-->
+<!--    <h3>Поиск</h3>-->
+<!--    <div class="sub">-->
+<!--        <input type="text" placeholder="Что желаете найти?">-->
+<!--        <button>Найти</button>-->
+<!--    </div>-->
+<!--</div>-->
 
 
 <div class="container">
@@ -457,18 +457,18 @@
     </div>
 </div>
 
-<div class="slider">
-    {% for new in news %}
-    <div class="slider-field">
-        <h2 class="name">{{new.title}}</h2>
-        <div class="slider-text">
-            <h4>{{new.text}}</h4>
-        </div>
-    </div>
-    {% endfor %}
-    <button class="prevSlider">Prev</button>
-    <button class="nextSlider">Next</button>
-</div>
+<!--<div class="slider">-->
+<!--    {% for new in news %}-->
+<!--    <div class="slider-field">-->
+<!--        <h2 class="name">{{new.title}}</h2>-->
+<!--        <div class="slider-text">-->
+<!--            <h4>{{new.text}}</h4>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    {% endfor %}-->
+<!--    <button class="prevSlider">Prev</button>-->
+<!--    <button class="nextSlider">Next</button>-->
+<!--</div>-->
 
 
 {% endblock %}

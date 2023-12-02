@@ -1,0 +1,58 @@
+.slider {
+    position: relative;
+    width: 100%;
+    height: 30em;
+    overflow: hidden;
+    text-align: center;
+    background-color: #98C1D9;
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.name {
+    color: #293241;
+    padding-top: 20px;
+    padding-bottom: 60px;
+}
+
+
+.sliderField {
+    position: absolute;
+    margin-bottom: 20px;
+    opacity: 1;
+    margin-top: 100px;
+    width: 50em;
+}
+
+
+.sliderText {
+    color: #293241;
+}
+
+.sliderText h3 {
+    color: #293241;
+    padding-bottom: 60px;
+}
+
+.sliderField.active {
+    opacity: 1;
+}
+
+.slider button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    color: #24262b;
+    width: 100px;
+}
+
+.prevSlider {
+    left: 20px;
+}
+
+.nextSlider {
+    right: 20px;
+}
