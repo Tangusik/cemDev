@@ -38,4 +38,9 @@ urlpatterns = [
     path('client/<int:client_id>/add_balance', views.add_balance, name='add_balance'),
     path('client/<int:client_id>/buy_abonement', views.buy_abonement, name='buy_abonement'),
     path('client/<int:client_id>/delete_abonement/<int:abonement_id>', views.delete_abonement, name='delete_abonement'),
+
+
+
+#___________ Пока никто не ебёт что здесь происходит
+    path('react_test', views.client_list)
     ]

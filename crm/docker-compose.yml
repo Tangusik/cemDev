@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  django:
+    build: ./
+    container_name: django
+    restart: always
+    ports: 
+      - 8000:8000
+
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
+
+    networks:
+      - testnetwork
+
+  node:
+    build: ./frontend
+    container_name: react
+    restart: always
+    ports:
+      - 3000:3000
+    
+    command: npm start
+
+    depends_on:
+      - django
+    
+    networks:
+      - testnetwork
+
+networks:
+  testnetwork:
+    external: false
+
+

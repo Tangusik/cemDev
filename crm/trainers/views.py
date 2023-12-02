@@ -5,11 +5,16 @@ from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abon
     Presence, PurchaseHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.db.models import Q
+from .serializers import ClientSerializer
 import json
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 
 
 def login_page(request):
@@ -250,14 +255,59 @@ def trainers_add_action(request):
         return HttpResponseRedirect(reverse('trainers'))
 
 
+# def schedule(request):
+#     if request.user.is_authenticated:
+#         activities = Activity.objects.all()
+#         context = [activity.to_json() for activity in activities]
+#         context = json.dumps(context)
+#         return render(request, "trainers/schedule.html", {'activities': context})
+#     else:
+#         return HttpResponseRedirect(reverse('login_page'))
+# def schedule(request):
+#     if request.user.is_authenticated:
+#         month = request.POST['month']
+#         activities = Activity.objects.all()
+#         context = [activity.to_json() for activity in activities]
+#         return JsonResponse(context, safe=False)
+#     else:
+#         return HttpResponseRedirect(reverse('login_page'))
+
+# def schedule(request):
+#     if request.user.is_authenticated:
+#         activities = Activity.objects.filter(act_date__month=1)
+#         context = [activity.to_json() for activity in activities]
+#         return JsonResponse(context, safe=False)
+#     else:
+#         return HttpResponseRedirect(reverse('login_page'))
+# @csrf_exempt
+# def schedule(request):
+#     if request.user.is_authenticated:
+#         if request.method == 'POST':
+#             data = json.loads(request.body)
+#             selected_month = data.get('month')
+#             activities = Activity.objects.filter(act_date__month=selected_month)
+#         else:
+#             activities = Activity.objects.all()
+#
+#         context = [activity.to_json() for activity in activities]
+#         json_response = JsonResponse(context, safe=False)
+#         return render(request, "trainers/schedule.html", {'activities': json_response})
+#     else:
+#         return HttpResponseRedirect(reverse('login_page'))
 def schedule(request):
     if request.user.is_authenticated:
-        activities = Activity.objects.all()
+        selected_month = int(request.GET.get('selectedMonth', 0)) + 1
+        print("selected_month",selected_month)
+        activities = Activity.objects.filter(act_date__month=selected_month).order_by('act_date', 'act_time_begin')
         context = [activity.to_json() for activity in activities]
         context = json.dumps(context)
+        print(context)
         return render(request, "trainers/schedule.html", {'activities': context})
+#         return JsonResponse({'activities': context})
     else:
         return HttpResponseRedirect(reverse('login_page'))
+
+
 
 
 def sport_type_creation(request):
@@ -442,6 +492,7 @@ def add_balance(request, client_id):
     client.balance += int(added_money)
     client.save()
     return HttpResponseRedirect(reverse('client_info', args=[client_id]))
+
 def buy_abonement(request, client_id):
     client = get_object_or_404(Client, pk = client_id)
     abonement_id = request.POST['abonement']
@@ -490,3 +541,19 @@ def checkout_abonement(client_id):
             if abonement.activities_left == 0:
                 abonement.status = 'прошедший'
             abonement.save()
+
+@api_view(['GET','POST'])
+def client_list(request):
+    if request.method == 'GET':
+        clients = Client.objects.all()
+        serializer = ClientSerializer(clients, context={'request': request},many=True)
+        return JsonResponse(serializer.data, safe = False)
+
+    elif request.method == 'POST':
+        serializer = ClientSerializer(data=request.data)
+        print(request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status = status.HTTP_201_CREATED)
+        else:
+             Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
