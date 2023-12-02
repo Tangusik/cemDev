@@ -1,0 +1,25 @@
+.container{
+    padding-top: 5em;
+    min-height: 10em;
+    margin-bottom: 3em;
+}
+
+.container h3{
+    text-align: center;
+    color: #3D5A80;
+    margin-bottom: 2em;
+}
+
+.container p{
+    text-align: left;
+    color: #3D5A80;
+    padding-left: 2em;
+    padding-bottom: 1em;
+}
+
+.polosa {
+    height: 2em;
+    background-color: #3D5A80;
+}
+
+

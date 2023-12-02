@@ -151,14 +151,4 @@ input::-webkit-datetime-edit-year-field:focus {
     font-family: 'Roboto', sans-serif;
     align-items: center;
     color: #3D5A80;
-    /*-webkit-appearance: none;*/
-    /*-moz-appearance: none;*/
-    /*appearance: none;*/
-    /*padding: 0.5em;*/
-    /*border-radius: 5px;*/
-    /*border: 1px solid #ccc;*/
-    /*background-color: #dddddd;*/
-    /*color: #3c3c3c;*/
-    /*width: 100%;*/
-    /*height: 3em;*/
 }
