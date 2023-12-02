@@ -1,0 +1,108 @@
+/*HEADER*/
+.nav {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #43638d;
+
+    align-items: center;
+    height: 135px;
+    width: 100%;
+    gap: 6vw;
+}
+
+.container_header {
+    padding-right: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 3vw;
+    padding-left: 1em;
+}
+
+.nav button {
+    width: 100px;
+    font-size: 1em;
+    margin-right: 3vw;
+}
+
+.form_logout{
+    text-align: center;
+}
+
+.exit {
+    height: 2em;
+    width: 6em;
+    border-radius: 1em;
+    outline: none;
+    color: #293241;
+    text-align: center;
+    font-size: 1em;
+    margin-right: 3vw;
+}
+
+@media (max-width: 840px) {
+    .nav {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 200px;
+    }
+
+    .text {
+        display: none;
+    }
+
+    .nav button {
+        width: 70px;
+    }
+
+    #exit {
+        margin-right: 0;
+    }
+}
+
+/*МЕНЯЮЩИЙСЯ ТЕКСТ*/
+.text {
+    text-align: center;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.text p {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0;
+    color: #24262b;
+}
+
+.word {
+    position: absolute;
+    width: 220px;
+    opacity: 0;
+    color: #dddddd;
+}
+
+.letter {
+    display: inline-block;
+    position: relative;
+    float: left;
+    transform: translateZ(25px);
+    transform-origin: 50% 50% 25px;
+}
+
+.letter.out {
+    transform: rotateX(90deg);
+    transition: transform 0.32s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.letter.behind {
+    transform: rotateX(-90deg);
+}
+
+.letter.in {
+    transform: rotateX(0deg);
+    transition: transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
