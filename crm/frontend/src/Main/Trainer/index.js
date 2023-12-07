@@ -1,15 +1,20 @@
-import styles from './index.module.css';
 import Container from "../Container";
+import React from "react";
 
 const Trainer = () => {
     return (
         <div>
-            <Container title={"Мои группы и клиенты"}></Container>
-            <Container title={"Статусы сотрудников"}></Container>
-            <Container title={"Статусы клиентов"}></Container>
-            <Container title={"Площадки"}></Container>
-            <Container title={"Виды спорта"}></Container>
-            <Container title={"Абонементы"}></Container>
+            <Container
+                title={"Мои группы и клиенты"}
+                polosa={true}
+            ></Container>
+            <Container
+                title={"Ближайшие занятия"}
+                polosa={true}
+            ></Container>
+            <Container
+                title={"Прошедшие занятия"}
+            ></Container>
         </div>
     );
 }

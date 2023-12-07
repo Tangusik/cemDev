@@ -1,4 +1,8 @@
 .container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     padding-top: 5em;
     min-height: 10em;
     margin-bottom: 3em;
@@ -19,7 +23,7 @@
 
 .polosa {
     height: 2em;
-    background-color: #3D5A80;
+    background-color: #43638d;
 }
 
 
