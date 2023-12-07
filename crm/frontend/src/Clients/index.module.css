@@ -1,0 +1,20 @@
+.cards {
+    overflow: hidden;
+    width: 100%;
+    min-height: 300px;
+}
+
+.mainContent{
+    padding-top: 5em;
+    padding-bottom: 1em;
+    min-height: 35em;
+    background-color: rgb(152, 193, 217);
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin-bottom: 4em;
+}

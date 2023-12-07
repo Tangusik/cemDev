@@ -1,5 +1,14 @@
 .main{
-
+    height: 2em;
+    border-radius: 1em;
+    background-color: #43638d;
+    color: #dddddd;;
+    text-align: center;
+    font-size: 1em;
+    display: inline-block;
+    width: auto;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .change{
@@ -9,7 +18,6 @@
     color: #dddddd;
     text-align: center;
     font-size: 1em;
-    margin-right: 3vw;
     display: inline-block;
     width: auto;
     padding-left: 15px;

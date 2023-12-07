@@ -1,3 +1,52 @@
+/* Общий контейнер для календаря */
+/*.calendar {*/
+/*}*/
+
+/* Выбор месяца и года */
+.calendar select {
+    margin-right: 10px;
+}
+
+.calendarGrid {
+    max-width: 1800px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Стили для дней месяца */
+.calendarDay {
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 50px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Стили для пустых дней */
+.emptyDay {
+    background-color: #f0f0f0;
+    color: #999;
+}
+
+/* Стили для недели в календаре */
+.calendarWeek {
+    clear: both;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* вся страница */
 .calWrap * {
     text-align: center;
