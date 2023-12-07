@@ -1,15 +1,16 @@
 import React from 'react';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Search from "../components/Search";
 
-const Trainers = () => {
+const Colleagues = () => {
     return (
         <div>
             <Header></Header>
-            <h1>Trainers Page</h1>
+            <Search></Search>
             <Footer></Footer>
         </div>
     );
 }
 
-export default Trainers;
+export default Colleagues;

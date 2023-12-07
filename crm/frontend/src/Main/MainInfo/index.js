@@ -6,12 +6,13 @@ import Form from "../../components/Form";
 import React, {useState} from "react";
 
 const Container = () => {
-    const [showModal, setShowModal] = useState(false);
-    const handleEditMainDataOpen = () => {
-        setShowModal(true);
+    const [showMainDataModal, setShowMainDataModal] = useState(false);
+    const [showStateDataModal, setShowStateDataModal] = useState(false);
+    const handleEditMainData = () => {
+        setShowMainDataModal(!showMainDataModal);
     }
-    const handleEditMainDataClose = () => {
-        setShowModal(false);
+    const handleEditStateData = () => {
+        setShowStateDataModal(!showStateDataModal);
     }
     return (
         <div>
@@ -23,10 +24,41 @@ const Container = () => {
                 <h4>Почта: </h4>
                 <h4>День рождения: </h4>
                 <h4>Статус:</h4>
-                <Button type={"change"} style={{marginTop:  '30px'}} title={"Редактировать"} onClick={handleEditMainDataOpen}></Button>
+                <Button type={"change"} style={{marginTop:  '30px', marginRight: '10px'}} title={"Редактировать"} onClick={handleEditMainData}></Button>
+                <Button type={"change"} style={{marginTop:  '30px'}} title={"Изменить статус"} onClick={handleEditStateData}></Button>
             </div>
         </div>
-        {showModal && <EditModal onClose={handleEditMainDataClose} children={<Form></Form>}></EditModal>}
+        {showMainDataModal &&
+            <EditModal
+                onClose={handleEditMainData}
+                children={
+                    <Form
+                        title={'Редактирование профиля'}
+                        children={
+                            <div>
+                                <input type="text" name="name"  placeholder="Имя"/>
+                                <input type="text" name="last_name"  placeholder="Фамилия"/>
+                                <input type="text" name="otchestcv" placeholder="Отчество"/>
+                                <input type="text" name="email" placeholder="Почта"/>
+                                <input type="submit" value="Добавить"/>
+                            </div>}
+                    ></Form>}
+            ></EditModal>
+        }
+        {showStateDataModal &&
+            <EditModal
+                onClose={handleEditStateData}
+                children={
+                    <Form
+                        title={'Изменение статуса'}
+                        children={
+                            <div>
+                                <input type="text" name="state"  placeholder="Статус"/>
+                                <input type="submit" value="Изменить"/>
+                            </div>}
+                    ></Form>}
+            ></EditModal>
+        }
         </div>
     );
 }

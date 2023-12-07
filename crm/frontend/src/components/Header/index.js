@@ -15,7 +15,7 @@ const Header = () => {
                 </p>
             </div>
             <div className={styles.container_header}>
-                <Link to={"../trainers"}>Коллеги</Link>
+                <Link to={"../colleagues"}>Коллеги</Link>
                 <Link to={"../clients"}>Клиенты</Link>
                 <Link to={"../schedule"}>Расписание</Link>
                 <Link to={"../main"}>Главная</Link>

@@ -1,5 +1,5 @@
 /*FOOTER*/
-.nav_footer {
+.navFooter {
     width: 100%;
     background-color: #43638d;
     display: flex;
@@ -9,18 +9,18 @@
     height: 150px;
 }
 
-.footer-col {
+.footerCol {
     text-align: center;
 }
 
-.social-links {
+.socialLinks {
     display: flex;
     flex-direction: row;
     justify-content: center;
     gap: 10px;
 }
 
-.social-links a {
+.link{
     margin-top: 20px;
     height: 40px;
     width: 40px;
@@ -31,20 +31,20 @@
     transition: all 0.5s ease;
 }
 
-.footer-col .social-links a:hover {
+.link:hover {
     color: #24262b;
     background-color: #ffffff;
 }
 
 @media (max-width: 860px) {
-    .nav_footer {
+    .navFooter {
         display: flex;
         flex-direction: column;
         justify-content: center;
         height: 250px;
     }
 
-    .footer-col:nth-child(-n+2) {
+    .footerCol:nth-child(-n+2) {
         margin-bottom: 20px;
     }
 }

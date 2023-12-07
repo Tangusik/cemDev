@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.db.models import Q
 from .serializers import ClientSerializer
+from .serializers import ScheduleSerializer
 import json
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt

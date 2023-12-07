@@ -33,11 +33,12 @@
 }
 
 .exit {
+    background-color: #8DA6C6;
     height: 2em;
     width: 6em;
     border-radius: 1em;
     outline: none;
-    color: #293241;
+    color: black;
     text-align: center;
     font-size: 1em;
     margin-right: 3vw;

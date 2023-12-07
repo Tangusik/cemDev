@@ -14,6 +14,8 @@ services:
     networks:
       - testnetwork
 
+    volumes:
+      - .:/code
   node:
     build: ./frontend
     container_name: react
@@ -28,6 +30,9 @@ services:
     
     networks:
       - testnetwork
+
+    volumes:
+      - ./frontend:/code/frontend
 
 networks:
   testnetwork:
