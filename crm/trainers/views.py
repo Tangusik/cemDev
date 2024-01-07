@@ -8,8 +8,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.db.models import Q
-from .serializers import ClientSerializer
-from .serializers import ScheduleSerializer
+from .serializers import *
 import json
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -548,7 +547,7 @@ def client_list(request):
     if request.method == 'GET':
         clients = Client.objects.all()
         serializer = ClientSerializer(clients, context={'request': request},many=True)
-        return JsonResponse(serializer.data, safe = False)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
 
     elif request.method == 'POST':
         serializer = ClientSerializer(data=request.data)
@@ -558,3 +557,11 @@ def client_list(request):
             return Response(status = status.HTTP_201_CREATED)
         else:
              Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def trainer_list(request):
+    if request.method == 'GET':
+        trainers = Trainer.objects.all()
+        serializer = TarinerSerializer(trainers, context={'request': request}, many=True)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})                   
