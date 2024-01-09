@@ -244,33 +244,133 @@
 //
 // export default Calendar;
 
+
+
+//
+// import React, {Component, useEffect, useState} from 'react';
+// import styles from './index.module.css';
+// import Header from "../components/Header";
+// import Footer from "../components/Footer";
+// import axios from "axios";
+//
+// const Calendar = () => {
+//     const [schedule, setSchedule] = useState([]);
+//
+//     const now = new Date();
+//     const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
+//     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
+//     const [calendar, setCalendar] = useState([]);
+//
+//     const handleMonthChange = (event) => {
+//         setSelectedMonth(parseInt(event.target.value));
+//     };
+//
+//     const handleYearChange = (event) => {
+//         setSelectedYear(parseInt(event.target.value));
+//     };
+//
+//     useEffect(() => {
+//         const now = new Date(selectedYear, selectedMonth, 1);
+//         const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+//         const startDay = now.getDay();
+//
+//         const newCalendar = [];
+//         let week = [];
+//
+//         for (let i = 0; i < startDay - 1; i++) {
+//             week.push(
+//                 <div
+//                     key={`empty-${i}`}
+//                     className={`${styles.calendarDay} ${styles.emptyDay}`}
+//                 ></div>
+//             );
+//         }
+//
+//         for (let day = 1; day <= daysInMonth; day++) {
+//             week.push(
+//                 <div key={`day-${day}`} className={styles.calendarDay} style={{color: "darkgray"}}>
+//                     {day}
+//                 </div>
+//             );
+//
+//             if (week.length === 7) {
+//                 newCalendar.push(
+//                     <div
+//                         key={`week-${newCalendar.length}`}
+//                         className={styles.calendarWeek}
+//                     >
+//                         {week}
+//                     </div>
+//                 );
+//                 week = [];
+//             }
+//         }
+//
+//         while (week.length < 7) {
+//             week.push(
+//                 <div
+//                     key={`empty-end-${week.length}`}
+//                     className={`${styles.calendarDay} ${styles.emptyDay}`}
+//                 ></div>
+//             );
+//         }
+//
+//         newCalendar.push(
+//             <div
+//                 key={`week-${newCalendar.length}`}
+//                 className={styles.calendarWeek}
+//             >
+//                 {week}
+//             </div>
+//         );
+//
+//         setCalendar(newCalendar);
+//     }, [selectedMonth, selectedYear]);
+//
+//
+//     return (
+//             <div>
+//                 <Header></Header>
+//                 <div>
+//                     <select value={selectedMonth} onChange={handleMonthChange} style={{color: "black"}}>
+//                         {Array.from({ length: 12 }, (_, i) => (
+//                             <option key={`month-${i}`} value={i}>
+//                                 {new Date(selectedYear, i).toLocaleString('default', { month: 'short' })}
+//                             </option>
+//                         ))}
+//                     </select>
+//                     <select value={selectedYear} onChange={handleYearChange} style={{color: "black"}}>
+//                         {Array.from({ length: 9 }, (_, i) => now.getFullYear() - 4 + i).map((year) => (
+//                             <option key={`year-${year}`} value={year}>
+//                                 {year}
+//                             </option>
+//                         ))}
+//                     </select>
+//                 </div>
+//                 <div className={styles.calendarGrid}>{calendar}</div> {/* Использование класса из модуля стилей */}
+//                 <Footer></Footer>
+//             </div>
+//
+//         );
+// }
+//
+// export default Calendar;
+
+
+
+
 import React, {Component, useEffect, useState} from 'react';
 import styles from './index.module.css';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import axios from "axios";
+import moment from 'moment';
 
 const Calendar = () => {
     const [schedule, setSchedule] = useState([]);
-    // useEffect(() => {
-    //     const fetchClients = async () => {
-    //         try {
-    //             const port = 8000;
-    //             axios.defaults.baseURL = `http://localhost:${port}`;
-    //             const response = await axios.get('crm/react_schedule');
-    //             setClients(response.data);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     };
-    //
-    //     fetchClients();
-    // }, []);
 
     const now = new Date();
     const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
-    const [calendar, setCalendar] = useState([]);
 
     const handleMonthChange = (event) => {
         setSelectedMonth(parseInt(event.target.value));
@@ -280,89 +380,50 @@ const Calendar = () => {
         setSelectedYear(parseInt(event.target.value));
     };
 
-    useEffect(() => {
-        const now = new Date(selectedYear, selectedMonth, 1);
-        const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
-        const startDay = now.getDay();
+    const getDaysInMonth = (month, year) => {
+        const date = moment(`${year}-${month}`, 'YYYY-MM');
+        const days = date.daysInMonth();
+        return days;
+    };
 
-        const newCalendar = [];
-        let week = [];
-
-        for (let i = 0; i < startDay - 1; i++) {
-            week.push(
-                <div
-                    key={`empty-${i}`}
-                    className={`${styles.calendarDay} ${styles.emptyDay}`}
-                ></div>
-            );
+    const renderItems = () => {
+        const items = [];
+        for (let i = 0; i < getDaysInMonth(selectedMonth + 1, selectedYear); i++) {
+            items.push(<div className={styles.day} key={i}>{i+1}</div>);
         }
-
-        for (let day = 1; day <= daysInMonth; day++) {
-            week.push(
-                <div key={`day-${day}`} className={styles.calendarDay} style={{color: "darkgray"}}>
-                    {day}
-                </div>
-            );
-
-            if (week.length === 7) {
-                newCalendar.push(
-                    <div
-                        key={`week-${newCalendar.length}`}
-                        className={styles.calendarWeek}
-                    >
-                        {week}
-                    </div>
-                );
-                week = [];
-            }
-        }
-
-        while (week.length < 7) {
-            week.push(
-                <div
-                    key={`empty-end-${week.length}`}
-                    className={`${styles.calendarDay} ${styles.emptyDay}`}
-                ></div>
-            );
-        }
-
-        newCalendar.push(
-            <div
-                key={`week-${newCalendar.length}`}
-                className={styles.calendarWeek}
-            >
-                {week}
-            </div>
-        );
-
-        setCalendar(newCalendar);
-    }, [selectedMonth, selectedYear]);
+        return items;
+    };
 
 
     return (
+        <div>
+            <Header></Header>
+            <div className={styles.page}>
             <div>
-                <Header></Header>
-                <div>
-                    <select value={selectedMonth} onChange={handleMonthChange} style={{color: "black"}}>
-                        {Array.from({ length: 12 }, (_, i) => (
-                            <option key={`month-${i}`} value={i}>
-                                {new Date(selectedYear, i).toLocaleString('default', { month: 'short' })}
-                            </option>
-                        ))}
-                    </select>
-                    <select value={selectedYear} onChange={handleYearChange} style={{color: "black"}}>
-                        {Array.from({ length: 9 }, (_, i) => now.getFullYear() - 4 + i).map((year) => (
-                            <option key={`year-${year}`} value={year}>
-                                {year}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className={styles.calendarGrid}>{calendar}</div> {/* Использование класса из модуля стилей */}
-                <Footer></Footer>
+                <select value={selectedMonth} onChange={handleMonthChange} style={{color: "black"}}>
+                    {Array.from({ length: 12 }, (_, i) => (
+                        <option key={`month-${i}`} value={i}>
+                            {new Date(selectedYear, i).toLocaleString('default', { month: 'short' })}
+                        </option>
+                    ))}
+                </select>
+                <select value={selectedYear} onChange={handleYearChange} style={{color: "black"}}>
+                    {Array.from({ length: 9 }, (_, i) => now.getFullYear() - 4 + i).map((year) => (
+                        <option key={`year-${year}`} value={year}>
+                            {year}
+                        </option>
+                    ))}
+                </select>
             </div>
 
-        );
+            <div style={{color: 'black'}}>{selectedMonth + 1} {selectedYear}</div>
+            <div style={{color: 'black'}}>{getDaysInMonth(selectedMonth + 1, selectedYear)}</div>
+                <div className={styles.calendar}><div className={styles.container}>{renderItems()}</div></div>
+            </div>
+            <Footer></Footer>
+        </div>
+
+    );
 }
 
 export default Calendar;
