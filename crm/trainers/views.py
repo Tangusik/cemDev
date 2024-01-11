@@ -24,20 +24,20 @@ def login_page(request):
         return render(request, 'trainers/login.html')
 
 
-def log_in(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
-        return HttpResponseRedirect(reverse('login_page'))
-    else:
-        return HttpResponseRedirect(reverse('main'))
+#def log_in(request):
+    #username = request.POST['username']
+    #password = request.POST['password']
+    #user = authenticate(request, username=username, password=password)
+    #if user is not None:
+        #login(request, user)
+        #return HttpResponseRedirect(reverse('login_page'))
+    #else:
+        #return HttpResponseRedirect(reverse('main'))
 
 
-def log_out(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('login_page'))
+#def log_out(request):
+    #logout(request)
+    #return HttpResponseRedirect(reverse('login_page'))
 
 
 def main(request):
@@ -556,7 +556,7 @@ def client_list(request):
             serializer.save()
             return Response(status = status.HTTP_201_CREATED)
         else:
-             Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -564,4 +564,29 @@ def trainer_list(request):
     if request.method == 'GET':
         trainers = Trainer.objects.all()
         serializer = TarinerSerializer(trainers, context={'request': request}, many=True)
-        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})                   
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})       
+
+@api_view(['POST'])
+def log_in(request):
+    serializer = UserAuthSerializer(data = request.data)
+    print(request.data)
+    if serializer.is_valid():
+        user = authenticate(request, username=serializer.email, password=serializer.password)
+        if user is not None:
+            login(request, user)
+            return Response(status=status.HTTP_202_ACCEPTED)
+            print('вошёл как к себе домой')
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+    else:
+        Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def log_out(request):
+    if request.user.is_authenticated:
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+  

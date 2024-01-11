@@ -14,6 +14,12 @@ class ScheduleSerializer(serializers.ModelSerializer):
         fields = ('area', 'act_date', 'act_time_begin',
         'sport')
 
+class UserAuthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["email", "password"]
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -22,8 +28,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 class TarinerSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    #state = serializers.Field(source='state.name')
-    #role = serializers.Field(source='role.name')
 
     class Meta:
         model = Trainer
