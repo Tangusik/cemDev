@@ -1,7 +1,7 @@
 from .models import *
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.serializers import CharField
+from rest_framework.serializers import CharField, Serializer
 
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,14 +15,15 @@ class ScheduleSerializer(serializers.ModelSerializer):
         fields = ('area', 'act_date', 'act_time_begin',
         'sport')
 
-class UserAuthSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
+class UserAuthSerializer(Serializer):
+    
+    model = User
         
-        username = CharField(required=True)
-        password = CharField(required=True)
+    username = CharField(required=True)
+    password = CharField(required=True)
 
-        fields = ['username', 'password']
+
+        
 
 
 

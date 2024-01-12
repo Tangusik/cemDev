@@ -577,11 +577,12 @@ def log_in(request):
         user = authenticate(**serializer.validated_data)
         if user is not None:
             login(request, user)
-            return Response(status=status.HTTP_202_ACCEPTED)
+            return Response({'status': 'Success'})
         else:
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': 'Invalid credentials'}, status=403)
     else:
-        Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=400)
+    
 
 
 @api_view(['GET'])

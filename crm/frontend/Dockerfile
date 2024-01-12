@@ -8,5 +8,6 @@ ADD ./public ./public
 ADD ./src ./src
 
 RUN npm install
+RUN npm update
 
 
