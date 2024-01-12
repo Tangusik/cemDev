@@ -16,6 +16,7 @@ services:
 
     volumes:
       - .:/code
+      
   node:
     build: ./frontend
     container_name: react

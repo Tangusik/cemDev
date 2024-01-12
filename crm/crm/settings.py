@@ -1,11 +1,11 @@
 import os
 from pathlib import Path
+from .secret import secret
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'django-insecure-_bohd@6z4l2x@ox&b&cvo6i6&_r@xvp@&%1(4g^(w7gpq)-g4a'
-
+SECRET_KEY = secret()
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -86,6 +86,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
 
 LANGUAGE_CODE = 'en-us'
 
@@ -96,9 +102,12 @@ USE_I18N = True
 USE_TZ = True
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),]
+    BASE_DIR / "static"
+]
 
-
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

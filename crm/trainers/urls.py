@@ -42,5 +42,6 @@ urlpatterns = [
 
 
 #___________ Пока никто не ебёт что здесь происходит
-    path('react_test', views.client_list)
+    path('react_test', views.client_list),
+    path('react_test1', views.trainer_list)
     ]

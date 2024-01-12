@@ -1,4 +1,4 @@
 crm/db.sqlite3
-/.idea/
+**/__pycache__/
 venv
-**/__pycache__
+crm/crm/secret.py
