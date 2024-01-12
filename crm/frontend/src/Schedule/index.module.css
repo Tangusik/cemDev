@@ -1,170 +1,3 @@
-/* Общий контейнер для календаря */
-/*.calendar {*/
-/*}*/
-
-/* Выбор месяца и года */
-/*.calendar select {*/
-/*    margin-right: 10px;*/
-/*}*/
-
-/*.calendarGrid {*/
-/*    max-width: 1800px;*/
-/*    margin-top: 20px;*/
-/*    text-align: center;*/
-/*}*/
-
-/*!* Стили для дней месяца *!*/
-/*.calendarDay {*/
-/*    width: 150px;*/
-/*    height: 150px;*/
-/*    display: inline-block;*/
-/*    vertical-align: top;*/
-/*    line-height: 50px;*/
-/*    border: 1px solid #ccc;*/
-/*    box-sizing: border-box;*/
-/*}*/
-
-/*!* Стили для пустых дней *!*/
-/*.emptyDay {*/
-/*    background-color: #f0f0f0;*/
-/*    color: #999;*/
-/*}*/
-
-/*!* Стили для недели в календаре *!*/
-/*.calendarWeek {*/
-/*    clear: both;*/
-/*}*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*!* вся страница *!*/
-/*.calWrap * {*/
-/*    text-align: center;*/
-/*    margin: auto;*/
-/*}*/
-/*.calWrap {*/
-/*    margin-bottom: 100px;*/
-/*}*/
-/*.ninja {*/
-/*    display: none !important;*/
-/*}*/
-/*!* CONTAINER *!*/
-/*.calContainer {*/
-/*    max-width: 1200px;*/
-/*    margin-top: 20px;*/
-/*}*/
-/*!* ВЫБОР ПЕРИОДА *!*/
-/*.calDate {*/
-/*    display: flex;*/
-/*    height: 20px;*/
-
-/*}*/
-/*.calMth, .calYr {*/
-/*    box-sizing: border-box;*/
-/*    padding: 10px 20px;*/
-/*    font-size: 1.2em;*/
-/*    border: 0;*/
-/*    color: #293241;*/
-/*}*/
-/*!* КАЛЕНДАРЬ *!*/
-/*.calendar {*/
-/*    table-layout: fixed;*/
-/*    word-break: break-all;*/
-/*    width: 100%;*/
-/*    border-collapse: collapse;*/
-/*}*/
-/*.calendar tr.head td {*/
-/*    font-weight: bold;*/
-/*    text-transform: uppercase;*/
-/*    color: #fff;*/
-/*    background: #3D5A80;*/
-/*    padding: 15px;*/
-/*    text-align: center;*/
-/*}*/
-/*.calendar tr.day td {*/
-/*    border: 1px solid #ddd;*/
-/*    width: 14.28%;*/
-/*    padding: 75px 5px;*/
-/*    vertical-align: top;*/
-/*}*/
-/*.calendar tr.day td:hover {*/
-/*    background: #fff9e4;*/
-/*    cursor: pointer;*/
-/*}*/
-/*.calendar tr td.blank {*/
-/*    background: #f5f5f5;*/
-/*}*/
-/*.calendar tr td.today {*/
-/*    background: #98C1D9;*/
-/*}*/
-/*.calendar .dd {*/
-/*    font-size: 1.2em;*/
-/*    color: #999;*/
-/*    text-align: right;*/
-/*    margin-top: -60px;*/
-/*}*/
-/*.calendar .evt {*/
-/*    margin-top: 5px;*/
-/*    font-size: 0.8em;*/
-/*    font-weight: bold;*/
-/*    overflow: hidden;*/
-/*    color: #3D5A80;*/
-/*}*/
-
-
-
-
-/*!* ДОБАВИТЬ/РЕДАКТИРОВАТЬ СОБЫТИЕ *!*/
-/*.cal-event {*/
-/*    max-width: 1000px;*/
-/*    table-layout: fixed;*/
-/*    padding: 15px;*/
-/*    margin-top: 20px;*/
-/*    background: #f5f5f5;*/
-/*    border: 1px solid #ddd;*/
-/*}*/
-/*.cal-event h1 {*/
-/*    color: #333;*/
-/*    padding: 0;*/
-/*    margin: 0;*/
-/*}*/
-/*.evt-date {*/
-/*    color: #555;*/
-/*    margin: 10px 0;*/
-/*}*/
-/*.cal-event textarea {*/
-/*    display: block;*/
-/*    box-sizing: border-box;*/
-/*    width: 100%;*/
-/*    padding: 10px;*/
-/*    margin: 10px 0;*/
-/*    border: 1px solid #ddd;*/
-/*    min-height: 100px;*/
-/*}*/
-/*.cal-event input[type=button], #cal-event input[type=submit] {*/
-/*    padding: 10px;*/
-/*    margin: 5px;*/
-/*    font-size: 1.2em;*/
-/*    border: 0;*/
-/*    background: #3D5A80;*/
-/*    color: #fff;*/
-/*}*/
-
-/*.calendar .dd  .desc {*/
-/*    color: #293241;*/
-/*    font-size: 0.7em;*/
-/*}*/
-
 .page{
     width: 100%;
     display: flex;
@@ -174,12 +7,49 @@
     justify-content: center;
 }
 
+.selects {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.select {
+    height: 30px;
+    width: 80px;
+
+    cursor: pointer;
+
+    border-radius: 1em;
+
+    text-align-last: center;
+    font-size: 16px;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+    color: #1b1b1b;
+    background: transparent;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.select:hover {
+    background-color: #eeeaf1;
+}
+
 .container {
     width: 200px;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     margin-bottom: 100px;
 }
+
 
 .day {
     height: 200px;
@@ -189,8 +59,127 @@
     margin-bottom: 1px;
     margin-right: 1px;
     text-align: right;
+    opacity: 0.8;
+    overflow: hidden;
+}
+
+.day:hover {
+    background-color: #8DA6C6;
+    opacity: 1;
+    cursor: pointer;
+}
+
+.number {
+    color: #1b1b1b;
+    text-align: right !important;
+    padding-top: 5px;
+    padding-right: 5px;
+    margin-bottom: 10px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.emptyDay {
+    height: 200px;
+    width: 200px;
+    background-color: white;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    text-align: right;
 }
 
 .calendar {
      width: 1400px;
+}
+
+.weekdays {
+    width: 1400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    justify-content: center;
+}
+
+.weekday {
+    height: 20px;
+    width: 200px;
+    background-color: white;
+    color: #1b1b1b;
+    margin-bottom: 10px;
+    margin-right: 1px;
+    text-align: center;
+}
+
+.data {
+    width: 150px;
+    padding: 2px 15px 2px 15px;
+    margin-bottom: 5px;
+
+    background-color: white;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    border-radius: 1em;
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    justify-content: space-between;
+}
+
+.sport {
+    width: 100px;
+    color: #1b1b1b;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    text-align: left;
+}
+
+.time {
+    display: flex;
+    flex-direction: column;
+}
+
+.hideData {
+    display: none;
+}
+
+.openData {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.data:hover .hideData{
+    display: block;
+    color: #1b1b1b;
+    text-align: center;
+    font-size: smaller;
+}
+
+.cardMainContainer {
+    padding-top: 250px;
+    padding-bottom: 50px;
+
+}
+.card {
+    position: relative;
+    max-width: 400px;
+    min-height: 100px;
+    margin: 0 auto 0;
+
+    z-index: 5;
+    max-height: 400px;
+    background-color: #3D5A80;
+
+    border-radius: 1em;
+
+    text-align: center;
 }
