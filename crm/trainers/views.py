@@ -1,20 +1,23 @@
 import datetime
 from datetime import date, timedelta
+from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
-from .models import Client, Team, Trainer, Activity, News, Area, SportType, Abonement, TrainerState, ClientState, Role, \
-    Presence, PurchaseHistory
+from .models import *
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.db.models import Q
-from .serializers import *
 import json
-from django.utils import timezone
+
 from django.views.decorators.csrf import csrf_exempt
+
+from .serializers import *
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication
 
 
 def login_page(request):
@@ -566,18 +569,17 @@ def trainer_list(request):
         serializer = TarinerSerializer(trainers, context={'request': request}, many=True)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})       
 
+
 @api_view(['POST'])
 def log_in(request):
     serializer = UserAuthSerializer(data = request.data)
-    print(request.data)
     if serializer.is_valid():
-        user = authenticate(request, username=serializer.email, password=serializer.password)
+        user = authenticate(**serializer.validated_data)
         if user is not None:
             login(request, user)
             return Response(status=status.HTTP_202_ACCEPTED)
-            print('вошёл как к себе домой')
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_403_FORBIDDEN)
     else:
         Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

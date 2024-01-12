@@ -1,6 +1,7 @@
 from .models import *
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.serializers import CharField
 
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,7 +18,12 @@ class ScheduleSerializer(serializers.ModelSerializer):
 class UserAuthSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["email", "password"]
+        
+        username = CharField(required=True)
+        password = CharField(required=True)
+
+        fields = ['username', 'password']
+
 
 
 class UserSerializer(serializers.ModelSerializer):
