@@ -9,11 +9,10 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'reg_date', 'birth_date', 'state', 'balance')
 
 
-class ScheduleSerializer(serializers.ModelSerializer):
+class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
-        fields = ('area', 'act_date', 'act_time_begin',
-        'sport')
+        fields = ("__all__")
 
 class UserAuthSerializer(Serializer):
     
@@ -21,6 +20,7 @@ class UserAuthSerializer(Serializer):
         
     username = CharField(required=True)
     password = CharField(required=True)
+
 
 
         
