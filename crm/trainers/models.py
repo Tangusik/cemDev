@@ -56,6 +56,8 @@ class Address(models.Model):
 class Area(models.Model):
     address = models.CharField(blank=True, max_length=50, default='Адрес площадки')
 
+    def __str__(self):
+        return self.address
 
 class Parents(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
