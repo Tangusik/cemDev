@@ -297,18 +297,18 @@ def trainers_add_action(request):
 #         return render(request, "trainers/schedule.html", {'activities': json_response})
 #     else:
 #         return HttpResponseRedirect(reverse('login_page'))
-def schedule(request):
-    if request.user.is_authenticated:
-        selected_month = int(request.GET.get('selectedMonth', 0)) + 1
-        print("selected_month",selected_month)
-        activities = Activity.objects.filter(act_date__month=selected_month).order_by('act_date', 'act_time_begin')
-        context = [activity.to_json() for activity in activities]
-        context = json.dumps(context)
-        print(context)
-        return render(request, "trainers/schedule.html", {'activities': context})
-#         return JsonResponse({'activities': context})
-    else:
-        return HttpResponseRedirect(reverse('login_page'))
+# def schedule(request):
+#     if request.user.is_authenticated:
+#         selected_month = int(request.GET.get('selectedMonth', 0)) + 1
+#         print("selected_month",selected_month)
+#         activities = Activity.objects.filter(act_date__month=selected_month).order_by('act_date', 'act_time_begin')
+#         context = [activity.to_json() for activity in activities]
+#         context = json.dumps(context)
+#         print(context)
+#         return render(request, "trainers/schedule.html", {'activities': context})
+# #         return JsonResponse({'activities': context})
+#     else:
+#         return HttpResponseRedirect(reverse('login_page'))
 
 
 
@@ -596,11 +596,13 @@ def log_out(request):
 
 @api_view(['GET'])                  #В расписании занятия одного тренера, а не всех
 def sсhedule1(request):
-    trainer = Trainer.objects.get(user=request.user.id)
-    acts = Activity.objects.filter(trainer = trainer)
-    serializer = ActivitySerializer(acts, context={'request': request},many=True)
-    return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
-
+    if request.user.is_authenticated:
+        trainer = Trainer.objects.get(user=request.user.id)
+        acts = Activity.objects.filter(trainer = trainer)
+        serializer = ActivitySerializer(acts, context={'request': request},many=True)
+        return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 #@api_view(['GET'])              #страница одного клиента
 #def client_info

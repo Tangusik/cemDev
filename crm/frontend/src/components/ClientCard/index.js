@@ -23,7 +23,7 @@ const ClientCard = (props) =>{
                             <h1>
                                 {firstName} {lastName}
                             </h1>
-                            <p><a href='clients'>Студент.Ссылка</a></p>
+                            <p><a href='client/{id}'>Студент.Ссылка</a></p>
                         </div>
                     </div>
                 </div>

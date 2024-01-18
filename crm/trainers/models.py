@@ -4,13 +4,11 @@ import datetime
 
 class Role(models.Model):
     name = models.CharField(blank=True, max_length=30)
-
     def __str__(self):
             return self.name
 
 class ClientState(models.Model):
     name = models.CharField(blank=True, max_length=30)
-
     def __str__(self):
         return self.name
 

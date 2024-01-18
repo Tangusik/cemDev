@@ -4,17 +4,10 @@ from rest_framework import serializers
 from rest_framework.serializers import CharField, Serializer
 
 class ClientSerializer(serializers.ModelSerializer):
+    state = serializers.StringRelatedField()
     class Meta:
         model = Client
-        fields = ('first_name', 'last_name', 'reg_date', 'birth_date', 'state', 'balance',"id")
-        depth = 1
-
-
-class ScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Activity
-        fields = ('area', 'act_date', 'act_time_begin', 'sport')
-        depth = 1
+        fields = ('first_name', 'last_name', 'reg_date', 'birth_date', 'state', 'balance', 'id')
 
 class UserAuthSerializer(Serializer):
     model = User
@@ -35,12 +28,11 @@ class TrainerSerializer(serializers.ModelSerializer):
         fields = ['user', 'otchestv', 'birthdate', 'role', 'state']
         depth = 1
 
-
 class ActivitySerializer(serializers.ModelSerializer):
-    trainer = TarinerSerializer()
+    trainer = TrainerSerializer()
     clients = ClientSerializer(many=True)
-    area=  serializers.StringRelatedField()
-    sport=  serializers.StringRelatedField()
+    area = serializers.StringRelatedField()
+    sport = serializers.StringRelatedField()
     class Meta:
         model = Activity
         fields = ("__all__")
@@ -50,4 +42,3 @@ class EmployeeRolesSerializer(Serializer):
 
 class EmployeeStatesSerializer(Serializer):
     name = CharField(required=True)
-
