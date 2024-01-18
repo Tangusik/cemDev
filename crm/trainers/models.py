@@ -93,17 +93,17 @@ class Activity(models.Model):
     status = models.CharField(max_length=20, default="Состоится")
     sport = models.ForeignKey(SportType, models.DO_NOTHING, blank=False, null=True)
 
-    def to_json(self):
-        return {
-            'act_date': self.act_date.strftime('%Y-%m-%d'),
-            'act_time_begin': self.act_time_begin.strftime('%H:%M:%S'),
-            'act_time_end': self.act_time_end.strftime('%H:%M:%S'),
-            'area': self.area.address,
-#             'clients': [client.id for client in self.clients.all()],
-            'trainer': self.trainer.user.first_name,
-            'status': self.status,
-            'sport': self.sport.title,
-        }
+#     def to_json(self):
+#         return {
+#             'act_date': self.act_date.strftime('%Y-%m-%d'),
+#             'act_time_begin': self.act_time_begin.strftime('%H:%M:%S'),
+#             'act_time_end': self.act_time_end.strftime('%H:%M:%S'),
+#             'area': self.area.address,
+# #             'clients': [client.id for client in self.clients.all()],
+#             'trainer': self.trainer.user.first_name,
+#             'status': self.status,
+#             'sport': self.sport.title,
+#         }
 
 class Presence(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.DO_NOTHING)

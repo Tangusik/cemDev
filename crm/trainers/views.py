@@ -585,7 +585,7 @@ def client_list(request):
 def trainer_list(request):
     if request.method == 'GET':
         trainers = Trainer.objects.all()
-        serializer = TarinerSerializer(trainers, context={'request': request}, many=True)
+        serializer = TrainerSerializer(trainers, context={'request': request}, many=True)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})       
 
 
