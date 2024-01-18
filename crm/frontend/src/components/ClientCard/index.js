@@ -10,6 +10,7 @@ const ClientCard = (props) =>{
                 <div className={styles.cards_elements}>
                     <div className={styles.card}>
                         <div className={styles.front}>
+                            <p>{id}</p>
                             <p>{birthday}</p>
                             <h1>
                                 {firstName} {lastName}
@@ -22,7 +23,7 @@ const ClientCard = (props) =>{
                             <h1>
                                 {firstName} {lastName}
                             </h1>
-                            <p><a href="client/{id}">Студент.Ссылка</a></p>
+                            <p><a href='clients'>Студент.Ссылка</a></p>
                         </div>
                     </div>
                 </div>

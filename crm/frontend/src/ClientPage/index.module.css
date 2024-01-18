@@ -1,0 +1,215 @@
+.studentPage {
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+}
+
+.side {
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 30%;
+    background-color: #d87d56;
+    width: 100%;
+}
+
+.main {
+    overflow: hidden;
+    background-color: #F1FFFF;
+    flex: 70%;
+    width: 100%;
+}
+
+.container {
+    width: 100%;
+    height: 20em;
+    background-color: #F1FFFF;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/*ГЛАВНАЯ ПРО СТУДЕНТА*/
+.studentData {
+    margin-top: 30px;
+    color: #dddddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.studentData > * {
+    margin-bottom: 1em;
+}
+
+@media screen and (max-width: 950px) {
+    .studentPage {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+
+
+/*НАВЫКИ*/
+.skills {
+    background-color: #3D5A80;
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.skills h3 {
+    text-align: center;
+    color: #dddddd;
+    margin-bottom: 30px;
+}
+
+.skills p {
+    color: #dddddd;
+    margin-bottom: 5px;
+}
+
+.containerSkills {
+    width: 50vw;
+    background-color: #ddd;
+    margin-bottom: 30px;
+}
+
+.skills {
+    text-align: right;
+    padding-top: 1vw;
+    padding-bottom: 1vw;
+    color: white;
+    padding-right: 5px;
+}
+
+.html {
+    width: 90%;
+    background-color: #d87d56;
+}
+
+.css {
+    width: 80%;
+    background-color: #EE6C4D;
+}
+
+.js {
+    width: 65%;
+    background-color: #d87d56;
+}
+
+.php {
+    width: 60%;
+    background-color: #EE6C4D;
+}
+
+@media screen and (max-width: 950px) {
+    .containerSkills {
+        width: 90vw;
+    }
+}
+
+.ecip{
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.ecip h3, .ecip h4{
+    color: #3c3c3c;
+}
+
+
+.containerText{
+    padding-right: 2em;
+    margin-left: 2em;
+}
+
+.containerText h4 {
+    color: #293241;
+}
+
+.containerText h3 {
+    margin-bottom: 1em;
+    color: #293241;
+}
+
+.containerText ul li a{
+    color: #293241;
+    display: none;
+}
+
+.changeBtn {
+    height: 2em;
+    border-radius: 1em;
+    background-color: #3D5A80;
+    color: #dddddd;
+    text-align: center;
+    font-size: 1em;
+    margin-right: 3vw;
+    display: inline-block;
+    width: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+
+/*!*ПРЯМОУГОЛЬНИКИ*!*/
+.rectangle {
+    text-align: center;
+    overflow: hidden;
+    height: 12em;
+    width: 10em;
+    border-radius: 2em;
+}
+
+.rectangleLeft {
+    background-color: #98C1D9;
+    transform: rotate(-18deg);
+}
+
+.rectangleRight {
+    transform: rotate(18deg);
+    margin-left: 13em;
+
+}
+
+.rectangleFront {
+    color: #dddddd;
+    background-color: #3D5A80;
+    margin-top: -10em;
+}
+
+.rectangleBack{
+    margin-left: 7em;
+    margin-right: 5em;
+    background-color: #98C1D9;
+}
+
+.rectangleBack h2 , .rectangleBack h1{
+    color: #3D5A80;
+
+}
+
+.rectangleFront h2, .rectangleFront h1{
+    color: #dddddd;
+}
+
+.list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+}

@@ -33,6 +33,8 @@ const Colleagues = () => {
                     <ColleagueCard
                         id={colleague.id}
                         name={colleague.user.first_name}
+                        lastName={colleague.user.last_name}
+                        surname={colleague.otchestv}
                         birthdate={colleague.birthdate}
                         role={colleague.role.name}
                         state={colleague.state.name}

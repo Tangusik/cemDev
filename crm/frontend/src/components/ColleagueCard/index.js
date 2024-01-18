@@ -1,24 +1,31 @@
 import styles from './index.module.css';
 
-const ClientCard = (props) =>{
-    const { id, name, birthdate, role, state } = props;
+const ColleagueCard = (props) =>{
+    const { id, name, lastName, surname, birthdate, role, state } = props;
     return (
-                <div className={styles.cards_elements}>
                     <div className={styles.card}>
                         <div className={styles.front}>
-                            <p>{name}</p>
                             <p>{birthdate}</p>
+                            <div style={{lineHeight: '10px'}}>
+                                <p>{lastName}</p>
+                                <p>{name}</p>
+                                <p>{surname}</p>
+                            </div>
                             <p>{role}</p>
                             <p>{state}</p>
                         </div>
                         <div className={styles.back}>
-                            <p>{name}</p>
                             <p>{birthdate}</p>
+                            <div style={{lineHeight: '10px'}}>
+                                <p>{lastName}</p>
+                                <p>{name}</p>
+                                <p>{surname}</p>
+                            </div>
                             <p>{role}</p>
                             <p>{state}</p>
+                            <p>ссылка</p>
                         </div>
                     </div>
-                </div>
     )
 }
-export default ClientCard;
+export default ColleagueCard;

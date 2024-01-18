@@ -7,6 +7,7 @@ import Schedule from "./Schedule";
 import Clients from "./Clients";
 import Sign from "./Sign";
 import Colleagues from "./Colleagues";
+import ClientPage from "./ClientPage";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -17,6 +18,7 @@ root.render(
             <Route path="clients" element={<Clients />} />
             <Route path="schedule" element={<Schedule />} />
             <Route path="main" element={<Main />} />
+            <Route path="client" element={<ClientPage />} />
         </Routes>
     </BrowserRouter>,
 );
