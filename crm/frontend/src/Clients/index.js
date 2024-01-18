@@ -66,7 +66,7 @@ const Clients = () => {
                                     firstName={client.first_name}
                                     lastName={client.last_name}
                                     birthday={client.birth_date}
-                                    state={client.state.name}
+                                    state={client.state}
                                     balance={client.balance}
                                 >
                                 </ClientCard>
