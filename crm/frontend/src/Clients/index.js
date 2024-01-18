@@ -36,7 +36,7 @@ const Clients = () => {
             try {
                 const port = 8000;
                 axios.defaults.baseURL = `http://localhost:${port}`;
-                const response = await axios.get('crm/react_test');
+                const response = await axios.get('crm/client_list');
                 setClients(response.data);
             } catch (error) {
                 console.error(error);
@@ -66,7 +66,7 @@ const Clients = () => {
                                     firstName={client.first_name}
                                     lastName={client.last_name}
                                     birthday={client.birth_date}
-                                    state={client.state}
+                                    state={client.state.name}
                                     balance={client.balance}
                                 >
                                 </ClientCard>

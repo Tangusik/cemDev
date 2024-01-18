@@ -14,8 +14,8 @@ const Main = () => {
             <Header></Header>
             <MainInfo></MainInfo>
             <ToDoList></ToDoList>
-            <Trainer></Trainer>
-            {/*<Admin></Admin>*/}
+            {/*<Trainer></Trainer>*/}
+            <Admin></Admin>
             <Search></Search>
             <Slider title={"Новости"} text={"Какой-то текст"}></Slider>
             <Footer></Footer>
