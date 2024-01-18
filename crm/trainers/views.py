@@ -592,4 +592,15 @@ def log_out(request):
         return Response(status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-  
+
+
+@api_view(['GET'])                  #В расписании занятия одного тренера, а не всех
+def sсhedule1(request):
+    trainer = Trainer.objects.get(user=request.user.id)
+    acts = Activity.objects.filter(trainer = trainer)
+    serializer = ActivitySerializer(acts, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
+
+
+#@api_view(['GET'])              #страница одного клиента
+#def client_info

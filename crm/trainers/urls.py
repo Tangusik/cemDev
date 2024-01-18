@@ -41,7 +41,8 @@ urlpatterns = [
 
 
 
-#___________ Пока никто не ебёт что здесь происходит
+#___________
     path('react_test', views.client_list),
-    path('react_test1', views.trainer_list)
+    path('react_test1', views.trainer_list),
+    path("schedule1", views.sсhedule1)
     ]
