@@ -12,11 +12,6 @@ class ClientSerializer(serializers.ModelSerializer):
 
 
 
-class ScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Activity
-        fields = ('area', 'act_date', 'act_time_begin', 'sport')
-        depth = 1
 
 class UserAuthSerializer(Serializer):
     model = User
