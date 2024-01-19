@@ -298,18 +298,18 @@ def trainers_add_action(request):
 #         return render(request, "trainers/schedule.html", {'activities': json_response})
 #     else:
 #         return HttpResponseRedirect(reverse('login_page'))
-def schedule(request):
-    if request.user.is_authenticated:
-        selected_month = int(request.GET.get('selectedMonth', 0)) + 1
-        print("selected_month",selected_month)
-        activities = Activity.objects.filter(act_date__month=selected_month).order_by('act_date', 'act_time_begin')
-        context = [activity.to_json() for activity in activities]
-        context = json.dumps(context)
-        print(context)
-        return render(request, "trainers/schedule.html", {'activities': context})
-#         return JsonResponse({'activities': context})
-    else:
-        return HttpResponseRedirect(reverse('login_page'))
+# def schedule(request):
+#     if request.user.is_authenticated:
+#         selected_month = int(request.GET.get('selectedMonth', 0)) + 1
+#         print("selected_month",selected_month)
+#         activities = Activity.objects.filter(act_date__month=selected_month).order_by('act_date', 'act_time_begin')
+#         context = [activity.to_json() for activity in activities]
+#         context = json.dumps(context)
+#         print(context)
+#         return render(request, "trainers/schedule.html", {'activities': context})
+# #         return JsonResponse({'activities': context})
+#     else:
+#         return HttpResponseRedirect(reverse('login_page'))
 
 
 

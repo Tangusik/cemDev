@@ -19,6 +19,24 @@ const Calendar = () => {
     const Obj4 = {sport: 'Джиу', area: 'Карбышева 4', trainer: 'Петр', time: '10:30 - 11:30', date: new Date(2024,0,5)};
     const array = [Obj1, Obj2, Obj3, Obj4];
 
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const port = 8000;
+                axios.defaults.baseURL = `http://localhost:${port}`;
+                const response = await axios.get('crm/sсhedule1');
+                setData(response.data);
+                console.log(data)
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
+        console.log(data)
+    }, []);
 
     const renderWeekdayHeaders = () => {
         const weekdays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
@@ -106,6 +124,7 @@ const Calendar = () => {
     return (
         <div>
             <Header></Header>
+            <div style={{color: 'red'}}>{data.map((d)=> d.time)}</div>
             <div className={styles.page}>
             <div className={styles.selects}>
                 <select value={selectedMonth} onChange={handleMonthChange} style={{color: "black"}} className={styles.select}>
