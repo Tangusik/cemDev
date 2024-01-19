@@ -14,10 +14,11 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import *
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 def login_page(request):
@@ -545,6 +546,24 @@ def checkout_abonement(client_id):
                 abonement.status = 'прошедший'
             abonement.save()
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @api_view(['GET','POST'])
 def client_list(request):
     if request.method == 'GET':
@@ -586,6 +605,7 @@ def log_in(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def log_out(request):
     if request.user.is_authenticated:
         logout(request)
@@ -595,14 +615,26 @@ def log_out(request):
 
 
 @api_view(['GET'])                  #В расписании занятия одного тренера, а не всех
+@permission_classes([IsAuthenticated])
 def sсhedule1(request):
-    if request.user.is_authenticated:
-        trainer = Trainer.objects.get(user=request.user.id)
-        acts = Activity.objects.filter(trainer = trainer)
-        serializer = ActivitySerializer(acts, context={'request': request},many=True)
-        return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
-    else:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    trainer = Trainer.objects.get(user=request.user.id)
+    acts = Activity.objects.filter(trainer = trainer)
+    serializer = ActivitySerializer(acts, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
 
-#@api_view(['GET'])              #страница одного клиента
-#def client_info
+
+@api_view(['GET'])              #инфа карточки тренера
+@permission_classes([IsAuthenticated])
+def trainer_info_card(request):
+    trainer = Trainer.objects.get(user=request.user.id)
+    serializer = TarinerSerializer(trainer, context={'request': request})
+    return JsonResponse(serializer.data, json_dumps_params={'ensure_ascii': False})
+
+
+@api_view(['GET'])                      #Группы и клиенты тренера
+@permission_classes([IsAuthenticated])
+def trainers_groups(request):
+    trainer = Trainer.objects.get(user=request.user.id)
+    teams = Team.objects.filter(trainer = trainer)
+    serializer = TeamSerializer(teams, context={'request': request}, many = True)
+    return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})

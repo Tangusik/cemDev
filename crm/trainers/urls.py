@@ -33,7 +33,7 @@ urlpatterns = [
     path('client/add/action', views.client_add_action, name='client_add_action'),
     path('trainers', views.trainers, name='trainers'),
     path('trainers/add_action', views.trainers_add_action, name='trainers_add_action'),
-#     path('schedule', views.schedule, name='schedule'),
+    #path('schedule', views.schedule, name='schedule'),
     path('main/edit_profile', views.edit, name="profile_edit"),
     path('client/<int:client_id>/add_balance', views.add_balance, name='add_balance'),
     path('client/<int:client_id>/buy_abonement', views.buy_abonement, name='buy_abonement'),
@@ -41,7 +41,10 @@ urlpatterns = [
 
 
 
+#___________
     path('client_list', views.client_list),
     path('trainer_list', views.trainer_list),
-    path('sсhedule1', views.sсhedule1),
-]
+    path("schedule", views.sсhedule1),
+    path("trainer_card", views.trainer_info_card),
+    path("trainer_groups", views.trainers_groups),
+    ]
