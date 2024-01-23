@@ -5,12 +5,9 @@ from rest_framework.serializers import CharField, Serializer
 
 class ClientSerializer(serializers.ModelSerializer):
     state = serializers.StringRelatedField()
-    state = serializers.StringRelatedField()
     class Meta:
         model = Client
         fields = ('first_name', 'last_name', 'birth_date', 'state', 'balance',"id")
-
-
 
 
 class UserAuthSerializer(Serializer):
@@ -41,7 +38,6 @@ class ActivitySerializer(serializers.ModelSerializer):
         model = Activity
         fields = ("__all__")
 
-
 class TeamSerializer(serializers.ModelSerializer):
     clients = ClientSerializer(many=True)
     sport_type = serializers.StringRelatedField()
@@ -49,8 +45,3 @@ class TeamSerializer(serializers.ModelSerializer):
         model = Team
         fields = ('name','clients', 'sport_type')
 
-class EmployeeRolesSerializer(Serializer):
-    name = CharField(required=True)
-
-class EmployeeStatesSerializer(Serializer):
-    name = CharField(required=True)

@@ -44,7 +44,7 @@ urlpatterns = [
 #___________
     path('client_list', views.client_list),
     path('trainer_list', views.trainer_list),
-    path("schedule", views.sсhedule1),
+    path("schedule", views.schedule),
     path("trainer_card", views.trainer_info_card),
     path("trainer_groups", views.trainers_groups),
     ]

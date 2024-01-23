@@ -1,11 +1,13 @@
 import styles from './index.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import axios from 'axios';
 
 const Sign = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -17,26 +19,21 @@ const Sign = () => {
         };
 
         try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+            const response = await axios.post(url, data);
 
-            if (response.ok) {
-                const responseData = await response.json();
+            if (response.status === 200) {
+                const responseData = response.data;
                 console.log(responseData);
                 navigate('/main');
             } else {
                 console.error('Ошибка при отправке запроса:', response.statusText);
-                alert('Ошибка при входе, убедитесь в корректности данных')
+                alert('Ошибка при входе, убедитесь в корректности данных');
             }
         } catch (error) {
             console.error('Произошла ошибка:', error);
         }
     };
+
     return (
         <div>
             <h1>Sign In</h1>
@@ -53,4 +50,5 @@ const Sign = () => {
         </div>
     );
 }
+
 export default Sign;
