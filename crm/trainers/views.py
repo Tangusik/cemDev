@@ -565,6 +565,7 @@ def checkout_abonement(client_id):
 
 
 @api_view(['GET','POST'])
+@permission_classes([IsAuthenticated])
 def client_list(request):
     if request.method == 'GET':
         clients = Client.objects.all()
@@ -582,6 +583,7 @@ def client_list(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def trainer_list(request):
     if request.method == 'GET':
         trainers = Trainer.objects.all()
@@ -616,7 +618,7 @@ def log_out(request):
 
 @api_view(['GET'])                  #В расписании занятия одного тренера, а не всех
 @permission_classes([IsAuthenticated])
-def sсhedule1(request):
+def schedule(request):
     trainer = Trainer.objects.get(user=request.user.id)
     acts = Activity.objects.filter(trainer = trainer)
     serializer = ActivitySerializer(acts, context={'request': request},many=True)
@@ -627,7 +629,7 @@ def sсhedule1(request):
 @permission_classes([IsAuthenticated])
 def trainer_info_card(request):
     trainer = Trainer.objects.get(user=request.user.id)
-    serializer = TarinerSerializer(trainer, context={'request': request})
+    serializer = TrainerSerializer(trainer, context={'request': request})
     return JsonResponse(serializer.data, json_dumps_params={'ensure_ascii': False})
 
 

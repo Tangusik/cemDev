@@ -36,6 +36,7 @@ const Clients = () => {
             try {
                 const port = 8000;
                 axios.defaults.baseURL = `http://localhost:${port}`;
+                axios.defaults.withCredentials = true;
                 const response = await axios.get('crm/client_list');
                 setClients(response.data);
             } catch (error) {

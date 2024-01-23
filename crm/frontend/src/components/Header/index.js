@@ -1,32 +1,23 @@
 import {Link, useNavigate} from "react-router-dom";
 import styles from './index.module.css';
+import axios from 'axios';
+import {useEffect} from "react";
 
 const Header = () => {
     const navigate = useNavigate();
     const handleLogout = async (event) => {
         event.preventDefault();
-
-        const port = 8000;
-        const url = `http://localhost:${port}/crm/logout`;
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (response.ok) {
-                console.log('Successfully logged out');
+            try {
+                const port = 8000;
+                axios.defaults.baseURL = `http://localhost:${port}`;
+                axios.defaults.withCredentials = true;
+                const response = await axios.get('crm/logout');
                 navigate('/');
-            } else {
-                console.error('Error during logout:', response.statusText);
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error('An error occurred:', error);
-        }
-    };
+        };
+
     return (
         <div className={styles.nav}>
             <div className={styles.text}>

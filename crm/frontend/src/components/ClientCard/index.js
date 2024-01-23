@@ -10,7 +10,6 @@ const ClientCard = (props) =>{
                 <div className={styles.cards_elements}>
                     <div className={styles.card}>
                         <div className={styles.front}>
-                            <p>{id}</p>
                             <p>{birthday}</p>
                             <h1>
                                 {firstName} {lastName}

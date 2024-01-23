@@ -26,7 +26,8 @@ const Calendar = () => {
             try {
                 const port = 8000;
                 axios.defaults.baseURL = `http://localhost:${port}`;
-                const response = await axios.get('crm/sсhedule1');
+                axios.defaults.withCredentials = true;
+                const response = await axios.get('crm/schedule');
                 setData(response.data);
                 console.log(data)
             } catch (error) {
@@ -35,8 +36,9 @@ const Calendar = () => {
         };
 
         fetchData();
-        console.log(data)
     }, []);
+
+    console.log(data)
 
     const renderWeekdayHeaders = () => {
         const weekdays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
@@ -72,21 +74,28 @@ const Calendar = () => {
 
     const renderContent = (i) => {
         let content = [];
-        array.map((Obj) => {
+        data.map((Obj) => {
+            Obj.date = new Date(Obj.act_date);
             const objDay = Obj.date.getDate();
             const objMonth = Obj.date.getMonth();
             const objYear = Obj.date.getFullYear();
             if (i === objDay-1 && selectedMonth === objMonth && selectedYear === objYear) {
                 content.push (
-                    <div className={styles.data} onClick={() => handleShowCard(Obj)}>
+                    <div className={styles.data}
+                         style={{backgroundColor: Obj.status === 'Состоится' ? 'white' : '#FFDA73'}}
+                         onClick={() => handleShowCard(Obj)}>
                         <div className={styles.openData}>
                             <div className={styles.sport}>{Obj.sport}</div>
                             <div className={styles.time}>
-                                <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.time.slice(0,5)}</span>
-                                <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.time.slice(8,13)}</span>
+                                <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.act_time_begin.slice(0,5)}</span>
+                                <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.act_time_end.slice(0,5)}</span>
                             </div>
                         </div>
-                        <div className={styles.hideData}>{Obj.trainer}</div>
+                        {Obj.trainer.user &&
+                            <div className={styles.hideData}>
+                                {Obj.status !== 'Состоится' && <span style={{color: '#1b1b1b', fontWeight: 'bold'}}>{Obj.status}</span>}
+                                <span style={{color: '#1b1b1b'}}>{Obj.trainer.user.last_name} {Obj.trainer.user.first_name}</span>
+                            </div>}
                     </div>
                 );
             };

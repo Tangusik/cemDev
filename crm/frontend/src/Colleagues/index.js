@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Search from "../components/Search";
 import axios from "axios";
-import styles from "../Clients/index.module.css";
+import styles from "../Colleagues/index.module.css";
 import ColleagueCard from "../components/ColleagueCard";
 
 const Colleagues = () => {
@@ -14,6 +14,7 @@ const Colleagues = () => {
             try {
                 const port = 8000;
                 axios.defaults.baseURL = `http://localhost:${port}`;
+                axios.defaults.withCredentials = true;
                 const response = await axios.get('crm/trainer_list');
                 setColleagues(response.data);
             } catch (error) {
