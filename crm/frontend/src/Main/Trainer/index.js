@@ -1,13 +1,37 @@
 import Container from "../Container";
-import React from "react";
+import React, {useEffect, useState} from "react";
+import axios from "axios";
+import GroupItem from "./GroupItem";
 
 const Trainer = () => {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const port = 8000;
+                axios.defaults.baseURL = `http://localhost:${port}`;
+                axios.defaults.withCredentials = true;
+                const response = await axios.get('crm/trainer_groups');
+                setData(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div>
             <Container
                 title={"Мои группы и клиенты"}
                 polosa={true}
-            ></Container>
+            >
+                {data.map((d) => (
+                    <GroupItem group={d}></GroupItem>
+                ))}
+            </Container>
             <Container
                 title={"Ближайшие занятия"}
                 polosa={true}
