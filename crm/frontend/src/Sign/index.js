@@ -19,7 +19,9 @@ const Sign = () => {
         };
 
         try {
-            const response = await axios.post(url, data);
+            const response = await axios.post(url, data, {
+                withCredentials: true
+            });
 
             if (response.status === 200) {
                 const responseData = response.data;
