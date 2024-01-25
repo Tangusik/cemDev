@@ -7,6 +7,17 @@
     justify-content: center;
 }
 
+.scheduleType {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
 .selects {
     display: flex;
     flex-direction: row;

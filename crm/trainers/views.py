@@ -564,7 +564,7 @@ def checkout_abonement(client_id):
 
 
 
-@api_view(['GET','POST'])
+@api_view(['GET','POST'])   #список всех клиентов
 @permission_classes([IsAuthenticated])
 def client_list(request):
     if request.method == 'GET':
@@ -582,7 +582,7 @@ def client_list(request):
             Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(['GET'])   #список всех тренеров
 @permission_classes([IsAuthenticated])
 def trainer_list(request):
     if request.method == 'GET':
@@ -640,3 +640,11 @@ def trainers_groups(request):
     teams = Team.objects.filter(trainer = trainer)
     serializer = TeamSerializer(teams, context={'request': request}, many = True)
     return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def schedule_all(request):
+    acts = Activity.objects.all()
+    serializer = ActivitiesSerializer(acts, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})

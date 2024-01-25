@@ -6,7 +6,7 @@ import Form from "../../components/Form";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 
-const Container = () => {
+const MainInfo = ({ setUserRole }) => {
     const [showMainDataModal, setShowMainDataModal] = useState(false);
     const [showStateDataModal, setShowStateDataModal] = useState(false);
     const [data, setData] = useState([]);
@@ -25,6 +25,7 @@ const Container = () => {
                 axios.defaults.withCredentials = true;
                 const response = await axios.get('crm/trainer_card');
                 setData(response.data);
+                setUserRole(response.data.role);
             } catch (error) {
                 console.error(error);
             }
@@ -40,12 +41,17 @@ const Container = () => {
             <div className={styles.containerText}>
                 {data.user && (
                     <>
-                <h3>ФИО {data.user.last_name} {data.user.first_name} {data.otchestv}</h3>
-                <h4>Роль: {data.role}</h4>
-                <h4>Почта: {data.user.email}</h4>
-                <h4>День рождения: {data.birthdate}</h4>
-                <h4>Статус: {data.state}</h4>
-                    </>  )}
+                        <div className={styles.userName}>
+                            {data.user.last_name} {data.user.first_name} {data.otchestv}
+                            <div className={styles.state}>{data.state}</div>
+                        </div>
+                        <div className={styles.role}>{data.role}</div>
+                        <div className={styles.mainData}>
+                            <div>{data.user.email}</div>
+                            <div>phone number</div>
+                        </div>
+                    </>
+                )}
                 <Button type={"change"} style={{marginTop:  '30px', marginRight: '10px'}} title={"Редактировать"} onClick={handleEditMainData}></Button>
                 <Button type={"change"} style={{marginTop:  '30px'}} title={"Изменить статус"} onClick={handleEditStateData}></Button>
             </div>
@@ -84,4 +90,4 @@ const Container = () => {
         </div>
     );
 }
-export default Container;
+export default MainInfo;

@@ -1,10 +1,11 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './index.module.css';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import moment from 'moment';
 import axios from "axios";
 import EditModal from "../components/EditModal";
+import Button from "../components/Button";
 
 const Calendar = () => {
     const now = new Date();
@@ -13,32 +14,20 @@ const Calendar = () => {
     const [showCard, setShowCard] = useState(false);
     const [card, setCard] = useState({sport: '', area: '', trainer: '', time: '', date: '',});
 
-    const Obj1 = {sport: 'Бокс', area: 'Сантьяго де Куба 3', trainer: 'Иван', time: '11:00 - 12:00', date: new Date(2024,0,3)};
-    const Obj2 = {sport: 'Карате', area: 'Волочаевская 54', trainer: 'Алексей', time: '15:30 - 16:40', date: new Date(2024,0,3)};
-    const Obj3 = {sport: 'Новый вид спорта', area: 'Петрозаводская 123', trainer: 'Игорь', time: '19:30 - 21:30', date: new Date(2024,0,3)};
-    const Obj4 = {sport: 'Джиу', area: 'Карбышева 4', trainer: 'Петр', time: '10:30 - 11:30', date: new Date(2024,0,5)};
-    const array = [Obj1, Obj2, Obj3, Obj4];
-
     const [data, setData] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/schedule');
-                setData(response.data);
-                console.log(data)
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    console.log(data)
+    const fetchData = async (url) => {
+        try {
+            const port = 8000;
+            axios.defaults.baseURL = `http://localhost:${port}`;
+            axios.defaults.withCredentials = true;
+            const response = await axios.get(url);
+            setData(response.data);
+            console.log(data)
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const renderWeekdayHeaders = () => {
         const weekdays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
@@ -70,6 +59,14 @@ const Calendar = () => {
     const getDaysInMonth = (month, year) => {
         const date = moment(`${year}-${month}`, 'YYYY-MM');
         return date.daysInMonth();
+    };
+
+    const handleChooseOwnSchedule = () => {
+        fetchData('crm/schedule').then(r => console.log(r));
+    };
+
+    const handleChooseCommonSchedule = () => {
+        fetchData('crm/scheduleAll').then(r => console.log(r));
     };
 
     const renderContent = (i) => {
@@ -133,8 +130,11 @@ const Calendar = () => {
     return (
         <div>
             <Header></Header>
-            <div style={{color: 'red'}}>{data.map((d)=> d.time)}</div>
             <div className={styles.page}>
+            <div className={styles.scheduleType}>
+                <Button title={'Мое расписание'} onClick={handleChooseOwnSchedule}></Button>
+                <Button title={'Общее расписание'} onClick={handleChooseCommonSchedule}></Button>
+            </div>
             <div className={styles.selects}>
                 <select value={selectedMonth} onChange={handleMonthChange} style={{color: "black"}} className={styles.select}>
                     {Array.from({ length: 12 }, (_, i) => (

@@ -45,6 +45,7 @@ urlpatterns = [
     path('client_list', views.client_list),
     path('trainer_list', views.trainer_list),
     path("schedule", views.schedule),
+    path("scheduleAll", views.schedule_all),
     path("trainer_card", views.trainer_info_card),
     path("trainer_groups", views.trainers_groups),
     ]
