@@ -1,7 +1,7 @@
 from .models import *
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.serializers import CharField, Serializer
+from rest_framework.serializers import CharField, Serializer, EmailField
 
 class ClientSerializer(serializers.ModelSerializer):
     state = serializers.StringRelatedField()
@@ -15,6 +15,11 @@ class UserAuthSerializer(Serializer):
     username = CharField(required=True)
     password = CharField(required=True)
 
+class UserEditSerializer(Serializer):
+    first_name = CharField(required=False)
+    last_name = CharField(required=False)
+    otchestv = CharField(required=False)
+    email = EmailField(required=False)
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

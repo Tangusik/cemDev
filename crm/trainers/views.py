@@ -564,32 +564,6 @@ def checkout_abonement(client_id):
 
 
 
-@api_view(['GET','POST'])   #список всех клиентов
-@permission_classes([IsAuthenticated])
-def client_list(request):
-    if request.method == 'GET':
-        clients = Client.objects.all()
-        serializer = ClientSerializer(clients, context={'request': request},many=True)
-        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
-
-    elif request.method == 'POST':
-        serializer = ClientSerializer(data=request.data)
-        print(request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status = status.HTTP_201_CREATED)
-        else:
-            Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET'])   #список всех тренеров
-@permission_classes([IsAuthenticated])
-def trainer_list(request):
-    if request.method == 'GET':
-        trainers = Trainer.objects.all()
-        serializer = TrainerSerializer(trainers, context={'request': request}, many=True)
-        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})       
-
 
 @api_view(['POST'])
 def log_in(request):
@@ -614,6 +588,43 @@ def log_out(request):
         return Response(status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def user_edit(request):
+    serializer = UserEditSerializer(data = request.data)
+    user = request.user
+    if serializer.is_valid():
+        if serializer.first_name:
+            user.first_name = serializer.first_name
+        if serializer.last_name:
+            user.last_name = serializer.last_name
+        if serializer.email:
+            user.email = serializer.email
+            user.username = serializer.email
+        trainer= get_object_or_404(Trainer, pk = request.user.id)
+        if serializer.otchestv:
+            trainer.otchestv = serializer.otchestv
+        return Response(status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET'])   #список всех клиентов
+@permission_classes([IsAuthenticated])
+def client_list(request):
+    clients = Client.objects.all()
+    serializer = ClientSerializer(clients, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+
+
+@api_view(['GET'])   #список всех тренеров
+@permission_classes([IsAuthenticated])
+def trainer_list(request):
+    if request.method == 'GET':
+        trainers = Trainer.objects.all()
+        serializer = TrainerSerializer(trainers, context={'request': request}, many=True)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+
 
 
 @api_view(['GET'])                  #В расписании занятия одного тренера, а не всех

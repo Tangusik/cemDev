@@ -48,4 +48,5 @@ urlpatterns = [
     path("scheduleAll", views.schedule_all),
     path("trainer_card", views.trainer_info_card),
     path("trainer_groups", views.trainers_groups),
+    path("user_edit", views.user_edit),
     ]
