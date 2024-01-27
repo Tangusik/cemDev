@@ -30,7 +30,7 @@ urlpatterns = [
     path('clients/team_creation', views.team_creation, name='team_creation'),
     path('clients', views.clients, name='clients'),
     path('client/<int:client_id>', views.client_info, name='client_info'),
-    path('client/add/action', views.client_add_action, name='client_add_action'),
+    #path('client/add/action', views.client_add_action, name='client_add_action'),
     path('trainers', views.trainers, name='trainers'),
     path('trainers/add_action', views.trainers_add_action, name='trainers_add_action'),
     #path('schedule', views.schedule, name='schedule'),
@@ -41,12 +41,23 @@ urlpatterns = [
 
 
 
-#___________
+#___________DJ+React
     path('client_list', views.client_list),
     path('trainer_list', views.trainer_list),
     path("schedule", views.schedule),
     path("scheduleAll", views.schedule_all),
     path("trainer_card", views.trainer_info_card),
     path("trainer_groups", views.trainers_groups),
-    path("user_edit", views.user_edit),
+
+    #___________main
+    path("roles", views.roles),
+    path("tr_statuses", views.tr_statuses),
+    path("cl_statuses", views.cl_statuses),
+    path("areas", views.areas),
+    path("sport_types", views.sport_types),
+    path("abonements", views.abonements),
+    #___________client_detail_info
+    path("client/<int:pk>", views.client_detail),
+
+
     ]
