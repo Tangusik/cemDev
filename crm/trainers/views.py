@@ -704,15 +704,15 @@ def abonements(request):
 
 
         if request.method == "POST":
-            serializer = SportTypeSerializer(data = request.data)
+            serializer = AbonementSerializer(data = request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            sport_types = SportType.objects.all()
-            serializer = SportTypeSerializer(sport_types, context={'request': request},many=True)
+            abonements = Abonement.objects.all()
+            serializer = AbonementSerializer(abonements, context={'request': request},many=True)
             return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
         Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -744,6 +744,13 @@ def user_edit(request):
     else:
         return Response(serializer.errors, status=400)
 
+@api_view(['GET'])   #детальная инфа о клиенте
+@permission_classes([IsAuthenticated])
+def client_detail(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+    return Response(status=status.HTTP_200_OK)
+
+
 @api_view(['GET'])   #список всех клиентов
 @permission_classes([IsAuthenticated])
 def client_list(request):
@@ -759,6 +766,7 @@ def trainer_list(request):
         trainers = Trainer.objects.all()
         serializer = TrainerSerializer(trainers, context={'request': request}, many=True)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+
 
 
 
