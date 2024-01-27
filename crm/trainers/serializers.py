@@ -1,7 +1,7 @@
 from .models import *
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.serializers import CharField, Serializer
+from rest_framework.serializers import CharField, Serializer, EmailField
 
 class ClientSerializer(serializers.ModelSerializer):
     state = serializers.StringRelatedField()
@@ -10,10 +10,22 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'birth_date', 'state', 'balance',"id")
 
 
+
+
+
+
+
+
 class UserAuthSerializer(Serializer):
     model = User
     username = CharField(required=True)
     password = CharField(required=True)
+
+class UserEditSerializer(Serializer):
+    first_name = CharField(required=False)
+    last_name = CharField(required=False)
+    otchestv = CharField(required=False)
+    email = EmailField(required=False)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,6 +40,12 @@ class TrainerSerializer(serializers.ModelSerializer):
         model = Trainer
         fields = ['user', 'otchestv', 'birthdate', 'role', 'state']
         depth = 1
+
+
+
+
+
+
 
 class ActivitySerializer(serializers.ModelSerializer):
     trainer = TrainerSerializer()
@@ -53,4 +71,37 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ('name','clients', 'sport_type')
+
+
+
+
+
+
+
+
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ("__all__")
+
+class TrainerStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrainerState
+        fields = ("__all__")
+
+class ClientStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClientState
+        fields = ("__all__")
+
+
+class AreaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Area
+        fields = ("__all__")
+
+
+
+
 
