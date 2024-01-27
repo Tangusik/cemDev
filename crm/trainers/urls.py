@@ -59,5 +59,7 @@ urlpatterns = [
     #___________client_detail_info
     path("client/<int:pk>", views.client_detail),
 
+    
+
 
     ]

@@ -101,6 +101,18 @@ class AreaSerializer(serializers.ModelSerializer):
         model = Area
         fields = ("__all__")
 
+class SportTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SportType
+        fields = ("__all__")
+
+class AbonementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Abonement
+        fields = ("title","price","duration","lesson_count","sport",)
+
+
+
 
 
 

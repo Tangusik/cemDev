@@ -751,13 +751,20 @@ def client_detail(request, pk):
     return Response(status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])   #список всех клиентов
+@api_view(['GET','POST'])   #список всех клиентов
 @permission_classes([IsAuthenticated])
 def client_list(request):
-    clients = Client.objects.all()
-    serializer = ClientSerializer(clients, context={'request': request},many=True)
-    return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
-
+    if request.method == "GET":
+        clients = Client.objects.all()
+        serializer = ClientSerializer(clients, context={'request': request},many=True)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+    else:
+        serializer = ClientSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])   #список всех тренеров
 @permission_classes([IsAuthenticated])
