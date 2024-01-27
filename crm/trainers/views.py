@@ -594,17 +594,22 @@ def log_out(request):
 def user_edit(request):
     serializer = UserEditSerializer(data = request.data)
     user = request.user
+    
     if serializer.is_valid():
-        if serializer.first_name:
-            user.first_name = serializer.first_name
-        if serializer.last_name:
-            user.last_name = serializer.last_name
-        if serializer.email:
-            user.email = serializer.email
-            user.username = serializer.email
+        data = serializer.validated_data
+        print(data)
+        if "first_name" in data:
+            user.first_name = data['first_name']
+        if "last_name" in data:
+            user.last_name = data['last_name']
+        if "email" in data:
+            user.email = data['email']
+            user.username = data['email']
         trainer= get_object_or_404(Trainer, pk = request.user.id)
-        if serializer.otchestv:
-            trainer.otchestv = serializer.otchestv
+        if "otchestv" in data:
+            trainer.otchestv = data['otchestv']
+        user.save()
+        trainer.save()
         return Response(status=status.HTTP_202_ACCEPTED)
     else:
         return Response(serializer.errors, status=400)
