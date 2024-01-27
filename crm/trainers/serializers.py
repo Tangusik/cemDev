@@ -10,6 +10,12 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'birth_date', 'state', 'balance',"id")
 
 
+
+
+
+
+
+
 class UserAuthSerializer(Serializer):
     model = User
     username = CharField(required=True)
@@ -20,6 +26,7 @@ class UserEditSerializer(Serializer):
     last_name = CharField(required=False)
     otchestv = CharField(required=False)
     email = EmailField(required=False)
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -33,6 +40,12 @@ class TrainerSerializer(serializers.ModelSerializer):
         model = Trainer
         fields = ['user', 'otchestv', 'birthdate', 'role', 'state']
         depth = 1
+
+
+
+
+
+
 
 class ActivitySerializer(serializers.ModelSerializer):
     trainer = TrainerSerializer()
@@ -58,4 +71,37 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ('name','clients', 'sport_type')
+
+
+
+
+
+
+
+
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ("__all__")
+
+class TrainerStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrainerState
+        fields = ("__all__")
+
+class ClientStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClientState
+        fields = ("__all__")
+
+
+class AreaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Area
+        fields = ("__all__")
+
+
+
+
 

@@ -577,17 +577,147 @@ def log_in(request):
             return Response({'error': 'Invalid credentials'}, status=403)
     else:
         return Response(serializer.errors, status=400)
-    
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def log_out(request):
-    if request.user.is_authenticated:
-        logout(request)
-        return Response(status=status.HTTP_200_OK)
+    logout(request)
+    return Response(status=status.HTTP_200_OK)
+
+
+
+@api_view(['GET','POST'])                           #Получение всех ролей и создание новых
+@permission_classes([IsAuthenticated])
+def roles(request):                         
+    trainer = request.user.trainer
+    if trainer.role == "Директор":
+
+
+        if request.method == "POST":
+            serializer = RoleSerializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            roles = Role.objects.all()
+            serializer = RoleSerializer(roles, context={'request': request},many=True)
+            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET','POST'])                           #Получение всех состояний тренеров и создание новых
+@permission_classes([IsAuthenticated])
+def tr_statuses(request):                         
+    trainer = request.user.trainer
+    if trainer.role == "Директор":
+
+
+        if request.method == "POST":
+            serializer = TrainerStateSerializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            tr_statuses = TrainerState.objects.all()
+            serializer = TrainerStateSerializer(tr_statuses, context={'request': request},many=True)
+            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+    else:
+        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
+@api_view(['GET','POST'])                           #Получение всех состояний клиентов и создание новых
+@permission_classes([IsAuthenticated])
+def cl_statuses(request):                         
+    trainer = request.user.trainer
+    if trainer.role == "Директор":
+
+
+        if request.method == "POST":
+            serializer = ClientStateSerializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            cl_statuses = ClientState.objects.all()
+            serializer = ClientStateSerializer(cl_statuses, context={'request': request},many=True)
+            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+    else:
+        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['GET','POST'])                           #Получение всех площадок и создание новых
+@permission_classes([IsAuthenticated])
+def areas(request):                         
+    trainer = request.user.trainer
+    if trainer.role == "Директор":
+
+
+        if request.method == "POST":
+            serializer = AreaSerializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            areas = Area.objects.all()
+            serializer = AreaSerializer(areas, context={'request': request},many=True)
+            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+    else:
+        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['GET','POST'])                           #Получение всех видов спорта и создание новых
+@permission_classes([IsAuthenticated])
+def sport_types(request):                         
+    trainer = request.user.trainer
+    if trainer.role == "Директор":
+
+
+        if request.method == "POST":
+            serializer = SportTypeSerializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            sport_types = SportType.objects.all()
+            serializer = SportTypeSerializer(sport_types, context={'request': request},many=True)
+            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+    else:
+        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['GET','POST'])                           #Получение всех абонементов и создание новых
+@permission_classes([IsAuthenticated])
+def abonements(request):                         
+    trainer = request.user.trainer
+    if trainer.role == "Директор":
+
+
+        if request.method == "POST":
+            serializer = SportTypeSerializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            sport_types = SportType.objects.all()
+            serializer = SportTypeSerializer(sport_types, context={'request': request},many=True)
+            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+    else:
+        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
