@@ -590,7 +590,7 @@ def log_out(request):
 @permission_classes([IsAuthenticated])
 def roles(request):                         
     trainer = request.user.trainer
-    if trainer.role == "Директор":
+    if trainer.role.name == "Директор":
 
 
         if request.method == "POST":
@@ -611,7 +611,7 @@ def roles(request):
 @permission_classes([IsAuthenticated])
 def tr_statuses(request):                         
     trainer = request.user.trainer
-    if trainer.role == "Директор":
+    if trainer.role.name == "Директор":
 
 
         if request.method == "POST":
@@ -634,7 +634,7 @@ def tr_statuses(request):
 @permission_classes([IsAuthenticated])
 def cl_statuses(request):                         
     trainer = request.user.trainer
-    if trainer.role == "Директор":
+    if trainer.role.name == "Директор":
 
 
         if request.method == "POST":
@@ -656,7 +656,7 @@ def cl_statuses(request):
 @permission_classes([IsAuthenticated])
 def areas(request):                         
     trainer = request.user.trainer
-    if trainer.role == "Директор":
+    if trainer.role.name == "Директор":
 
 
         if request.method == "POST":
@@ -678,7 +678,7 @@ def areas(request):
 @permission_classes([IsAuthenticated])
 def sport_types(request):                         
     trainer = request.user.trainer
-    if trainer.role == "Директор":
+    if trainer.role.name == "Директор":
 
 
         if request.method == "POST":
@@ -700,7 +700,7 @@ def sport_types(request):
 @permission_classes([IsAuthenticated])
 def abonements(request):                         
     trainer = request.user.trainer
-    if trainer.role == "Директор":
+    if trainer.role.name == "Директор":
 
 
         if request.method == "POST":
