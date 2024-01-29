@@ -409,35 +409,7 @@ def client_state_delete(request):
     return HttpResponseRedirect(reverse('main'))
 
 
-def abonement_creation(request):
-    title = request.POST['title']
-    price = request.POST['price']
-    sport = request.POST['sport']
-    sport = get_object_or_404(SportType, pk=sport)
-    is_duration = request.POST.get('duration_check', False)
-    is_count = request.POST.get('count_check', False)
 
-    if is_count == 'on':
-        count = request.POST['count']
-    else:
-        count = None
-
-    if is_duration == 'on':
-        duration = request.POST['duration']
-        duration_type = request.POST['duration_type']
-        if duration_type == 'days':
-            dur = timedelta(days=int(duration))
-        elif duration_type == 'weeks':
-            dur = timedelta(weeks=int(duration))
-        elif duration_type == 'month':
-            dur = timedelta(days=int(duration) * 30)
-    else:
-        dur = None
-
-    abonement = Abonement.objects.create(title=title, price=price, lesson_count=count, duration=dur, sport=sport)
-    abonement.save()
-
-    return HttpResponseRedirect(reverse('main'))
 
 
 def abonement_delete(request):
@@ -590,7 +562,7 @@ def log_out(request):
 @permission_classes([IsAuthenticated])
 def roles(request):                         
     trainer = request.user.trainer
-    if trainer.role.name == "Директор":
+    if trainer.role.name.lower() == "директор":
 
 
         if request.method == "POST":
@@ -611,7 +583,7 @@ def roles(request):
 @permission_classes([IsAuthenticated])
 def tr_statuses(request):                         
     trainer = request.user.trainer
-    if trainer.role.name == "Директор":
+    if trainer.role.name.lower() == "директор":
 
 
         if request.method == "POST":
@@ -634,7 +606,7 @@ def tr_statuses(request):
 @permission_classes([IsAuthenticated])
 def cl_statuses(request):                         
     trainer = request.user.trainer
-    if trainer.role.name == "Директор":
+    if trainer.role.name.lower() == "директор":
 
 
         if request.method == "POST":
@@ -656,7 +628,7 @@ def cl_statuses(request):
 @permission_classes([IsAuthenticated])
 def areas(request):                         
     trainer = request.user.trainer
-    if trainer.role.name == "Директор":
+    if trainer.role.name.lower() == "директор":
 
 
         if request.method == "POST":
@@ -678,7 +650,7 @@ def areas(request):
 @permission_classes([IsAuthenticated])
 def sport_types(request):                         
     trainer = request.user.trainer
-    if trainer.role.name == "Директор":
+    if trainer.role.name.lower() == "директор":
 
 
         if request.method == "POST":
@@ -700,22 +672,50 @@ def sport_types(request):
 @permission_classes([IsAuthenticated])
 def abonements(request):                         
     trainer = request.user.trainer
-    if trainer.role.name == "Директор":
+    if trainer.role.name.lower() == "директор":
 
 
         if request.method == "POST":
-            serializer = AbonementSerializer(data = request.data)
+            serializer = AbonementCreationSerializer(data = request.data)
             if serializer.is_valid():
-                serializer.save()
+                data = serializer.validated_data
+
+                if data['is_lesson_count']:
+                    count = data['lesson_count']
+                else:
+                    count = None
+
+                if data['is_duration']:
+                    duration = data['duration']
+                    duration_type = data['duration_type']
+
+                    if duration_type == 'days':
+                        dur = timedelta(days=int(duration))
+                    elif duration_type == 'weeks':
+                        dur = timedelta(weeks=int(duration))
+                    elif duration_type == 'month':
+                        dur = timedelta(days=int(duration) * 30)
+                else:
+                    dur = None
+
+                sport_type  = get_object_or_404(SportType, pk=data['sport_type'])
+                abonement = Abonement.objects.create(title=data['title'], 
+                price=data['price'], 
+                lesson_count=count, duration=dur, sport=sport_type)
                 return Response(status=status.HTTP_201_CREATED)
+
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             abonements = Abonement.objects.all()
+            sport_types = SportType.objects.all()
             serializer = AbonementSerializer(abonements, context={'request': request},many=True)
-            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+            sp_serializer = SportTypeSerializer(sport_types, context={'request': request},many=True)
+            return JsonResponse(serializer.data + sp_serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
 
 
 
@@ -727,7 +727,6 @@ def user_edit(request):
     
     if serializer.is_valid():
         data = serializer.validated_data
-        print(data)
         if "first_name" in data:
             user.first_name = data['first_name']
         if "last_name" in data:
