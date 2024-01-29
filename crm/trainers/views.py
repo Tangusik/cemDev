@@ -605,7 +605,7 @@ def roles(request):
             serializer = RoleSerializer(roles, context={'request': request},many=True)
             return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
-        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(['GET','POST'])                           #Получение всех состояний тренеров и создание новых
 @permission_classes([IsAuthenticated])
@@ -626,7 +626,7 @@ def tr_statuses(request):
             serializer = TrainerStateSerializer(tr_statuses, context={'request': request},many=True)
             return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
-        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 
@@ -649,7 +649,7 @@ def cl_statuses(request):
             serializer = ClientStateSerializer(cl_statuses, context={'request': request},many=True)
             return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
-        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['GET','POST'])                           #Получение всех площадок и создание новых
@@ -671,7 +671,7 @@ def areas(request):
             serializer = AreaSerializer(areas, context={'request': request},many=True)
             return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
-        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['GET','POST'])                           #Получение всех видов спорта и создание новых
@@ -693,7 +693,7 @@ def sport_types(request):
             serializer = SportTypeSerializer(sport_types, context={'request': request},many=True)
             return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
-        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['GET','POST'])                           #Получение всех абонементов и создание новых
@@ -715,7 +715,7 @@ def abonements(request):
             serializer = AbonementSerializer(abonements, context={'request': request},many=True)
             return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
-        Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 
