@@ -25,7 +25,7 @@ const MainInfo = ({ setUserRole }) => {
                 axios.defaults.withCredentials = true;
                 const response = await axios.get('crm/trainer_card');
                 setData(response.data);
-                setUserRole(response.data.role);
+                setUserRole(response.data.role.toString());
             } catch (error) {
                 console.error(error);
             }

@@ -563,8 +563,6 @@ def log_out(request):
 def roles(request):                         
     trainer = request.user.trainer
     if trainer.role.name.lower() == "директор":
-
-
         if request.method == "POST":
             serializer = RoleSerializer(data = request.data)
             if serializer.is_valid():
@@ -579,13 +577,12 @@ def roles(request):
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+
 @api_view(['GET','POST'])                           #Получение всех состояний тренеров и создание новых
 @permission_classes([IsAuthenticated])
 def tr_statuses(request):                         
     trainer = request.user.trainer
     if trainer.role.name.lower() == "директор":
-
-
         if request.method == "POST":
             serializer = TrainerStateSerializer(data = request.data)
             if serializer.is_valid():
@@ -607,8 +604,6 @@ def tr_statuses(request):
 def cl_statuses(request):                         
     trainer = request.user.trainer
     if trainer.role.name.lower() == "директор":
-
-
         if request.method == "POST":
             serializer = ClientStateSerializer(data = request.data)
             if serializer.is_valid():
@@ -629,8 +624,6 @@ def cl_statuses(request):
 def areas(request):                         
     trainer = request.user.trainer
     if trainer.role.name.lower() == "директор":
-
-
         if request.method == "POST":
             serializer = AreaSerializer(data = request.data)
             if serializer.is_valid():
@@ -651,8 +644,6 @@ def areas(request):
 def sport_types(request):                         
     trainer = request.user.trainer
     if trainer.role.name.lower() == "директор":
-
-
         if request.method == "POST":
             serializer = SportTypeSerializer(data = request.data)
             if serializer.is_valid():
@@ -673,8 +664,6 @@ def sport_types(request):
 def abonements(request):                         
     trainer = request.user.trainer
     if trainer.role.name.lower() == "директор":
-
-
         if request.method == "POST":
             serializer = AbonementCreationSerializer(data = request.data)
             if serializer.is_valid():
@@ -724,7 +713,6 @@ def abonements(request):
 def user_edit(request):
     serializer = UserEditSerializer(data = request.data)
     user = request.user
-    
     if serializer.is_valid():
         data = serializer.validated_data
         if "first_name" in data:

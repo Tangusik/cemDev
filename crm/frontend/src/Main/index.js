@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ToDoList from "../components/ToDoList";
@@ -16,8 +16,7 @@ const Main = () => {
             <Header></Header>
             <MainInfo setUserRole={setUserRole}></MainInfo>
             <ToDoList></ToDoList>
-            {userRole === 'тренер' ? <Trainer></Trainer> : <Admin></Admin>}
-            <Trainer></Trainer>
+            {userRole === 'директор' ? <Admin></Admin> : <Trainer></Trainer>}
             <Search></Search>
             <Slider title={"Новости"} text={"Какой-то текст"}></Slider>
             <Footer></Footer>
