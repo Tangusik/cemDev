@@ -35,7 +35,8 @@ urlpatterns = [
     path("abonements", views.abonements),
     #___________client_detail_info
     path("client/<int:pk>", views.client_detail),
-            #ИНФА о клиенте сюда же edit
+    path("user_edit", views.user_edit),
+           #ИНФА о клиенте сюда же edit
             #абонементы сюда же добавление абонементов
             #занятия
             #группы

@@ -146,8 +146,8 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                {roles.map((role)=>
-                    (<div style={{color: '#293241'}}>{role.name}</div>)
+                {roles.map((role, index)=>
+                    (<div key={index} style={{color: '#293241'}}>{role.name}</div>)
                 )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить роль"} onClick={handleRoles}></Button>
                 </>
@@ -172,8 +172,8 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {employeeStates.map((employeeState)=>
-                        (<div style={{color: '#293241'}}>{employeeState.name}</div>)
+                    {employeeStates.map((employeeState, index)=>
+                        (<div key={index} style={{color: '#293241'}}>{employeeState.name}</div>)
                     )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить статус"} onClick={handleEmployeeStates}></Button>
                 </>
@@ -198,8 +198,8 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {clientsStates.map((clientsState)=>
-                        (<div style={{color: '#293241'}}>{clientsState.name}</div>)
+                    {clientsStates.map((clientsState, index)=>
+                        (<div key={index} style={{color: '#293241'}}>{clientsState.name}</div>)
                     )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить статус"} onClick={handleClientStates}></Button>
                 </>
@@ -224,8 +224,8 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {areas.map((area)=>
-                        (<div style={{color: '#293241'}}>{area.address}</div>)
+                    {areas.map((area, index)=>
+                        (<div key={index} style={{color: '#293241'}}>{area.address}</div>)
                     )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить площадку"} onClick={handleAreas}></Button>
                 </>
@@ -250,8 +250,8 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {sportTypes.map((sportType)=>
-                        (<div style={{color: '#293241'}}>{sportType.title}</div>)
+                    {sportTypes.map((sportType, index)=>
+                        (<div key={index} style={{color: '#293241'}}>{sportType.title}</div>)
                     )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить вид спорта"} onClick={handleTypeSports}></Button>
                 </>
@@ -276,8 +276,8 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {abonements.map((abonement)=>
-                        (<div style={{color: '#293241'}}>{abonement.title}</div>)
+                    {abonements.map((abonement, index)=>
+                        (<div key={index} style={{color: '#293241'}}>{abonement.title}</div>)
                     )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить абонемент"} onClick={handleAbonements}></Button>
                 </>

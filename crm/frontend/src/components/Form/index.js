@@ -3,10 +3,10 @@ import styles from './index.module.css';
 
 
 const Form = (props) => {
-    const { title, children } = props;
+    const { onSubmit, title, children } = props;
     return (
     <div className={styles.form}>
-        <form className={styles.decor} action="" method="post">
+        <form className={styles.decor} action="" method="post" onSubmit={onSubmit}>
             <div className={styles.formLeftDecoration}/>
             <div className={styles.formRightDecoration}/>
             <div className={styles.circle}/>

@@ -10,6 +10,15 @@ const MainInfo = ({ setUserRole }) => {
     const [showMainDataModal, setShowMainDataModal] = useState(false);
     const [showStateDataModal, setShowStateDataModal] = useState(false);
     const [data, setData] = useState([]);
+
+    const [first_name, setFirst_name] = useState('');
+    const [last_name, setLast_name] = useState('');
+    const [email, setEmail] = useState('');
+    const [otchestv, setOtchestv] = useState('');
+
+    const [statuses, setStatus] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState("");
+
     const handleEditMainData = () => {
         setShowMainDataModal(!showMainDataModal);
     }
@@ -33,6 +42,102 @@ const MainInfo = ({ setUserRole }) => {
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchEmployeeStates = async () => {
+            try {
+                const port = 8000;
+                axios.defaults.baseURL = `http://localhost:${port}`;
+                axios.defaults.withCredentials = true;
+                const response = await axios.get('crm/tr_statuses');
+                setStatus(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchEmployeeStates();
+    }, []);
+
+    function getCSRFToken() {
+        let csrfToken;
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const parts = cookie.split('=');
+            if (parts[0].trim() === 'csrftoken') {
+                csrfToken = parts[1];
+                break;
+            }
+        }
+        return csrfToken;
+    }
+
+    const handleSubmitEditUser = async (event) => {
+        event.preventDefault();
+
+        const port = 8000;
+        const url = `http://localhost:${port}/crm/user_edit`;
+        const data = {
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            otchestv: otchestv,
+        };
+
+        try {
+            const response = await axios.post(url, data, {
+                withCredentials: true,
+                headers: {'X-CSRFToken': getCSRFToken()}
+            });
+
+            if (response.status === 200) {
+                const responseData = response.data;
+                console.log(responseData);
+                setShowMainDataModal(false)
+                window.location.reload();
+            } else {
+                setShowMainDataModal(false)
+                console.error('Ошибка при отправке запроса:', response.statusText);
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Произошла ошибка:', error);
+        }
+    };
+
+    const handleStatusChange = (event) => {
+        setSelectedStatus(event.target.value);
+    };
+
+    const handleSubmitEditStatus = async (event) => {
+        event.preventDefault();
+
+        const port = 8000;
+        const url = `http://localhost:${port}/crm/tr_statuses`;
+        const data = {
+            state: selectedStatus
+        };
+
+        try {
+            const response = await axios.post(url, data, {
+                withCredentials: true,
+                headers: {'X-CSRFToken': getCSRFToken()}
+            });
+
+            if (response.status === 200) {
+                const responseData = response.data;
+                console.log(responseData);
+                setShowStateDataModal(false)
+                // window.location.reload();
+            } else {
+                setShowStateDataModal(false)
+                console.error('Ошибка при отправке запроса:', response.statusText);
+                // window.location.reload();
+            }
+        } catch (error) {
+            console.error('Произошла ошибка:', error);
+        }
+    };
 
     return (
         <div>
@@ -62,12 +167,13 @@ const MainInfo = ({ setUserRole }) => {
                 children={
                     <Form
                         title={'Редактирование профиля'}
+                        onSubmit={handleSubmitEditUser}
                         children={
                             <div>
-                                <input type="text" name="name"  placeholder="Имя"/>
-                                <input type="text" name="last_name"  placeholder="Фамилия"/>
-                                <input type="text" name="otchestcv" placeholder="Отчество"/>
-                                <input type="text" name="email" placeholder="Почта"/>
+                                <input type="text" name="name" placeholder="Имя" onChange={(e) => setFirst_name(e.target.value)}/>
+                                <input type="text" name="last_name"  placeholder="Фамилия" onChange={(e) => setLast_name(e.target.value)}/>
+                                <input type="text" name="otchestcv" placeholder="Отчество" onChange={(e) => setOtchestv(e.target.value)}/>
+                                <input type="text" name="email" placeholder="Почта" onChange={(e) => setEmail(e.target.value)}/>
                                 <input type="submit" value="Добавить"/>
                             </div>}
                     ></Form>}
@@ -79,9 +185,14 @@ const MainInfo = ({ setUserRole }) => {
                 children={
                     <Form
                         title={'Изменение статуса'}
+                        onSubmit={handleSubmitEditStatus}
                         children={
                             <div>
-                                <input type="text" name="state"  placeholder="Статус"/>
+                                <select name="duration_type" required className={styles.selectSport} style={{width: '100%'}} onChange={handleStatusChange} >
+                                    {statuses.map((status)=>
+                                        (<option name={status.name}>{status.name}</option>)
+                                    )}
+                                </select>
                                 <input type="submit" value="Изменить"/>
                             </div>}
                     ></Form>}

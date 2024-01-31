@@ -119,4 +119,4 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 
-CSRF_TRUSTED_ORIGINS = ["chrome-extension://amknoiejhlmhancpahfcfcfhllgkpbld"]
+CSRF_TRUSTED_ORIGINS = ["chrome-extension://amknoiejhlmhancpahfcfcfhllgkpbld", "http://localhost:3000"]

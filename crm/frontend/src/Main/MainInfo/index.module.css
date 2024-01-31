@@ -80,3 +80,19 @@
     }
 
 }
+
+
+.selectSport {
+    float: right;
+    display: block;
+    width: content-box;
+    margin-bottom: 10px;
+    background: #dddddd;
+    outline: none;
+    border-width: 0;
+    border-radius: 40px;
+    font-family: 'Roboto', sans-serif;
+    align-items: center;
+    color: #3D5A80;
+    padding: 12px 15px;
+}

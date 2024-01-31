@@ -21,6 +21,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 
+
 def login_page(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse('main'))
@@ -537,7 +538,7 @@ def checkout_abonement(client_id):
 
 
 
-@api_view(['POST'])
+@api_view(['POST'])             #DONE
 def log_in(request):
     serializer = UserAuthSerializer(data = request.data)
     if serializer.is_valid():
@@ -550,7 +551,7 @@ def log_in(request):
     else:
         return Response(serializer.errors, status=400)
 
-@api_view(['GET'])
+@api_view(['GET'])              #DONE
 @permission_classes([IsAuthenticated])
 def log_out(request):
     logout(request)
@@ -558,7 +559,7 @@ def log_out(request):
 
 
 
-@api_view(['GET','POST'])                           #Получение всех ролей и создание новых
+@api_view(['GET','POST'])             #Получение всех ролей и создание новых
 @permission_classes([IsAuthenticated])
 def roles(request):                         
     trainer = request.user.trainer
@@ -582,20 +583,17 @@ def roles(request):
 @permission_classes([IsAuthenticated])
 def tr_statuses(request):                         
     trainer = request.user.trainer
-    if trainer.role.name.lower() == "директор":
-        if request.method == "POST":
-            serializer = TrainerStateSerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == "POST":
+        serializer = TrainerStateSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
         else:
-            tr_statuses = TrainerState.objects.all()
-            serializer = TrainerStateSerializer(tr_statuses, context={'request': request},many=True)
-            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        tr_statuses = TrainerState.objects.all()
+        serializer = TrainerStateSerializer(tr_statuses, context={'request': request},many=True)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
 
 
 
@@ -668,12 +666,10 @@ def abonements(request):
             serializer = AbonementCreationSerializer(data = request.data)
             if serializer.is_valid():
                 data = serializer.validated_data
-
                 if data['is_lesson_count']:
                     count = data['lesson_count']
                 else:
                     count = None
-
                 if data['is_duration']:
                     duration = data['duration']
                     duration_type = data['duration_type']
@@ -686,7 +682,6 @@ def abonements(request):
                         dur = timedelta(days=int(duration) * 30)
                 else:
                     dur = None
-
                 sport_type  = get_object_or_404(SportType, pk=data['sport_type'])
                 abonement = Abonement.objects.create(title=data['title'], 
                 price=data['price'], 
@@ -703,9 +698,6 @@ def abonements(request):
             return JsonResponse(serializer.data + sp_serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-
 
 
 @api_view(['POST'])
@@ -730,6 +722,7 @@ def user_edit(request):
         return Response(status=status.HTTP_202_ACCEPTED)
     else:
         return Response(serializer.errors, status=400)
+
 
 @api_view(['GET'])   #детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
