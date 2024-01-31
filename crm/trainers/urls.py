@@ -10,7 +10,7 @@ urlpatterns = [
 
     path('clients/team_creation', views.team_creation, name='team_creation'),
     path('clients', views.clients, name='clients'),
-    path('client/<int:client_id>', views.client_info, name='client_info'),
+    #path('client/<int:client_id>', views.client_info, name='client_info'),
     path('trainers', views.trainers, name='trainers'),
     path('trainers/add_action', views.trainers_add_action, name='trainers_add_action'),
     path('main/edit_profile', views.edit, name="profile_edit"),

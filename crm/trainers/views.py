@@ -583,17 +583,20 @@ def roles(request):
 @permission_classes([IsAuthenticated])
 def tr_statuses(request):                         
     trainer = request.user.trainer
-    if request.method == "POST":
-        serializer = TrainerStateSerializer(data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+    if trainer.role.name.lower() == "директор":
+        if request.method == "POST":
+            serializer = TrainerStateSerializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            tr_statuses = TrainerState.objects.all()
+            serializer = TrainerStateSerializer(tr_statuses, context={'request': request},many=True)
+            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
-        tr_statuses = TrainerState.objects.all()
-        serializer = TrainerStateSerializer(tr_statuses, context={'request': request},many=True)
-        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 
@@ -666,10 +669,12 @@ def abonements(request):
             serializer = AbonementCreationSerializer(data = request.data)
             if serializer.is_valid():
                 data = serializer.validated_data
+
                 if data['is_lesson_count']:
                     count = data['lesson_count']
                 else:
                     count = None
+
                 if data['is_duration']:
                     duration = data['duration']
                     duration_type = data['duration_type']
@@ -682,6 +687,7 @@ def abonements(request):
                         dur = timedelta(days=int(duration) * 30)
                 else:
                     dur = None
+
                 sport_type  = get_object_or_404(SportType, pk=data['sport_type'])
                 abonement = Abonement.objects.create(title=data['title'], 
                 price=data['price'], 
@@ -700,6 +706,9 @@ def abonements(request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def user_edit(request):
@@ -708,27 +717,37 @@ def user_edit(request):
     if serializer.is_valid():
         data = serializer.validated_data
         if "first_name" in data:
-            user.first_name = data['first_name']
+            User.objects.filter(pk=user.id).update(first_name = data['first_name'])
         if "last_name" in data:
-            user.last_name = data['last_name']
+            User.objects.filter(pk=user.id).update(last_name = data['last_name'])
         if "email" in data:
-            user.email = data['email']
-            user.username = data['email']
-        trainer= get_object_or_404(Trainer, pk = request.user.id)
+            User.objects.filter(pk=user.id).update(email = data['email'])
+            User.objects.filter(pk=user.id).update(username = data['email'])
         if "otchestv" in data:
-            trainer.otchestv = data['otchestv']
-        user.save()
-        trainer.save()
+            Trainer.objects.filter(pk = request.user.id).update(otchestv = data['otchestv'])
         return Response(status=status.HTTP_202_ACCEPTED)
     else:
         return Response(serializer.errors, status=400)
 
-
 @api_view(['GET'])   #детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_detail(request, pk):
-    client = get_object_or_404(Client, pk=pk)
-    return Response(status=status.HTTP_200_OK)
+    if request.method == "GET":
+        client = get_object_or_404(Client, pk=pk)
+        serializer = ClientSerializer(client, context={'request': request}, many=False)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+
+
+
+@api_view(['GET'])   #детальная инфа о клиенте
+@permission_classes([IsAuthenticated])
+def client_abonements(request, pk):
+    if request.method == "GET":
+        client = get_object_or_404(Client, pk=pk)
+        cl_abonements = PurchaseHistory.objects.filter
+        
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+
 
 
 @api_view(['GET','POST'])   #список всех клиентов
