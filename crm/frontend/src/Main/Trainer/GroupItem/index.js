@@ -9,7 +9,7 @@ const GroupItem = (props) => {
         setShowModalAllClients(!showModalAllClients);
     }
     return (
-        <div style={{color: '#3D5A80', fontWeight: 'bold', marginBottom: '20px'}} onClick={handleAllClients}>
+        <div style={{color: '#3D5A80', fontWeight: 'bold'}} onClick={handleAllClients}>
             {props.group.name}
             {showModalAllClients ? (
                 <div>

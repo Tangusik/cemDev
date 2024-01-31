@@ -27,11 +27,16 @@ const Trainer = () => {
             <Container
                 title={"Мои группы и клиенты"}
                 polosa={true}
+                children={
+                    <>
+                        {data.map((group, index) => (
+                            <GroupItem key={index} group={group}></GroupItem>
+                        ))}
+                    </>
+                }
             >
-                {data.map((d) => (
-                    <GroupItem group={d}></GroupItem>
-                ))}
             </Container>
+
             <Container
                 title={"Ближайшие занятия"}
                 polosa={true}
