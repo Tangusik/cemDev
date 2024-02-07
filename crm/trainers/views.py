@@ -729,6 +729,11 @@ def user_edit(request):
     else:
         return Response(serializer.errors, status=400)
 
+
+
+
+#________________________________________________________ Страница юзера
+
 @api_view(['GET'])   #детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_detail(request, pk):
@@ -744,12 +749,35 @@ def client_detail(request, pk):
 def client_abonements(request, pk):
     if request.method == "GET":
         client = get_object_or_404(Client, pk=pk)
-        cl_abonements = PurchaseHistory.objects.filter
+        cl_abonements = PurchaseHistory.objects.filter(client=client)
+
+        serializer = AbonementhistorySerializer(cl_abonements, context={'request': request},many=True)
         
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
 
 
+@api_view(['GET'])  # детальная инфа о клиенте
+@permission_classes([IsAuthenticated])
+def client_groups(request, pk):
+    if request.method == "GET":
+        client = get_object_or_404(Client, pk=pk)
+        cl_groups = Team.objects.filter(clients__in=[client])
 
+        serializer = TeamSerializer(cl_groups, context={'request': request}, many=True)
+
+        return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
+
+@api_view(['GET'])  # детальная инфа о клиенте
+@permission_classes([IsAuthenticated])
+def client_activities(request, pk):
+    if request.method == "GET":
+        client = get_object_or_404(Client, pk=pk)
+        cl_acts = Activity.objects.filter(clients__in=[client]).order_by("act_date", "act_time_begin")
+
+        serializer = ActivitySerializer(cl_acts, context={'request': request}, many=True)
+
+        return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
+#__________________________
 @api_view(['GET','POST'])   #список всех клиентов
 @permission_classes([IsAuthenticated])
 def client_list(request):
