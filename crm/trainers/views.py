@@ -735,10 +735,10 @@ def user_state_edit(request):
     
     if request.method ==  "GET":
         tr_states = TrainerState.objects.all()
-        serializer = StateSerializer(tr_states, context={'request': request}, many=True)
+        serializer = TrainerStateSerializer(tr_states, context={'request': request}, many=True)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
-        serializer = StateSerializer(data = request.data)
+        serializer = TrainerStateEditSerializer(data = request.data)
         if serializer.is_valid():
             trainer = get_object_or_404(Trainer,pk = request.user.id)
             trainer_state = get_object_or_404(TrainerState, pk = serializer.validated_data['state'])
