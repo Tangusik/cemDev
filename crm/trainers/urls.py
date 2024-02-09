@@ -33,6 +33,7 @@ urlpatterns = [
     path("areas", views.areas),
     path("sport_types", views.sport_types),
     path("abonements", views.abonements),
+    path("change_tr_state", views.user_state_edit),
     #___________client_detail_info
     path("client/<int:pk>", views.client_detail),
     path("user_edit", views.user_edit),

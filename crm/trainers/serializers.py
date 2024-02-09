@@ -26,6 +26,15 @@ class UserEditSerializer(Serializer):
     otchestv = CharField(required=False)
     email = EmailField(required=False)
 
+class StateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrainerState
+        fields = ("__all__")
+
+class StateEditSerializer(Serializer):
+    state = IntegerField(required= True)
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

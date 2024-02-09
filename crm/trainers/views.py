@@ -729,8 +729,24 @@ def user_edit(request):
     else:
         return Response(serializer.errors, status=400)
 
-
-
+@api_view(['GET','POST'])
+@permission_classes([IsAuthenticated])
+def user_state_edit(request):
+    
+    if request.method ==  "GET":
+        tr_states = TrainerState.objects.all()
+        serializer = StateSerializer(tr_states, context={'request': request}, many=True)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+    else:
+        serializer = StateSerializer(data = request.data)
+        if serializer.is_valid():
+            trainer = get_object_or_404(Trainer,pk = request.user.id)
+            trainer_state = get_object_or_404(TrainerState, pk = serializer.validated_data['state'])
+            trainer.state = trainer_state
+            trainer.save()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(serializer.errors, status=400)
 
 #________________________________________________________ Страница юзера
 
