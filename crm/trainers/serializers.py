@@ -26,6 +26,15 @@ class UserEditSerializer(Serializer):
     otchestv = CharField(required=False)
     email = EmailField(required=False)
 
+class StateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrainerState
+        fields = ("__all__")
+
+class StateEditSerializer(Serializer):
+    state = IntegerField(required= True)
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -106,7 +115,6 @@ class SportTypeSerializer(serializers.ModelSerializer):
         fields = ("__all__")
 
 class AbonementSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Abonement
         fields = ("title","price","duration","lesson_count","sport")
@@ -120,11 +128,9 @@ class AbonementCreationSerializer(serializers.Serializer):
     is_lesson_count = BooleanField(required=False)
     lesson_count = IntegerField(required=False)
     sport_type = IntegerField(required=True)
-    
 
-
-
-
-
-
-
+class AbonementhistorySerializer(serializers.ModelSerializer):
+    abonement = AbonementSerializer()
+    class Meta:
+        model = PurchaseHistory
+        fields = ['abonement', 'purchase_date', "status", 'activities_left', 'date_of_end']
