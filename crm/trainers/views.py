@@ -808,7 +808,7 @@ def client_detail(request, pk):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
-@api_view(['GET'])   #детальная инфа о клиенте
+@api_view(['GET','POST'])   #детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_abonements(request, pk):
     if request.method == "GET":
@@ -818,18 +818,13 @@ def client_abonements(request, pk):
         serializer = AbonementhistorySerializer(cl_abonements, context={'request': request},many=True)
         
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
-
-
-@api_view(['POST'])  # детальная инфа о клиенте
-@permission_classes([IsAuthenticated])
-def client_add_abonement(request, pk):
-    if request.method == "GET":
+    elif request.method == 'POST':
+        serializer = AbonementAddSerializer(data = request.data)
         client = get_object_or_404(Client, pk=pk)
-        cl_abonements = PurchaseHistory.objects.filter(client=client)
-
-        serializer = AbonementhistorySerializer(cl_abonements, context={'request': request}, many=True)
-
-        return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
+        ab = get_object_or_404(Abonement, pk=serializer.data['abonement'])
+        if "date_of_buy" in request.data and ab.duration is not None:
+            end_date = request.data["date_of_buy"] + ab.duration
+            client.abonements.add(ab, through_defaults={'purchase_date':request.data['date_of_buy'], "activities_left":ab.lesson_count, "date_of_end":})
 
 
 @api_view(['GET'])  # детальная инфа о клиенте
