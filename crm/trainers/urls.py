@@ -29,13 +29,18 @@ urlpatterns = [
     #___________main
     path("roles", views.roles),
     path("tr_statuses", views.tr_statuses),
+    path("tr_status_delete/<int:id>", views.delete_tr_status),
     path("cl_statuses", views.cl_statuses),
+    path("cl_status_delete/<int:id>", views.delete_cl_status),
     path("areas", views.areas),
+    path("area_delete/<int:id>", views.delete_area),
     path("sport_types", views.sport_types),
+    path("sport_type_delete/<int:id>", views.delete_sport_type),
     path("abonements", views.abonements),
+    path("abonement_delete/<int:id>", views.delete_sport_type),
     path("change_tr_state", views.user_state_edit),
     #___________client_detail_info
-    path("client/<int:pk>", views.client_detail),
+    path("client/<int:pk>", views.client_detail), #удаление юзера по этой же ссылке методом DELETE
     path("user_edit", views.user_edit),
     path("client/<int:pk>/abonements", views.client_abonements),
     path("client/<int:pk>/groups", views.client_groups),
