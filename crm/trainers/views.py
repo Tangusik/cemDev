@@ -578,6 +578,13 @@ def roles(request):
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_role(request, id):
+    role = get_object_or_404(Role, pk=id)
+    role.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
 
 @api_view(['GET','POST'])                           #Получение всех состояний тренеров и создание новых
 @permission_classes([IsAuthenticated])
@@ -597,6 +604,14 @@ def tr_statuses(request):
             return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_tr_status(request, id):
+    tr_status = get_object_or_404(TrainerState, pk=id)
+    tr_status.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
 
 
 
@@ -620,6 +635,13 @@ def cl_statuses(request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_cl_status(request, id):
+    cl_status = get_object_or_404(ClientState, pk=id)
+    cl_status.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
 @api_view(['GET','POST'])                           #Получение всех площадок и создание новых
 @permission_classes([IsAuthenticated])
 def areas(request):                         
@@ -640,6 +662,14 @@ def areas(request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_area(request, id):
+    area = get_object_or_404(Area, pk=id)
+    area.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
+
 @api_view(['GET','POST'])                           #Получение всех видов спорта и создание новых
 @permission_classes([IsAuthenticated])
 def sport_types(request):                         
@@ -658,6 +688,14 @@ def sport_types(request):
             return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_sport_type(request, id):
+    sport_type = get_object_or_404(SportType, pk=id)
+    sport_type.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
 
 
 @api_view(['GET','POST'])                           #Получение всех абонементов и создание новых
@@ -706,6 +744,13 @@ def abonements(request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_abonement(request, id):
+    abonement = get_object_or_404(Abonement, pk=id)
+    abonement.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
 
 
 
@@ -750,14 +795,17 @@ def user_state_edit(request):
 
 #________________________________________________________ Страница юзера
 
-@api_view(['GET'])   #детальная инфа о клиенте
+@api_view(['GET','DELETE'])   #детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_detail(request, pk):
     if request.method == "GET":
         client = get_object_or_404(Client, pk=pk)
         serializer = ClientSerializer(client, context={'request': request}, many=False)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
-
+    elif request.method == 'DELETE':
+        client = get_object_or_404()
+        client.delete()
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 
 @api_view(['GET'])   #детальная инфа о клиенте
@@ -794,20 +842,21 @@ def client_activities(request, pk):
 
         return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
 #__________________________
-@api_view(['GET','POST'])   #список всех клиентов
+@api_view(['GET','POST','DELETE'])   #список всех клиентов
 @permission_classes([IsAuthenticated])
 def client_list(request):
     if request.method == "GET":
         clients = Client.objects.all()
         serializer = ClientSerializer(clients, context={'request': request},many=True)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
-    else:
+    elif request.method== "POST":
         serializer = ClientSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])   #список всех тренеров
 @permission_classes([IsAuthenticated])
