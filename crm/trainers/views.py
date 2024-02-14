@@ -820,6 +820,18 @@ def client_abonements(request, pk):
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
 
 
+@api_view(['POST'])  # детальная инфа о клиенте
+@permission_classes([IsAuthenticated])
+def client_add_abonement(request, pk):
+    if request.method == "GET":
+        client = get_object_or_404(Client, pk=pk)
+        cl_abonements = PurchaseHistory.objects.filter(client=client)
+
+        serializer = AbonementhistorySerializer(cl_abonements, context={'request': request}, many=True)
+
+        return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
+
+
 @api_view(['GET'])  # детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_groups(request, pk):
@@ -842,7 +854,7 @@ def client_activities(request, pk):
 
         return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
 #__________________________
-@api_view(['GET','POST','DELETE'])   #список всех клиентов
+@api_view(['GET','POST'])   #список всех клиентов
 @permission_classes([IsAuthenticated])
 def client_list(request):
     if request.method == "GET":
@@ -856,6 +868,7 @@ def client_list(request):
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['GET'])   #список всех тренеров
