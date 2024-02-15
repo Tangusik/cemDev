@@ -824,6 +824,7 @@ def client_abonements(request, pk):
             end_date = datetime.date.today() + ab.duration
             ab.clients.add(client, through_defaults={"activities_left": ab.lesson_count, "date_of_end":end_date})
             client.balance -= ab.price
+            client.save()
             return Response(status=status.HTTP_202_ACCEPTED)
         else:
             return Response(serializer.errors, status=400)
