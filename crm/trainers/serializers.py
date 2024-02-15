@@ -1,7 +1,8 @@
 from .models import *
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.serializers import CharField, Serializer, EmailField, IntegerField, BooleanField
+from rest_framework.serializers import CharField, Serializer, EmailField, IntegerField, BooleanField, DateField, DateTimeField
+
 
 class ClientSerializer(serializers.ModelSerializer):
     state = serializers.StringRelatedField()
@@ -19,10 +20,6 @@ class UserEditSerializer(Serializer):
     otchestv = CharField(required=False)
     email = EmailField(required=False)
 
-class StateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TrainerState
-        fields = ("__all__")
 
 class TrainerStateEditSerializer(Serializer):
     state = IntegerField(required= True)
@@ -109,7 +106,7 @@ class SportTypeSerializer(serializers.ModelSerializer):
 class AbonementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Abonement
-        fields = ("title","price","duration","lesson_count","sport")
+        fields = ("title","price","duration","lesson_count","sport", )
 
 class AbonementCreationSerializer(serializers.Serializer):
     title = CharField(required=True)
@@ -126,3 +123,7 @@ class AbonementhistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = PurchaseHistory
         fields = ['abonement', 'purchase_date', "status", 'activities_left', 'date_of_end']
+
+
+class AbonementAddSerializer(serializers.Serializer):
+    abonement = IntegerField(required = True)

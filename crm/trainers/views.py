@@ -807,18 +807,26 @@ def client_detail(request, pk):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
-@api_view(['GET'])   #детальная инфа о клиенте
+@api_view(['GET','POST'])   #детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_abonements(request, pk):
     if request.method == "GET":
         client = get_object_or_404(Client, pk=pk)
         cl_abonements = PurchaseHistory.objects.filter(client=client)
-
         serializer = AbonementhistorySerializer(cl_abonements, context={'request': request},many=True)
-        
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
-
-
+    if request.method == "POST":
+        serializer = AbonementAddSerializer(data = request.data)
+        client = get_object_or_404(Client, pk = pk)
+        if serializer.is_valid():
+            ab = get_object_or_404(Abonement, pk = serializer.data['abonement'])
+            end_date = datetime.date.today() + ab.duration
+            ab.clients.add(client, through_defaults={"activities_left": ab.lesson_count, "date_of_end":end_date})
+            client.balance -= ab.price
+            client.save()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(serializer.errors, status=400)
 @api_view(['GET'])  # детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_groups(request, pk):
