@@ -4,7 +4,8 @@ import Button from "../../components/Button";
 import React, {useEffect, useState} from "react";
 import Form from "../../components/Form";
 import EditModal from "../../components/EditModal";
-import axios from "axios";
+import { fetchGet } from '../../api/get';
+import { fetchPost } from '../../api/post';
 
 const Admin = () => {
     const [showModalRoles, setShowModalRoles] = useState(false);
@@ -14,8 +15,8 @@ const Admin = () => {
     const [showModalTypeSports, setShowModalTypeSports] = useState(false);
     const [showModalAbonements, setShowModalAbonements] = useState(false);
 
-    const [isDurationActive, setIsDurationActive] = useState(false);
-    const [isCountActive, setIsCountActive] = useState(false);
+    // const [isDurationActive, setIsDurationActive] = useState(false);
+    // const [isCountActive, setIsCountActive] = useState(false);
 
     const [roles, setRoles] = useState([]);
     const [employeeStates, setEmployeeStates] = useState([]);
@@ -23,6 +24,21 @@ const Admin = () => {
     const [areas, setAreas] = useState([]);
     const [sportTypes, setSportTypes] = useState([]);
     const [abonements, setAbonements] = useState([]);
+
+    const [role, setRole] = useState([]);
+    const [employeeState, setEmployeeState] = useState([]);
+    const [clientsState, setClientsState] = useState([]);
+    const [area, setArea] = useState([]);
+    const [sportType, setSportType] = useState([]);
+
+    const [abonementName, setAbonementName] = useState([]);
+    const [abonementPrice, setAbonementPrice] = useState([]);
+    const [abonementIsDuration, setAbonementIsDuration] = useState(false);
+    const [abonementDuration, setAbonementDuration] = useState([]);
+    const [abonementDurationType, setAbonementDurationType] = useState([]);
+    const [abonementIsLessonCount, setAbonementIsLessonCount] = useState(false);
+    const [abonementLessonCount, setAbonementLessonCount] = useState([]);
+    const [abonementSportType, setAbonementSportType] = useState([]);
 
     const handleRoles = () => {
         setShowModalRoles(!showModalRoles)
@@ -44,100 +60,108 @@ const Admin = () => {
     }
 
     useEffect(() => {
-        const fetchRoles = async () => {
-            try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/roles');
-                setRoles(response.data);
-            } catch (error) {
-                console.error(error);
-            }
+        const fetchGetData = async () => {
+            const roles = await fetchGet('roles');
+            setRoles(roles);
+
+            const employeeStates = await fetchGet('tr_statuses');
+            setEmployeeStates(employeeStates)
+
+            const clientsStates = await fetchGet('cl_statuses');
+            setClientsStates(clientsStates)
+
+            const areas = await fetchGet('areas');
+            setAreas(areas)
+
+            const sportTypes = await fetchGet('sport_types');
+            setSportTypes(sportTypes)
+
+            const abonements = await fetchGet('abonements');
+            setAbonements(abonements)
+
         };
 
-        fetchRoles();
+        fetchGetData();
     }, []);
 
-    useEffect(() => {
-        const fetchEmployeeStates = async () => {
-            try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/tr_statuses');
-                setEmployeeStates(response.data);
-            } catch (error) {
-                console.error(error);
-            }
+    const handleAddRole = async (event) => {
+        event.preventDefault();
+
+        const data = {
+            name: role,
         };
+        await fetchPost( 'roles', data);
+        setShowModalRoles(false)
+        window.location.reload();
+    };
 
-        fetchEmployeeStates();
-    }, []);
+    const handleAddEmployeeState = async (event) => {
+        event.preventDefault();
 
-    useEffect(() => {
-        const fetchClientsStates = async () => {
-            try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/cl_statuses');
-                setClientsStates(response.data);
-            } catch (error) {
-                console.error(error);
-            }
+        const data = {
+            name: employeeState,
         };
+        await fetchPost( 'tr_statuses', data);
+        setShowModalEmployeeStates(false)
+        window.location.reload();
+    };
 
-        fetchClientsStates();
-    }, []);
+    const handleAddClientState = async (event) => {
+        event.preventDefault();
 
-    useEffect(() => {
-        const fetchAreas = async () => {
-            try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/areas');
-                setAreas(response.data);
-            } catch (error) {
-                console.error(error);
-            }
+        const data = {
+            name: clientsState,
         };
+        await fetchPost( 'cl_statuses', data);
+        setShowModalClientStates(false)
+        window.location.reload();
+    };
 
-        fetchAreas();
-    }, []);
+    const handleAddAreas = async (event) => {
+        event.preventDefault();
 
-    useEffect(() => {
-        const fetchSportTypes = async () => {
-            try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/sport_types');
-                setSportTypes(response.data);
-            } catch (error) {
-                console.error(error);
-            }
+        const data = {
+            address: area,
         };
+        await fetchPost( 'areas', data);
+        setShowModalAreas(false)
+        window.location.reload();
+    };
 
-        fetchSportTypes();
-    }, []);
+    const handleAddTypeSports = async (event) => {
+        event.preventDefault();
 
-    useEffect(() => {
-        const fetchAbonements = async () => {
-            try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/abonements');
-                setAbonements(response.data);
-            } catch (error) {
-                console.error(error);
-            }
+        const data = {
+            title: sportType,
+            trainers: [],
         };
+        await fetchPost( 'sport_types', data);
+        setShowModalTypeSports(false)
+        window.location.reload();
+    };
 
-        fetchAbonements();
-    }, []);
+    const handleAddAbonements = async (event) => {
+        event.preventDefault();
+
+        const data = {
+            title: abonementName,
+            price: abonementPrice,
+            is_duration: abonementIsDuration,
+            is_lesson_count: abonementIsLessonCount,
+            sport_type: abonementSportType,
+            ...(abonementIsDuration && {
+                duration: abonementDuration,
+                duration_type: abonementDurationType,
+            }),
+            ...(abonementIsLessonCount && {
+                lesson_count: abonementLessonCount,
+            }),
+        };
+        await fetchPost( 'abonements', data);
+        setShowModalAbonements(false)
+        window.location.reload();
+    };
+
 
     return (
         <div>
@@ -158,10 +182,11 @@ const Admin = () => {
                     onClose={handleRoles}
                     children={
                         <Form
+                            onSubmit={handleAddRole}
                             title={'Добавление роли'}
                             children={
                                 <div>
-                                    <input type="text" name="role" placeholder="Название роли" required/>
+                                    <input type="text" name="role" placeholder="Название роли" onChange={(e) => setRole(e.target.value)} required/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -184,10 +209,11 @@ const Admin = () => {
                     onClose={handleEmployeeStates}
                     children={
                         <Form
+                            onSubmit={handleAddEmployeeState}
                             title={'Добавление статуса сотрудников'}
                             children={
                                 <div>
-                                    <input type="text" name="trainer_state" placeholder="Название статуса" required/>
+                                    <input type="text" name="trainer_state" placeholder="Название статуса" onChange={(e) => setEmployeeState(e.target.value)} required/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -210,10 +236,11 @@ const Admin = () => {
                     onClose={handleClientStates}
                     children={
                         <Form
+                            onSubmit={handleAddClientState}
                             title={'Добавление статуса клиентов'}
                             children={
                                 <div>
-                                    <input type="text" name="client_state" placeholder="Название статуса" required/>
+                                    <input type="text" name="client_state" placeholder="Название статуса" onChange={(e) => setClientsState(e.target.value)} required/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -236,10 +263,11 @@ const Admin = () => {
                     onClose={handleAreas}
                     children={
                         <Form
+                            onSubmit={handleAddAreas}
                             title={'Добавление площадки'}
                             children={
                                 <div>
-                                    <input type="text" name="address" placeholder="Адрес площадки" required/>
+                                    <input type="text" name="address" placeholder="Адрес площадки" onChange={(e) => setArea(e.target.value)} required/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -262,10 +290,11 @@ const Admin = () => {
                     onClose={handleTypeSports}
                     children={
                         <Form
+                            onSubmit={handleAddTypeSports}
                             title={'Добавление вида спорта'}
                             children={
                                 <div>
-                                    <input type="text" name="title" placeholder="Вид спорта" required/>
+                                    <input type="text" name="title" placeholder="Вид спорта" onChange={(e) => setSportType(e.target.value)} required/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -288,16 +317,17 @@ const Admin = () => {
                     onClose={handleAbonements}
                     children={
                         <Form
+                            onSubmit={handleAddAbonements}
                             title={'Добавление абонемента'}
                             children={
                                 <div>
-                                    <input type="text" name="title" placeholder="Название абонемента" required/>
-                                        <input type="text" name="price" placeholder="Цена абонемента" required/>
+                                    <input type="text" name="title" placeholder="Название абонемента" onChange={(e) => setAbonementName(e.target.value)} required/>
+                                        <input type="text" name="price" placeholder="Цена абонемента" onChange={(e) => setAbonementPrice(e.target.value)} required/>
                                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                             <input
                                                 type="checkbox"
-                                                checked={isDurationActive}
-                                                onChange={e => setIsDurationActive(e.target.checked)}
+                                                checked={abonementIsDuration}
+                                                onChange={e => setAbonementIsDuration(e.target.checked)}
                                                 style={{width: '20px', marginLeft: '-20px'}}
                                             />
                                             <input
@@ -305,9 +335,10 @@ const Admin = () => {
                                                 name="duration"
                                                 placeholder="Длительность"
                                                 style={{ marginRight: '1em'}}
-                                                disabled={!isDurationActive}
+                                                disabled={!abonementIsDuration}
+                                                onChange={e => setAbonementDuration(e.target.value)}
                                             />
-                                            <select name="duration_type" required className={styles.selectSport} style={{width:'fit-content'}}>
+                                            <select name="duration_type" required className={styles.selectSport} onChange={(e) => setAbonementDurationType(e.target.value)} style={{width:'fit-content'}}>
                                                 <option value="days">Дней</option>
                                                 <option value="weeks">Недель</option>
                                                 <option value="month">Месяцев</option>
@@ -316,20 +347,21 @@ const Admin = () => {
                                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                             <input
                                                 type="checkbox"
-                                                checked={isCountActive}
-                                                onChange={e => setIsCountActive(e.target.checked)}
+                                                checked={abonementIsLessonCount}
+                                                onChange={e => setAbonementIsLessonCount(e.target.checked)}
                                                 style={{width: '20px', marginLeft: '-20px'}}
                                             />
                                             <input
                                                 type="text"
                                                 name="count"
                                                 placeholder="Количество занятий"
-                                                disabled={!isCountActive}
+                                                disabled={!abonementIsLessonCount}
+                                                onChange={(e) => setAbonementLessonCount(e.target.value)}
                                             />
                                         </div>
-                                        <select id="select_sport" name="sport" className={styles.selectSport}>
+                                        <select id="select_sport" required name="sport" className={styles.selectSport} onChange={(e) => setAbonementSportType(e.target.value)}>
                                             {sportTypes.map((sportType)=>
-                                                (<option>{sportType.title}</option>)
+                                                (<option value={sportType.id}>{sportType.title}</option>)
                                             )}
                                         </select>
                                     <input type="submit" value="Добавить"/>
