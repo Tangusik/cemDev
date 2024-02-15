@@ -814,19 +814,19 @@ def client_abonements(request, pk):
     if request.method == "GET":
         client = get_object_or_404(Client, pk=pk)
         cl_abonements = PurchaseHistory.objects.filter(client=client)
-
         serializer = AbonementhistorySerializer(cl_abonements, context={'request': request},many=True)
-        
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
-    elif request.method == 'POST':
+    if request.method == "POST":
         serializer = AbonementAddSerializer(data = request.data)
-        client = get_object_or_404(Client, pk=pk)
-        ab = get_object_or_404(Abonement, pk=serializer.data['abonement'])
-        if "date_of_buy" in request.data and ab.duration is not None:
-            end_date = request.data["date_of_buy"] + ab.duration
-            client.abonements.add(ab, through_defaults={'purchase_date':request.data['date_of_buy'], "activities_left":ab.lesson_count, "date_of_end":})
-
-
+        client = get_object_or_404(Client, pk = pk)
+        if serializer.is_valid():
+            ab = get_object_or_404(Abonement, pk = serializer.data['abonement'])
+            end_date = datetime.date.today() + ab.duration
+            ab.clients.add(client, through_defaults={"activities_left": ab.lesson_count, "date_of_end":end_date})
+            client.balance -= ab.price
+            return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(serializer.errors, status=400)
 @api_view(['GET'])  # детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_groups(request, pk):
@@ -849,7 +849,7 @@ def client_activities(request, pk):
 
         return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
 #__________________________
-@api_view(['GET','POST'])   #список всех клиентов
+@api_view(['GET','POST','DELETE'])   #список всех клиентов
 @permission_classes([IsAuthenticated])
 def client_list(request):
     if request.method == "GET":
@@ -863,7 +863,6 @@ def client_list(request):
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 @api_view(['GET'])   #список всех тренеров
