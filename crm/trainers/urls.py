@@ -8,12 +8,12 @@ urlpatterns = [
     path('logout', views.log_out, name='logout'),
     
 
-    path('clients/team_creation', views.team_creation, name='team_creation'),
-    path('clients', views.clients, name='clients'),
+#     path('clients/team_creation', views.team_creation, name='team_creation'),
+#     path('clients', views.clients, name='clients'),
     #path('client/<int:client_id>', views.client_info, name='client_info'),
-    path('trainers', views.trainers, name='trainers'),
-    path('trainers/add_action', views.trainers_add_action, name='trainers_add_action'),
-    path('main/edit_profile', views.edit, name="profile_edit"),
+#     path('trainers', views.trainers, name='trainers'),
+#     path('trainers/add_action', views.trainers_add_action, name='trainers_add_action'),
+#     path('main/edit_profile', views.edit, name="profile_edit"),
     #path('client/<int:client_id>/add_balance', views.add_balance, name='add_balance'),
     #path('client/<int:client_id>/buy_abonement', views.buy_abonement, name='buy_abonement'),
     #path('client/<int:client_id>/delete_abonement/<int:abonement_id>', views.delete_abonement, name='delete_abonement'),

@@ -4,7 +4,8 @@ import Button from "../../components/Button";
 import EditModal from "../../components/EditModal";
 import Form from "../../components/Form";
 import React, {useEffect, useState} from "react";
-import axios from "axios";
+import { fetchGet } from '../../api/get';
+import { fetchPost } from '../../api/post';
 
 const MainInfo = ({ setUserRole }) => {
     const [showMainDataModal, setShowMainDataModal] = useState(false);
@@ -27,117 +28,51 @@ const MainInfo = ({ setUserRole }) => {
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/trainer_card');
-                setData(response.data);
-                setUserRole(response.data.role.toString());
-            } catch (error) {
-                console.error(error);
-            }
-        };
+        const fetchGetData = async () => {
+            const main_data = await fetchGet('trainer_card');
+            setData(main_data);
+            setUserRole(main_data.role.toString());
 
-        fetchData();
+            const status = await fetchGet('change_tr_state');
+            setStatus(status);
+        };
+        fetchGetData();
     }, []);
 
-    useEffect(() => {
-        const fetchEmployeeStates = async () => {
-            try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/tr_statuses');
-                setStatus(response.data);
-            } catch (error) {
-                console.error(error);
+    function filterObject(obj) {
+        return Object.keys(obj).reduce((acc, key) => {
+            if (obj[key] !== "") {
+                acc[key] = obj[key];
             }
-        };
-
-        fetchEmployeeStates();
-    }, []);
-
-    function getCSRFToken() {
-        let csrfToken;
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const parts = cookie.split('=');
-            if (parts[0].trim() === 'csrftoken') {
-                csrfToken = parts[1];
-                break;
-            }
-        }
-        return csrfToken;
+            return acc;
+        }, {});
     }
 
     const handleSubmitEditUser = async (event) => {
         event.preventDefault();
-
-        const port = 8000;
-        const url = `http://localhost:${port}/crm/user_edit`;
-        const data = {
+        let noFilterData = {
             first_name: first_name,
             last_name: last_name,
             email: email,
             otchestv: otchestv,
         };
-
-        try {
-            const response = await axios.post(url, data, {
-                withCredentials: true,
-                headers: {'X-CSRFToken': getCSRFToken()}
-            });
-
-            if (response.status === 200) {
-                const responseData = response.data;
-                console.log(responseData);
-                setShowMainDataModal(false)
-                window.location.reload();
-            } else {
-                setShowMainDataModal(false)
-                console.error('Ошибка при отправке запроса:', response.statusText);
-                window.location.reload();
-            }
-        } catch (error) {
-            console.error('Произошла ошибка:', error);
-        }
-    };
-
-    const handleStatusChange = (event) => {
-        setSelectedStatus(event.target.value);
-    };
+        const data = filterObject(noFilterData);
+        console.log(data)
+        await fetchPost( 'user_edit', data);
+        setShowMainDataModal(false)
+        window.location.reload();
+    }
 
     const handleSubmitEditStatus = async (event) => {
         event.preventDefault();
-
-        const port = 8000;
-        const url = `http://localhost:${port}/crm/tr_statuses`;
         const data = {
             state: selectedStatus
         };
+        await fetchPost( 'change_tr_state', data);
+        setShowStateDataModal(false)
+        window.location.reload();
+    }
 
-        try {
-            const response = await axios.post(url, data, {
-                withCredentials: true,
-                headers: {'X-CSRFToken': getCSRFToken()}
-            });
-
-            if (response.status === 200) {
-                const responseData = response.data;
-                console.log(responseData);
-                setShowStateDataModal(false)
-                // window.location.reload();
-            } else {
-                setShowStateDataModal(false)
-                console.error('Ошибка при отправке запроса:', response.statusText);
-                // window.location.reload();
-            }
-        } catch (error) {
-            console.error('Произошла ошибка:', error);
-        }
-    };
 
     return (
         <div>
@@ -170,10 +105,10 @@ const MainInfo = ({ setUserRole }) => {
                         onSubmit={handleSubmitEditUser}
                         children={
                             <div>
-                                <input type="text" name="name" placeholder="Имя" onChange={(e) => setFirst_name(e.target.value)}/>
-                                <input type="text" name="last_name"  placeholder="Фамилия" onChange={(e) => setLast_name(e.target.value)}/>
-                                <input type="text" name="otchestcv" placeholder="Отчество" onChange={(e) => setOtchestv(e.target.value)}/>
-                                <input type="text" name="email" placeholder="Почта" onChange={(e) => setEmail(e.target.value)}/>
+                                <input type="text" name="name" placeholder="Имя" defaultValue={data.user.first_name} onChange={(e) => setFirst_name(e.target.value)}/>
+                                <input type="text" name="last_name"  placeholder="Фамилия" defaultValue={data.user.last_name} onChange={(e) => setLast_name(e.target.value)}/>
+                                <input type="text" name="otchestcv" placeholder="Отчество" defaultValue={data.otchestv} onChange={(e) => setOtchestv(e.target.value)}/>
+                                <input type="text" name="email" placeholder="Почта" defaultValue={data.user.email} onChange={(e) => setEmail(e.target.value)}/>
                                 <input type="submit" value="Добавить"/>
                             </div>}
                     ></Form>}
@@ -188,9 +123,9 @@ const MainInfo = ({ setUserRole }) => {
                         onSubmit={handleSubmitEditStatus}
                         children={
                             <div>
-                                <select name="duration_type" required className={styles.selectSport} style={{width: '100%'}} onChange={handleStatusChange} >
+                                <select name="duration_type" required className={styles.selectSport} style={{width: '100%'}} onChange={(e) => setSelectedStatus(e.target.value)} >
                                     {statuses.map((status)=>
-                                        (<option name={status.name}>{status.name}</option>)
+                                        (<option value={status.id} name={status.name}>{status.name}</option>)
                                     )}
                                 </select>
                                 <input type="submit" value="Изменить"/>

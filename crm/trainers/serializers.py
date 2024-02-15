@@ -9,13 +9,6 @@ class ClientSerializer(serializers.ModelSerializer):
         model = Client
         fields = ('first_name', 'last_name', 'birth_date', 'state', 'balance',"id")
 
-
-
-
-
-
-
-
 class UserAuthSerializer(Serializer):
     username = CharField(required=True)
     password = CharField(required=True)
@@ -31,9 +24,8 @@ class StateSerializer(serializers.ModelSerializer):
         model = TrainerState
         fields = ("__all__")
 
-class StateEditSerializer(Serializer):
+class TrainerStateEditSerializer(Serializer):
     state = IntegerField(required= True)
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
