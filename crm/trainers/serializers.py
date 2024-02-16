@@ -106,7 +106,7 @@ class SportTypeSerializer(serializers.ModelSerializer):
 class AbonementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Abonement
-        fields = ("title","price","duration","lesson_count","sport", )
+        fields = ("title","price","duration","lesson_count","sport", "id")
 
 class AbonementCreationSerializer(serializers.Serializer):
     title = CharField(required=True)
