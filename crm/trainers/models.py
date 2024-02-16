@@ -13,6 +13,12 @@ class ClientState(models.Model):
         return self.name
 
 
+class SportType(models.Model):
+    title = models.CharField(blank=True, max_length=50, default='Спорт')
+
+    def __str__(self):
+        return self.title
+
 class Client(models.Model):
     first_name = models.CharField(blank=False, max_length=30, default='qwerty')
     last_name = models.CharField(blank=True, max_length=30)
@@ -37,6 +43,7 @@ class Trainer(models.Model):
     birthdate = models.DateField(auto_now=False)
     role = models.ForeignKey(Role, models.CASCADE, blank=True, null=True)
     state = models.ForeignKey(TrainerState, models.CASCADE, blank=True, null=True)
+    sport_types = models.ManyToManyField(SportType)
 
     def __str__(self):
         return self.user.first_name
@@ -65,18 +72,12 @@ class Parents(models.Model):
     telephone = models.CharField(blank=True, max_length=30)
 
 
-class SportType(models.Model):
-    title = models.CharField(blank=True, max_length=50, default='Спорт')
-    trainers = models.ManyToManyField(Trainer)
-
-    def __str__(self):
-        return self.title
 
 class Team(models.Model):
     name = models.CharField(max_length=20, blank=False)
     clients = models.ManyToManyField(Client)
     sport_type = models.ForeignKey(SportType, on_delete=models.SET_NULL, blank=False, null=True)
-    trainer = models.ForeignKey(Trainer, models.CASCADE, blank=False, null=True)
+    trainer = models.ForeignKey(Trainer, models.DO_NOTHING, blank=False, null=True)
 
     def __str__(self):
         return self.name
@@ -91,17 +92,6 @@ class Activity(models.Model):
     status = models.CharField(max_length=20, default="Состоится")
     sport = models.ForeignKey(SportType, models.DO_NOTHING, blank=False, null=True)
 
-#     def to_json(self):
-#         return {
-#             'act_date': self.act_date.strftime('%Y-%m-%d'),
-#             'act_time_begin': self.act_time_begin.strftime('%H:%M:%S'),
-#             'act_time_end': self.act_time_end.strftime('%H:%M:%S'),
-#             'area': self.area.address,
-# #             'clients': [client.id for client in self.clients.all()],
-#             'trainer': self.trainer.user.first_name,
-#             'status': self.status,
-#             'sport': self.sport.title,
-#         }
 
 class Presence(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.DO_NOTHING)
@@ -126,7 +116,7 @@ class Abonement(models.Model):
     duration = models.DurationField(blank=True, null=True)
     lesson_count = models.IntegerField(blank=True, null=True)
     clients = models.ManyToManyField(Client, through="PurchaseHistory")
-    sport = models.ForeignKey(SportType, on_delete=models.CASCADE, blank=True)
+    sport = models.ForeignKey(SportType, on_delete=models.DO_NOTHING, blank=True)
 
 
 class PurchaseHistory(models.Model):
