@@ -20,6 +20,11 @@
     background-color: #F1FFFF;
     flex: 70%;
     width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .container {
@@ -134,20 +139,22 @@
 .containerText{
     padding-right: 2em;
     margin-left: 2em;
+    color:  #3D5A80;
+    margin-bottom: 30px;
 }
 
-.containerText h4 {
-    color: #293241;
+.abonements {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    font-size: 20px;
 }
 
-.containerText h3 {
-    margin-bottom: 1em;
-    color: #293241;
-}
-
-.containerText ul li a{
-    color: #293241;
-    display: none;
+.abonements div {
+    color: #3D5A80;
 }
 
 .changeBtn {

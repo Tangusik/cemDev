@@ -6,6 +6,7 @@ import moment from 'moment';
 import axios from "axios";
 import EditModal from "../components/EditModal";
 import Button from "../components/Button";
+import {fetchGet} from "../api/get";
 
 const Calendar = () => {
     const now = new Date();
@@ -13,21 +14,23 @@ const Calendar = () => {
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
     const [showCard, setShowCard] = useState(false);
     const [card, setCard] = useState({sport: '', area: '', trainer: '', time: '', date: '',});
+    // const [clientActs, setClientActs] = useState(null);
 
     const [data, setData] = useState([]);
 
     const fetchData = async (url) => {
-        try {
-            const port = 8000;
-            axios.defaults.baseURL = `http://localhost:${port}`;
-            axios.defaults.withCredentials = true;
-            const response = await axios.get(url);
-            setData(response.data);
-            console.log(data)
-        } catch (error) {
-            console.error(error);
-        }
+        const response = await fetchGet(url);
+        setData(response);
     };
+
+    // useEffect( () => {
+    //     const fetchData = async () => {
+    //         const responseClientActs = await fetchGet(`client/${id}/acts`);
+    //         setClientActs(responseClientActs);
+    //     }
+    //
+    //     fetchData();
+    // }, []);
 
     const renderWeekdayHeaders = () => {
         const weekdays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
@@ -62,11 +65,11 @@ const Calendar = () => {
     };
 
     const handleChooseOwnSchedule = () => {
-        fetchData('crm/schedule').then(r => console.log(r));
+        fetchData('schedule').then(r => console.log(r));
     };
 
     const handleChooseCommonSchedule = () => {
-        fetchData('crm/scheduleAll').then(r => console.log(r));
+        fetchData('scheduleAll').then(r => console.log(r));
     };
 
     const renderContent = (i) => {

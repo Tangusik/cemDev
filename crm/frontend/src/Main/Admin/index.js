@@ -6,6 +6,8 @@ import Form from "../../components/Form";
 import EditModal from "../../components/EditModal";
 import { fetchGet } from '../../api/get';
 import { fetchPost } from '../../api/post';
+import { fetchDelete} from '../../api/delete';
+import iconCross from '../../Icons/cross.svg';
 
 const Admin = () => {
     const [showModalRoles, setShowModalRoles] = useState(false);
@@ -14,9 +16,6 @@ const Admin = () => {
     const [showModalAreas, setShowModalAreas] = useState(false);
     const [showModalTypeSports, setShowModalTypeSports] = useState(false);
     const [showModalAbonements, setShowModalAbonements] = useState(false);
-
-    // const [isDurationActive, setIsDurationActive] = useState(false);
-    // const [isCountActive, setIsCountActive] = useState(false);
 
     const [roles, setRoles] = useState([]);
     const [employeeStates, setEmployeeStates] = useState([]);
@@ -39,6 +38,9 @@ const Admin = () => {
     const [abonementIsLessonCount, setAbonementIsLessonCount] = useState(false);
     const [abonementLessonCount, setAbonementLessonCount] = useState([]);
     const [abonementSportType, setAbonementSportType] = useState([]);
+
+    const [deletedItemId, setDeletedItemId] = useState([]);
+    const [deletedItemEndpoint, setDeletedEndpoint] = useState([]);
 
     const handleRoles = () => {
         setShowModalRoles(!showModalRoles)
@@ -162,6 +164,23 @@ const Admin = () => {
         window.location.reload();
     };
 
+    useEffect(() => {
+        const performDeletion = async () => {
+            if (deletedItemEndpoint !== '' && deletedItemId !== '') {
+                await fetchDelete(deletedItemEndpoint, deletedItemId).then((res) => {
+                    if (res){
+                        window.location.reload()
+                    }
+                });
+                setDeletedItemId('');
+                setDeletedEndpoint('');
+            }
+        };
+
+        performDeletion();
+    }, [deletedItemEndpoint, deletedItemId]);
+
+
 
     return (
         <div>
@@ -170,8 +189,14 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                {roles.map((role, index)=>
-                    (<div key={index} style={{color: '#293241'}}>{role.name}</div>)
+                {roles.map((role) =>
+                    <div key={role.id} className={styles.row}>
+                        <div style={{color: '#293241'}}>{role.name}</div>
+                        <div style={{cursor: 'pointer'}} onClick={() => {
+                            setDeletedEndpoint('delete_role');
+                            setDeletedItemId(role.id);
+                        }}><img src={iconCross} alt=''/></div>
+                    </div>
                 )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить роль"} onClick={handleRoles}></Button>
                 </>
@@ -197,8 +222,14 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {employeeStates.map((employeeState, index)=>
-                        (<div key={index} style={{color: '#293241'}}>{employeeState.name}</div>)
+                    {employeeStates.map((employeeState) =>
+                        <div key={employeeState.id} className={styles.row}>
+                            <div style={{color: '#293241'}}>{employeeState.name}</div>
+                            <div style={{cursor: 'pointer'}} onClick={() => {
+                                setDeletedEndpoint('tr_status_delete');
+                                setDeletedItemId(employeeState.id);
+                            }}><img src={iconCross} alt=''/></div>
+                        </div>
                     )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить статус"} onClick={handleEmployeeStates}></Button>
                 </>
@@ -224,8 +255,14 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {clientsStates.map((clientsState, index)=>
-                        (<div key={index} style={{color: '#293241'}}>{clientsState.name}</div>)
+                    {clientsStates.map((clientsState) =>
+                        <div key={clientsState.id} className={styles.row}>
+                            <div style={{color: '#293241'}}>{clientsState.name}</div>
+                            <div style={{cursor: 'pointer'}} onClick={() => {
+                                setDeletedEndpoint('cl_status_delete');
+                                setDeletedItemId(clientsState.id);
+                            }}><img src={iconCross} alt=''/></div>
+                        </div>
                     )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить статус"} onClick={handleClientStates}></Button>
                 </>
@@ -251,8 +288,14 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {areas.map((area, index)=>
-                        (<div key={index} style={{color: '#293241'}}>{area.address}</div>)
+                    {areas.map((area) =>
+                        <div key={area.id} className={styles.row}>
+                            <div style={{color: '#293241'}}>{area.address}</div>
+                            <div style={{cursor: 'pointer'}} onClick={() => {
+                                setDeletedEndpoint('area_delete');
+                                setDeletedItemId(area.id);
+                            }}><img src={iconCross} alt=''/></div>
+                        </div>
                     )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить площадку"} onClick={handleAreas}></Button>
                 </>
@@ -278,8 +321,14 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {sportTypes.map((sportType, index)=>
-                        (<div key={index} style={{color: '#293241'}}>{sportType.title}</div>)
+                    {sportTypes.map((sportType)=>
+                        <div key={sportType.id} className={styles.row}>
+                            <div style={{color: '#293241'}}>{sportType.title}</div>
+                            <div style={{cursor: 'pointer'}} onClick={() => {
+                                setDeletedEndpoint('sport_type_delete');
+                                setDeletedItemId(sportType.id);
+                            }}><img src={iconCross} alt=''/></div>
+                        </div>
                     )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить вид спорта"} onClick={handleTypeSports}></Button>
                 </>
@@ -305,8 +354,14 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {abonements.map((abonement, index)=>
-                        (<div key={index} style={{color: '#293241'}}>{abonement.title}</div>)
+                    {abonements.map((abonement)=>
+                        <div key={abonement.id} className={styles.row}>
+                            <div style={{color: '#293241'}}>{abonement.title}</div>
+                            <div style={{cursor: 'pointer'}} onClick={() => {
+                                setDeletedEndpoint('abonement_delete');
+                                setDeletedItemId(abonement.id);
+                            }}><img src={iconCross} alt=''/></div>
+                        </div>
                     )}
                     <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить абонемент"} onClick={handleAbonements}></Button>
                 </>
@@ -361,7 +416,7 @@ const Admin = () => {
                                         </div>
                                         <select id="select_sport" required name="sport" className={styles.selectSport} onChange={(e) => setAbonementSportType(e.target.value)}>
                                             {sportTypes.map((sportType)=>
-                                                (<option value={sportType.id}>{sportType.title}</option>)
+                                                (<option key={sportType.id} value={sportType.id}>{sportType.title}</option>)
                                             )}
                                         </select>
                                     <input type="submit" value="Добавить"/>

@@ -62,11 +62,20 @@
     margin-bottom: 50px;
 }
 
-summary {
+.summary {
     color: #3c3c3c;
     margin-top: 1em;
-    margin-left: 5em;
+    margin-left: 3em;
     font-size: 20px;
     list-style: none;
     font-weight: bold !important;
+
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
+
+.summary div {
+    color: #3D5A80;
+}
+

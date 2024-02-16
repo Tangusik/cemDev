@@ -11,3 +11,9 @@
     align-items: center;
     color: #3D5A80;
 }
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
