@@ -43,10 +43,10 @@ urlpatterns = [
     path("cl_status_delete/<int:id>", views.delete_cl_status),      #DONE
     path("areas", views.areas),                                     #DONE
     path("area_delete/<int:id>", views.delete_area),                #DONE
-    path("sport_types", views.sport_types),                         #FIX
-    path("sport_type_delete/<int:id>", views.delete_sport_type),    #FIX
+    path("sport_types", views.sport_types),                         #FIX #вроде норм
+    path("sport_type_delete/<int:id>", views.delete_sport_type),    #FIX #вроде норм
     path("abonements", views.abonements),                           #DONE
-    path("abonement_delete/<int:id>", views.delete_abonement),      #FIX
+    path("abonement_delete/<int:id>", views.delete_abonement),      #FIX #ghjlt yjhv
 
     #___________client_detail_info
     path("client/<int:pk>", views.client_detail),                   #DONE

@@ -670,7 +670,7 @@ def delete_area(request, id):
     return Response(status=status.HTTP_202_ACCEPTED)
 
 
-@api_view(['GET','POST'])                           #Получение всех видов спорта и создание новых
+@api_view(['POST'])                           #Получение всех видов спорта и создание новых
 @permission_classes([IsAuthenticated])
 def sport_types(request):                         
     trainer = request.user.trainer
@@ -694,6 +694,7 @@ def sport_types(request):
 @permission_classes([IsAuthenticated])
 def delete_sport_type(request, id):
     sport_type = get_object_or_404(SportType, pk=id)
+
     sport_type.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -736,10 +737,9 @@ def abonements(request):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             abonements = Abonement.objects.all()
-            sport_types = SportType.objects.all()
             serializer = AbonementSerializer(abonements, context={'request': request},many=True)
-            sp_serializer = SportTypeSerializer(sport_types, context={'request': request},many=True)
-            return JsonResponse(serializer.data + sp_serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+            
+            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
