@@ -44,7 +44,7 @@ urlpatterns = [
     path("areas", views.areas),                                     #DONE
     path("area_delete/<int:id>", views.delete_area),                #DONE
     path("sport_types", views.sport_types),                         #FIX
-    path("sport_type_delete/<int:id>", views.delete_sport_type),    #DONE
+    path("sport_type_delete/<int:id>", views.delete_sport_type),    #FIX
     path("abonements", views.abonements),                           #DONE
     path("abonement_delete/<int:id>", views.delete_abonement),      #FIX
 
