@@ -670,7 +670,7 @@ def delete_area(request, id):
     return Response(status=status.HTTP_202_ACCEPTED)
 
 
-@api_view(['POST'])                           #Получение всех видов спорта и создание новых
+@api_view(['POST', 'GET'])                           #Получение всех видов спорта и создание новых
 @permission_classes([IsAuthenticated])
 def sport_types(request):                         
     trainer = request.user.trainer
