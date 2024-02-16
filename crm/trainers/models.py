@@ -43,7 +43,7 @@ class Trainer(models.Model):
     birthdate = models.DateField(auto_now=False)
     role = models.ForeignKey(Role, models.CASCADE, blank=True, null=True)
     state = models.ForeignKey(TrainerState, models.CASCADE, blank=True, null=True)
-    sport_types = models.ManyToManyField(SportType)
+    sport_types = models.ManyToManyField(SportType, blank=True)
 
     def __str__(self):
         return self.user.first_name
