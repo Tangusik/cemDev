@@ -189,7 +189,7 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                {roles.map((role) =>
+                {roles && roles.map((role) =>
                     <div key={role.id} className={styles.row}>
                         <div style={{color: '#293241'}}>{role.name}</div>
                         <div style={{cursor: 'pointer'}} onClick={() => {
@@ -222,7 +222,7 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {employeeStates.map((employeeState) =>
+                    {employeeStates && employeeStates.map((employeeState) =>
                         <div key={employeeState.id} className={styles.row}>
                             <div style={{color: '#293241'}}>{employeeState.name}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
@@ -255,7 +255,7 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {clientsStates.map((clientsState) =>
+                    {clientsStates && clientsStates.map((clientsState) =>
                         <div key={clientsState.id} className={styles.row}>
                             <div style={{color: '#293241'}}>{clientsState.name}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
@@ -288,7 +288,7 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {areas.map((area) =>
+                    {areas && areas.map((area) =>
                         <div key={area.id} className={styles.row}>
                             <div style={{color: '#293241'}}>{area.address}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
@@ -321,7 +321,7 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {sportTypes.map((sportType)=>
+                    {sportTypes && sportTypes.map((sportType)=>
                         <div key={sportType.id} className={styles.row}>
                             <div style={{color: '#293241'}}>{sportType.title}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
@@ -354,7 +354,7 @@ const Admin = () => {
                 polosa={true}
                 children={
                 <>
-                    {abonements.map((abonement)=>
+                    {abonements && abonements.map((abonement)=>
                         <div key={abonement.id} className={styles.row}>
                             <div style={{color: '#293241'}}>{abonement.title}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
