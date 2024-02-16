@@ -8,15 +8,23 @@ import styles from "./index.module.css";
 import EditModal from "../components/EditModal";
 import Form from "../components/Form";
 import {fetchGet} from "../api/get";
+import {fetchPost} from "../api/post";
 
 const Clients = () => {
     const [clients, setClients] = useState([]);
+    const [chosenClientState, setChosenClientState] = useState([]);
+    const [clientsStates, setClientsStates] = useState([]);
 
     const [showModalAllClients, setShowModalAllClients] = useState(false);
     const [showModalGroups, setShowModalGroups] = useState(false);
 
     const [showModalAddClient, setShowModalAddClient] = useState(false);
     const [showModalAddGroup, setShowModalAddGroup] = useState(false);
+
+    const [firstName, setFirstName] = useState([]);
+    const [lastName, setLastName] = useState([]);
+    const [birthDate, setBirthDate] = useState([]);
+    const [balance, setBalance] = useState([]);
 
     const handleAllClients = () => {
         setShowModalAllClients(!showModalAllClients);
@@ -36,10 +44,28 @@ const Clients = () => {
         const fetchData = async () => {
             const response = await fetchGet('client_list');
             setClients(response);
+
+            const clientsStates = await fetchGet('cl_statuses');
+            setClientsStates(clientsStates)
         }
 
         fetchData();
     }, []);
+
+    const handleFetchAddClient = async (event) => {
+        event.preventDefault();
+
+        const data = {
+            first_name: firstName,
+            last_name: lastName,
+            birth_date: birthDate,
+            state: chosenClientState,
+            balance: balance,
+        };
+        await fetchPost( 'add_client', data);
+        setShowModalAddClient(false)
+        window.location.reload();
+    };
 
     return (
         <div>
@@ -78,12 +104,19 @@ const Clients = () => {
                         onClose={handleAddClient}
                         children={
                             <Form
+                                onSubmit={handleFetchAddClient}
                                 title={'Добавление клиента'}
                                 children={
                                     <div>
-                                        <input type="text" name="client_name" id="client_name" placeholder="Имя"/>
-                                        <input type="text" name="client_surname" id="client_surname" placeholder="Фамилия"/>
-                                        <input type="date" name="client_birthdate" id="client_birthdate" placeholder="Дата рождения"/>
+                                        <input type="text" name="first_name" id="first_name" placeholder="Имя" onChange={(e) => setFirstName(e.target.value)}/>
+                                        <input type="text" name="last_name" id="last_name" placeholder="Фамилия" onChange={(e) => setLastName(e.target.value)}/>
+                                        <input type="date" name="birth_date" id="birth_date" placeholder="Дата рождения" onChange={(e) => setBirthDate(e.target.value)}/>
+                                        <input type="text" name="balance" id="balance" placeholder="Баланс" onChange={(e) => setBalance(e.target.value)}/>
+                                        <select id="state" required name="state" className={styles.select} onChange={(e) => setChosenClientState(e.target.value)}>
+                                            {clientsStates.map((state)=>
+                                                (<option key={state.id} value={state.id}>{state.name}</option>)
+                                            )}
+                                        </select>
                                         <input type="submit" value="Добавить"/>
                                     </div>}
                             ></Form>}>
