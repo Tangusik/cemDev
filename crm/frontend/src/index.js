@@ -18,7 +18,7 @@ root.render(
             <Route path="clients" element={<Clients />} />
             <Route path="schedule" element={<Schedule />} />
             <Route path="main" element={<Main />} />
-            <Route path="client" element={<ClientPage />} />
+            <Route path="client/:id" element={<ClientPage />} />
         </Routes>
     </BrowserRouter>,
 );

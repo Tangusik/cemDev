@@ -18,32 +18,40 @@ urlpatterns = [
     #path('client/<int:client_id>/buy_abonement', views.buy_abonement, name='buy_abonement'),
     #path('client/<int:client_id>/delete_abonement/<int:abonement_id>', views.delete_abonement, name='delete_abonement'),
 
-#___________DJ+React
-    path('client_list', views.client_list),
-    path('trainer_list', views.trainer_list),
-    path("schedule", views.schedule),
-    path("scheduleAll", views.schedule_all),
-    path("trainer_card", views.trainer_info_card),
-    path("trainer_groups", views.trainers_groups),
+    #___________schedule
+    path("schedule", views.schedule),                               #DONE
+    path("scheduleAll", views.schedule_all),                        #DONE
+
+    #___________clients
+    path('client_list', views.client_list),                         #DONE
+
+    #___________colleagues
+    path('trainer_list', views.trainer_list),                       #DONE
+    path("trainer_groups", views.trainers_groups),                  #DONE
+
+    #___________main_info
+    path("trainer_card", views.trainer_info_card),                  #DONE
+    path("change_tr_state", views.user_state_edit),                 #DONE
+    path("user_edit", views.user_edit),                             #DONE
 
     #___________main
-    path("roles", views.roles),
-    path("tr_statuses", views.tr_statuses),
-    path("tr_status_delete/<int:id>", views.delete_tr_status),
-    path("cl_statuses", views.cl_statuses),
-    path("cl_status_delete/<int:id>", views.delete_cl_status),
-    path("areas", views.areas),
-    path("area_delete/<int:id>", views.delete_area),
-    path("sport_types", views.sport_types),
-    path("sport_type_delete/<int:id>", views.delete_sport_type),
-    path("abonements", views.abonements),
-    path("abonement_delete/<int:id>", views.delete_sport_type),
-    path("change_tr_state", views.user_state_edit),
+    path("roles", views.roles),                                     #DONE
+    path("delete_role/<int:id>", views.delete_role),                #DONE
+    path("tr_statuses", views.tr_statuses),                         #DONE
+    path("tr_status_delete/<int:id>", views.delete_tr_status),      #DONE
+    path("cl_statuses", views.cl_statuses),                         #DONE
+    path("cl_status_delete/<int:id>", views.delete_cl_status),      #DONE
+    path("areas", views.areas),                                     #DONE
+    path("area_delete/<int:id>", views.delete_area),                #DONE
+    path("sport_types", views.sport_types),                         #FIX
+    path("sport_type_delete/<int:id>", views.delete_sport_type),    #DONE
+    path("abonements", views.abonements),                           #DONE
+    path("abonement_delete/<int:id>", views.delete_abonement),      #FIX
+
     #___________client_detail_info
-    path("client/<int:pk>", views.client_detail), #удаление юзера по этой же ссылке методом DELETE
-    path("user_edit", views.user_edit),
-    path("client/<int:pk>/abonements", views.client_abonements),
-    path("client/<int:pk>/groups", views.client_groups),
+    path("client/<int:pk>", views.client_detail),                   #DONE
+    path("client/<int:pk>/abonements", views.client_abonements),    #DONE
+    path("client/<int:pk>/groups", views.client_groups),            #DONE
     path("client/<int:pk>/acts", views.client_activities),
 
     #ИНФА о клиенте сюда же edit

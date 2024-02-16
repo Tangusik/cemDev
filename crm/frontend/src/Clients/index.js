@@ -7,6 +7,7 @@ import ClientCard from "../components/ClientCard";
 import styles from "./index.module.css";
 import EditModal from "../components/EditModal";
 import Form from "../components/Form";
+import {fetchGet} from "../api/get";
 
 const Clients = () => {
     const [clients, setClients] = useState([]);
@@ -31,21 +32,15 @@ const Clients = () => {
         setShowModalAddGroup(!showModalAddGroup);
     }
 
-    useEffect(() => {
-        const fetchClients = async () => {
-            try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/client_list');
-                setClients(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
+    useEffect( () => {
+        const fetchData = async () => {
+            const response = await fetchGet('client_list');
+            setClients(response);
+        }
 
-        fetchClients();
+        fetchData();
     }, []);
+
     return (
         <div>
             <Header></Header>
@@ -63,6 +58,7 @@ const Clients = () => {
                             {clients.length===0 && <p>Нет клиентов</p>}
                             {clients.map((client) => (
                                 <ClientCard
+                                    key={client.id}
                                     id={client.id}
                                     firstName={client.first_name}
                                     lastName={client.last_name}

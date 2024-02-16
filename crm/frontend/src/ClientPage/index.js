@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Photo from "../components/Photo";
@@ -6,8 +6,14 @@ import styles from "./index.module.css";
 import Button from "../components/Button";
 import EditModal from "../components/EditModal";
 import Form from "../components/Form";
+import { useParams } from 'react-router-dom';
+import { fetchGet } from '../api/get';
 
 const ClientPage = () => {
+    let { id }= useParams();
+    const [client, setClient] = useState(null);
+    const [clientGroups, setClientGroups] = useState(null);
+    const [clientAbonements, setClientAbonements] = useState(null);
     const [showModalEditAccount, setShowModalEditAccount] = useState(false);
     const [showModalAddBalance, setShowModalAddBalance] = useState(false);
     const [showModalAddAbonement, setShowModalAddAbonement] = useState(false);
@@ -24,6 +30,25 @@ const ClientPage = () => {
         setShowModalAddAbonement(!showModalAddAbonement);
     }
 
+    useEffect( () => {
+        const fetchData = async () => {
+            const responseClientData = await fetchGet(`client/${id}`);
+            setClient(responseClientData);
+
+            const responseClientGroups = await fetchGet(`client/${id}/groups`);
+            setClientGroups(responseClientGroups);
+
+            const responseClientAbonements = await fetchGet(`client/${id}/abonements`);
+            setClientAbonements(responseClientAbonements);
+        }
+
+        fetchData();
+    }, []);
+
+    if (!client) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div>
             <Header></Header>
@@ -31,9 +56,13 @@ const ClientPage = () => {
                 <div className={styles.side}>
                     <Photo></Photo>
                     <div className={styles.studentData}>
-                        <h3>Имя</h3>
-                        <h3>Баланс: </h3>
-                        <h3>Студент.Группа</h3>
+                        <h3>{client.last_name} {client.first_name}</h3>
+                        <h3>{client.birth_date}</h3>
+                        <h3>{client.balance}</h3>
+                        <h3>{client.state}</h3>
+                        {clientGroups && clientGroups.map((group)=> (
+                            <div key={group.id}>{group.name}</div>
+                        ))}
                     </div>
                     <Button title={"Редактировать профиль"} style={{marginTop: '15px'}} onClick={handleEditAccount}></Button>
                     <Button title={"Пополнить баланс"} style={{marginTop: '30px'}} onClick={handleAddBalance}></Button>
@@ -43,55 +72,25 @@ const ClientPage = () => {
 
                     <div style={{textAlign: 'center'}}>
                         <div className={styles.containerText}>
-                            <h3 style={{marginTop: '30px'}}>Активные абонементы</h3>
-                            <Button style={{marginBottom: '30px'}} onClick={handleAddAbonement}>Добавить</Button>
+                            <div className={styles.abonements}>
+                                <div>Активные абонементы</div>
+                                {clientAbonements && <div>{clientAbonements.length}</div>}
+                            </div>
+                            <Button onClick={handleAddAbonement}>Добавить</Button>
                         </div>
                         <div className={styles.list}>
-                            <div style={{height: '400px', minWidth: '300px', backgroundColor: '#43638d', borderRadius: '10px'}}>
-                                <form action="">
-                                    <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}}>Удалить</button>
-                                </form>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>имя</h3>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>дата</h3>
-                                <h5 style={{color: 'white', marginTop: '50px'}}>До  </h5>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>спорт</h3>
-                            </div>
-                            <div style={{height: '400px', minWidth: '300px', backgroundColor: '#43638d', borderRadius: '10px'}}>
-                                <form action="">
-                                    <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}}>Удалить</button>
-                                </form>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>имя</h3>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>дата</h3>
-                                <h5 style={{color: 'white', marginTop: '50px'}}>До  </h5>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>спорт</h3>
-                            </div>
-                            <div style={{height: '400px', minWidth: '300px', backgroundColor: '#43638d', borderRadius: '10px'}}>
-                                <form action="">
-                                    <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}}>Удалить</button>
-                                </form>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>имя</h3>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>дата</h3>
-                                <h5 style={{color: 'white', marginTop: '50px'}}>До  </h5>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>спорт</h3>
-                            </div>
-                            <div style={{height: '400px', minWidth: '300px', backgroundColor: '#43638d', borderRadius: '10px'}}>
-                                <form action="">
-                                    <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}}>Удалить</button>
-                                </form>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>имя</h3>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>дата</h3>
-                                <h5 style={{color: 'white', marginTop: '50px'}}>До  </h5>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>спорт</h3>
-                            </div>
-                            <div style={{height: '400px', minWidth: '300px', backgroundColor: '#43638d', borderRadius: '10px'}}>
-                                <form action="">
-                                    <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}}>Удалить</button>
-                                </form>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>имя</h3>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>дата</h3>
-                                <h5 style={{color: 'white', marginTop: '50px'}}>До  </h5>
-                                <h3 style={{color: 'white', marginTop: '50px'}}>спорт</h3>
-                            </div>
+                            {clientAbonements && clientAbonements.map((abonement) => (
+                                <div style={{height: '400px', minWidth: '300px', backgroundColor: '#43638d', borderRadius: '10px'}}>
+                                    <form action="">
+                                        <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}}>Удалить</button>
+                                    </form>
+                                    <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.abonement.title}</h3>
+                                    <h5 style={{color: 'white', marginTop: '50px'}}>Дата покупки: {abonement.purchase_date}</h5>
+                                    <h5 style={{color: 'white', marginTop: '50px'}}>Дата окончания: {abonement.date_of_end}</h5>
+                                    <h5 style={{color: 'white', marginTop: '50px'}}>Активтес лефт: {abonement.activities_left}</h5>
+                                    <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.status}</h3>
+                                </div>
+                            ))}
                         </div>
                     </div>
 

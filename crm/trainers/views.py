@@ -802,7 +802,7 @@ def client_detail(request, pk):
         serializer = ClientSerializer(client, context={'request': request}, many=False)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     elif request.method == 'DELETE':
-        client = get_object_or_404()
+        client = get_object_or_404(Client, pk=pk)
         client.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
 

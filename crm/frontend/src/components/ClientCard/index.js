@@ -1,11 +1,39 @@
 import styles from './index.module.css';
+import { useNavigate } from 'react-router-dom';
+import iconCross from "../../Icons/cross.svg";
+import React, {useEffect} from "react";
+import {fetchDelete} from "../../api/delete";
 
 const ClientCard = (props) =>{
     const { id, firstName, lastName, birthday, state, balance } = props;
+
+    let navigate = useNavigate();
+
+    const handleOnClick = () => {
+        navigate(`/client/${id}`);
+    };
+
+    const handleDelete = async () => {
+        await fetchDelete('client', id).then((res) => {
+            if (res) {
+                window.location.reload()
+            }
+        });
+    }
+
     return (
             <details>
                 <summary>
-                    {firstName} {lastName}
+                    <div className={styles.summary}>
+                        <div>{firstName} {lastName}</div>
+                        <div style={{cursor: 'pointer'}}
+                             onClick={(event)=> {
+                                 event.stopPropagation();
+                                 handleDelete();
+                             }}>
+                            <img src={iconCross} alt=''/>
+                        </div>
+                    </div>
                 </summary>
                 <div className={styles.cards_elements}>
                     <div className={styles.card}>
@@ -22,7 +50,7 @@ const ClientCard = (props) =>{
                             <h1>
                                 {firstName} {lastName}
                             </h1>
-                            <p><a href='client/{id}'>Студент.Ссылка</a></p>
+                            <p onClick={handleOnClick}>Студент.Ссылка</p>
                         </div>
                     </div>
                 </div>
