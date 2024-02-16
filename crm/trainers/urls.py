@@ -24,6 +24,7 @@ urlpatterns = [
 
     #___________clients
     path('client_list', views.client_list),                         #DONE
+    path('add_client', views.add_client),                           #DONE
 
     #___________colleagues
     path('trainer_list', views.trainer_list),                       #DONE
