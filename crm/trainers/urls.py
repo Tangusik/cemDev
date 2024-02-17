@@ -44,10 +44,10 @@ urlpatterns = [
     path("cl_status_delete/<int:id>", views.delete_cl_status),      #DONE
     path("areas", views.areas),                                     #DONE
     path("area_delete/<int:id>", views.delete_area),                #DONE
-    path("sport_types", views.sport_types),                         #FIX
-    path("sport_type_delete/<int:id>", views.delete_sport_type),    #FIX #вроде норм
-    path("abonements", views.abonements),                           #DONE
-    path("abonement_delete/<int:id>", views.delete_abonement),      #FIX #ghjlt yjhv
+    path("sport_types", views.sport_types),                         #DONE
+    path("sport_type_delete/<int:id>", views.delete_sport_type),    #DONE
+    path("abonements", views.abonements),                           #FIX (нужно передать id в get)
+    path("abonement_delete/<int:id>", views.delete_abonement),      #FIX (должно работать, как тока передашь id)
 
     #___________client_detail_info
     path("client/<int:pk>", views.client_detail),                   #DONE
@@ -55,11 +55,13 @@ urlpatterns = [
     path("client/<int:pk>/groups", views.client_groups),            #DONE
     path("client/<int:pk>/acts", views.client_activities),
 
-    #ИНФА о клиенте сюда же edit
-            #абонементы сюда же добавление абонементов
-            #пополнить баланс
 
-    
+    #добавление абонемента клиенту
+    #редактирование клиента
+    #пополнить баланс
+    #добавить тренера
+    #получить все сущесвующие гурппы (не одного тренера, а все)
+    #добавить группу
 
 
     ]
