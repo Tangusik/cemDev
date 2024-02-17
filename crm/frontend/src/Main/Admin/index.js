@@ -153,7 +153,7 @@ const Admin = () => {
             sport_type: abonementSportType,
             ...(abonementIsDuration && {
                 duration: abonementDuration,
-                duration_type: abonementDurationType,
+                // duration_type: abonementDurationType,
             }),
             ...(abonementIsLessonCount && {
                 lesson_count: abonementLessonCount,
@@ -161,7 +161,7 @@ const Admin = () => {
         };
         await fetchPost( 'abonements', data);
         setShowModalAbonements(false)
-        window.location.reload();
+        // window.location.reload();
     };
 
     useEffect(() => {
