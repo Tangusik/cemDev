@@ -161,7 +161,7 @@ const Admin = () => {
         };
         await fetchPost( 'abonements', data);
         setShowModalAbonements(false)
-        // window.location.reload();
+        window.location.reload();
     };
 
     useEffect(() => {
@@ -393,7 +393,8 @@ const Admin = () => {
                                                 disabled={!abonementIsDuration}
                                                 onChange={e => setAbonementDuration(e.target.value)}
                                             />
-                                            <select name="duration_type" required className={styles.selectSport} onChange={(e) => setAbonementDurationType(e.target.value)} style={{width:'fit-content'}}>
+                                            <select name="duration_type" className={styles.selectSport} onChange={(e) => setAbonementDurationType(e.target.value)} style={{width:'fit-content'}}>
+                                                <option value="" disabled selected>диапазон</option>
                                                 <option value="days">Дней</option>
                                                 <option value="weeks">Недель</option>
                                                 <option value="month">Месяцев</option>
@@ -414,7 +415,8 @@ const Admin = () => {
                                                 onChange={(e) => setAbonementLessonCount(e.target.value)}
                                             />
                                         </div>
-                                        <select id="select_sport" required name="sport" className={styles.selectSport} onChange={(e) => setAbonementSportType(e.target.value)}>
+                                        <select id="select_sport" name="sport" className={styles.selectSport} onChange={(e) => setAbonementSportType(e.target.value)}>
+                                            <option value="" disabled selected>вид спорта</option>
                                             {sportTypes.map((sportType)=>
                                                 (<option key={sportType.id} value={sportType.id}>{sportType.title}</option>)
                                             )}

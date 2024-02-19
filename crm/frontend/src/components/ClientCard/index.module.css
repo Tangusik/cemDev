@@ -42,6 +42,10 @@
     transition: transform 0.9s ease;
     border-radius: 10px;
     background-color: #3D5A80;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 .front {
@@ -50,16 +54,6 @@
 
 .back {
     transform: perspective(1200px) rotateY(180deg);
-}
-
-.card p {
-    color: #dddddd;
-    margin-bottom: 20px;
-}
-
-.card h1 {
-    color: #F1FFFF;
-    margin-bottom: 50px;
 }
 
 .summary {
@@ -79,3 +73,10 @@
     color: #3D5A80;
 }
 
+.name{
+    cursor: pointer;
+}
+
+.center {
+    text-align: center;
+}

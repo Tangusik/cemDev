@@ -25,7 +25,7 @@ const ClientCard = (props) =>{
             <details>
                 <summary>
                     <div className={styles.summary}>
-                        <div>{firstName} {lastName}</div>
+                        <div className={styles.name}>{firstName} {lastName}</div>
                         <div style={{cursor: 'pointer'}}
                              onClick={(event)=> {
                                  event.stopPropagation();
@@ -38,19 +38,13 @@ const ClientCard = (props) =>{
                 <div className={styles.cards_elements}>
                     <div className={styles.card}>
                         <div className={styles.front}>
-                            <p>{birthday}</p>
-                            <h1>
-                                {firstName} {lastName}
-                            </h1>
-                            <p>{balance}</p>
-                            <p>{state}</p>
+                            <div>{birthday}</div>
+                            <div className={styles.center} style={{fontWeight: 'bold', fontSize: '20px'}}>{firstName} {lastName}</div>
+                            <div>баланс: {balance}</div>
+                            <div>{state}</div>
                         </div>
                         <div className={styles.back}>
-                            <p>{birthday}</p>
-                            <h1>
-                                {firstName} {lastName}
-                            </h1>
-                            <p onClick={handleOnClick}>Студент.Ссылка</p>
+                            <div onClick={handleOnClick} className={styles.center}>ссылка на страничку</div>
                         </div>
                     </div>
                 </div>
