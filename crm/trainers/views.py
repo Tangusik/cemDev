@@ -797,7 +797,7 @@ def user_state_edit(request):
 @api_view(['GET','DELETE','POST'])   #детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_detail(request, pk):
-    client = get_object_or_404()
+    client = get_object_or_404(Client, pk=pk)
     if request.method == "GET":
         serializer = ClientSerializer(client, context={'request': request}, many=False)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
@@ -810,7 +810,7 @@ def client_detail(request, pk):
             if 'first_name' in serializer.data:
                 client.first_name = serializer.data["first_name"]
             if 'last_name' in serializer.data:
-                client.last_name = serializer.data['last_name']:
+                client.last_name = serializer.data['last_name']
             if 'birth_date' in serializer.data:
                 client.birth_date = serializer.data['birth_date']
             client.save()
