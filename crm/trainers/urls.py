@@ -46,8 +46,8 @@ urlpatterns = [
     path("area_delete/<int:id>", views.delete_area),                #DONE
     path("sport_types", views.sport_types),                         #DONE
     path("sport_type_delete/<int:id>", views.delete_sport_type),    #DONE
-    path("abonements", views.abonements),                           #FIX (нужно передать id в get)
-    path("abonement_delete/<int:id>", views.delete_abonement),      #FIX (должно работать, как тока передашь id)
+    path("abonements", views.abonements),                           #FIX нужно подумать про диапазон времени при добавлении(просто оставить дни?)
+    path("abonement_delete/<int:id>", views.delete_abonement),      #DONE
 
     #___________client_detail_info
     path("client/<int:pk>", views.client_detail),                   #DONE

@@ -8,6 +8,7 @@ import EditModal from "../components/EditModal";
 import Form from "../components/Form";
 import { useParams } from 'react-router-dom';
 import { fetchGet } from '../api/get';
+import {fetchPost} from "../api/post";
 
 const ClientPage = () => {
     let { id }= useParams();
@@ -17,6 +18,10 @@ const ClientPage = () => {
     const [showModalEditAccount, setShowModalEditAccount] = useState(false);
     const [showModalAddBalance, setShowModalAddBalance] = useState(false);
     const [showModalAddAbonement, setShowModalAddAbonement] = useState(false);
+
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [birthDate, setBirthDate] = useState('');
 
     const handleEditAccount = () => {
         setShowModalEditAccount(!showModalEditAccount);
@@ -44,6 +49,31 @@ const ClientPage = () => {
 
         fetchData();
     }, []);
+
+    function filterObject(obj) {
+        return Object.keys(obj).reduce((acc, key) => {
+            if (obj[key] !== "") {
+                acc[key] = obj[key];
+            }
+            return acc;
+        }, {});
+    }
+
+
+    const handleEditClient = async (event) => {
+        event.preventDefault();
+
+        let noFilterData = {
+            first_name: firstName,
+            last_name: lastName,
+            birth_date: birthDate,
+        };
+        const data = filterObject(noFilterData);
+        await fetchPost( `client/${id}`, data);
+        setShowModalEditAccount(false)
+        window.location.reload();
+    };
+
 
     if (!client) {
         return <div>Loading...</div>;
@@ -181,13 +211,13 @@ const ClientPage = () => {
                     onClose={handleEditAccount}
                     children={
                         <Form
+                            onSubmit={handleEditClient}
                             title={'Редактирование профиля'}
                             children={
                                 <div>
-                                    <input type="text" name="client_name" id="client_name" placeholder="Имя"/>
-                                    <input type="text" name="client_surname" id="client_surname" placeholder="Фамилия"/>
-                                    <input style={{height: '40px'}} type="date" name="client_birthdate" id="client_birthdate" placeholder="Дата рождения"/>
-                                    <input type="text" name="client_email" id="client_email" placeholder="Почта"/>
+                                    <input type="text" name="first_name" id="first_name" placeholder="Имя"  defaultValue={client.first_name} onChange={(e) => setFirstName(e.target.value)}/>
+                                    <input type="text" name="last_name" id="last_name" placeholder="Фамилия"  defaultValue={client.last_name} onChange={(e) => setLastName(e.target.value)}/>
+                                    <input type="date" name="birth_date" id="birth_date" placeholder="Дата рождения"  defaultValue={client.birth_date} onChange={(e) => setBirthDate(e.target.value)}/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
