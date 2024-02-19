@@ -25,24 +25,55 @@ const Colleagues = () => {
         fetchColleagues();
     }, []);
 
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const getFullName = (colleague) => {
+        return `${colleague.user.first_name} ${colleague.user.last_name}`;
+    };
+
+    const filteredColleagues = colleagues.filter(colleague => {
+        const fullName = getFullName(colleague).toLowerCase();
+        return fullName.includes(searchTerm.toLowerCase());
+    });
+
     return (
         <div>
             <Header></Header>
+            <div className={styles.search_div}>
+                <h3>Поиск</h3>
+                <div className={styles.sub}>
+                    <input
+                        type="text"
+                        placeholder="Кого желаете найти?"
+                        value={searchTerm}
+                        onChange={handleSearchChange}>
+                    </input>
+                </div>
+                <div>
+                    {/*{filteredColleagues.map(colleague => (*/}
+                    {/*    <div key={colleague.user.id}>{getFullName(colleague)}</div>*/}
+                    {/*))}*/}
+                </div>
+            </div>
+            {/*<Search colleagues={colleagues}></Search>*/}
             <div className={styles.cards}>
-                {colleagues.length===0 && <p>Нет клиентов</p>}
-                {colleagues.map((colleague) => (
+                {filteredColleagues.length===0 && <p>Нет клиентов</p>}
+                {filteredColleagues.map((colleague) => (
                     <ColleagueCard
                         id={colleague.id}
                         name={colleague.user.first_name}
                         lastName={colleague.user.last_name}
                         surname={colleague.otchestv}
                         birthdate={colleague.birthdate}
-                        role={colleague.role.name}
-                        state={colleague.state.name}
+                        role={colleague.role}
+                        state={colleague.state}
                     ></ColleagueCard>
                 ))}
             </div>
-            <Search></Search>
             <Footer></Footer>
         </div>
     );
