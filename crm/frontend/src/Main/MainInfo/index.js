@@ -12,8 +12,8 @@ const MainInfo = ({ setUserRole }) => {
     const [showStateDataModal, setShowStateDataModal] = useState(false);
     const [data, setData] = useState([]);
 
-    const [first_name, setFirst_name] = useState('');
-    const [last_name, setLast_name] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [otchestv, setOtchestv] = useState('');
 
@@ -51,13 +51,12 @@ const MainInfo = ({ setUserRole }) => {
     const handleSubmitEditUser = async (event) => {
         event.preventDefault();
         let noFilterData = {
-            first_name: first_name,
-            last_name: last_name,
+            first_name: firstName,
+            last_name: lastName,
             email: email,
             otchestv: otchestv,
         };
         const data = filterObject(noFilterData);
-        console.log(data)
         await fetchPost( 'user_edit', data);
         setShowMainDataModal(false)
         window.location.reload();
@@ -105,8 +104,8 @@ const MainInfo = ({ setUserRole }) => {
                         onSubmit={handleSubmitEditUser}
                         children={
                             <div>
-                                <input type="text" name="name" placeholder="Имя" defaultValue={data.user.first_name} onChange={(e) => setFirst_name(e.target.value)}/>
-                                <input type="text" name="last_name"  placeholder="Фамилия" defaultValue={data.user.last_name} onChange={(e) => setLast_name(e.target.value)}/>
+                                <input type="text" name="name" placeholder="Имя" defaultValue={data.user.first_name} onChange={(e) => setFirstName(e.target.value)}/>
+                                <input type="text" name="last_name"  placeholder="Фамилия" defaultValue={data.user.last_name} onChange={(e) => setLastName(e.target.value)}/>
                                 <input type="text" name="otchestcv" placeholder="Отчество" defaultValue={data.otchestv} onChange={(e) => setOtchestv(e.target.value)}/>
                                 <input type="text" name="email" placeholder="Почта" defaultValue={data.user.email} onChange={(e) => setEmail(e.target.value)}/>
                                 <input type="submit" value="Добавить"/>

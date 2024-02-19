@@ -21,9 +21,9 @@ class UserEditSerializer(Serializer):
     email = EmailField(required=False)
 
 class ClientEditSerializer(Serializer):
-    first_name = CharField()
-    last_name = CharField()
-    birth_date = DateField()
+    first_name = CharField(required=False)
+    last_name = CharField(required=False)
+    birth_date = DateField(required=False)
 
 
 class TrainerStateEditSerializer(Serializer):
