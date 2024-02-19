@@ -20,6 +20,11 @@ class UserEditSerializer(Serializer):
     otchestv = CharField(required=False)
     email = EmailField(required=False)
 
+class ClientEditSerializer(Serializer):
+    first_name = CharField()
+    last_name = CharField()
+    birth_date = DateField()
+
 
 class TrainerStateEditSerializer(Serializer):
     state = IntegerField(required= True)

@@ -794,17 +794,29 @@ def user_state_edit(request):
 
 #________________________________________________________ Страница юзера
 
-@api_view(['GET','DELETE'])   #детальная инфа о клиенте
+@api_view(['GET','DELETE','POST'])   #детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_detail(request, pk):
+    client = get_object_or_404()
     if request.method == "GET":
-        client = get_object_or_404(Client, pk=pk)
         serializer = ClientSerializer(client, context={'request': request}, many=False)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     elif request.method == 'DELETE':
-        client = get_object_or_404(Client, pk=pk)
         client.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
+    else:
+        serializer = ClientEditSerializer(data = request.data)
+        if serializer.is_valid():
+            if 'first_name' in serializer.data:
+                client.first_name = serializer.data["first_name"]
+            if 'last_name' in serializer.data:
+                client.last_name = serializer.data['last_name']:
+            if 'birth_date' in serializer.data:
+                client.birth_date = serializer.data['birth_date']
+            client.save()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(serializer.errors, status=400)
 
 
 @api_view(['GET','POST'])   #детальная инфа о клиенте
