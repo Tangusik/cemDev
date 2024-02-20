@@ -9,13 +9,15 @@ import Form from "../components/Form";
 import { useParams } from 'react-router-dom';
 import { fetchGet } from '../api/get';
 import {fetchPost} from "../api/post";
+import {fetchDelete} from "../api/delete";
 
 const ClientPage = () => {
     let { id }= useParams();
     const [client, setClient] = useState(null);
     const [clientGroups, setClientGroups] = useState(null);
+    const [abonements, setAbonements] = useState([]);
     const [clientAbonements, setClientAbonements] = useState(null);
-    const [showModalEditAccount, setShowModalEditAccount] = useState(false);
+    const [showModalEditClient, setShowModalEditClient] = useState(false);
     const [showModalAddBalance, setShowModalAddBalance] = useState(false);
     const [showModalAddAbonement, setShowModalAddAbonement] = useState(false);
 
@@ -23,15 +25,22 @@ const ClientPage = () => {
     const [lastName, setLastName] = useState('');
     const [birthDate, setBirthDate] = useState('');
 
-    const handleEditAccount = () => {
-        setShowModalEditAccount(!showModalEditAccount);
+    const [abonementAdd, setAbonementAdd] = useState(null);
+    const [abonementStatus, setAbonementStatus] = useState(null);
+    const [abonementActivitiesLeft, setAbonementActivitiesLeft] = useState(null);
+    const [abonementEndDate, setAbonementEndDate] = useState(null);
+
+    const [deletedAbonementEndpoint, setDeletedAbonementEndpoint] = useState([]);
+
+    const handleEditClientModal = () => {
+        setShowModalEditClient(!showModalEditClient);
     }
 
-    const handleAddBalance = () => {
+    const handleAddBalanceModal = () => {
         setShowModalAddBalance(!showModalAddBalance);
     }
 
-    const handleAddAbonement = () => {
+    const handleAddAbonementModal = () => {
         setShowModalAddAbonement(!showModalAddAbonement);
     }
 
@@ -45,6 +54,9 @@ const ClientPage = () => {
 
             const responseClientAbonements = await fetchGet(`client/${id}/abonements`);
             setClientAbonements(responseClientAbonements);
+
+            const abonements = await fetchGet('abonements');
+            setAbonements(abonements)
         }
 
         fetchData();
@@ -70,10 +82,39 @@ const ClientPage = () => {
         };
         const data = filterObject(noFilterData);
         await fetchPost( `client/${id}`, data);
-        setShowModalEditAccount(false)
+        setShowModalEditClient(false)
         window.location.reload();
     };
 
+    const handleAddAbonement = async (event) => {
+        event.preventDefault();
+
+        let data = {
+            client: id,
+            abonement: abonementAdd,
+            status: abonementStatus,
+            activities_left: abonementActivitiesLeft,
+            date_of_end: abonementEndDate,
+        };
+        await fetchPost( `client/${id}/abonements`, data);
+        setShowModalAddAbonement(false)
+        window.location.reload();
+    };
+
+    useEffect(() => {
+        const performDeletion = async () => {
+            if (deletedAbonementEndpoint !== '') {
+                await fetchDelete(deletedAbonementEndpoint).then((res) => {
+                    if (res){
+                        window.location.reload()
+                    }
+                });
+                setDeletedAbonementEndpoint('');
+            }
+        };
+
+        performDeletion();
+    }, [deletedAbonementEndpoint]);
 
     if (!client) {
         return <div>Loading...</div>;
@@ -94,8 +135,8 @@ const ClientPage = () => {
                             <div key={group.id}>{group.name}</div>
                         ))}
                     </div>
-                    <Button title={"Редактировать профиль"} style={{marginTop: '15px'}} onClick={handleEditAccount}></Button>
-                    <Button title={"Пополнить баланс"} style={{marginTop: '30px'}} onClick={handleAddBalance}></Button>
+                    <Button title={"Редактировать профиль"} style={{marginTop: '15px'}} onClick={handleEditClientModal}></Button>
+                    <Button title={"Пополнить баланс"} style={{marginTop: '30px'}} onClick={handleAddBalanceModal}></Button>
                 </div>
 
                 <div className={styles.main}>
@@ -106,14 +147,14 @@ const ClientPage = () => {
                                 <div>Активные абонементы</div>
                                 {clientAbonements && <div>{clientAbonements.length}</div>}
                             </div>
-                            <Button onClick={handleAddAbonement}>Добавить</Button>
+                            <Button onClick={handleAddAbonementModal}>Добавить</Button>
                         </div>
                         <div className={styles.list}>
                             {clientAbonements && clientAbonements.map((abonement) => (
                                 <div style={{height: '400px', minWidth: '300px', backgroundColor: '#43638d', borderRadius: '10px'}}>
-                                    <form action="">
-                                        <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}}>Удалить</button>
-                                    </form>
+                                    {/*<button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}} onClick={() => {*/}
+                                    {/*    setDeletedAbonementEndpoint(`client/${abonement.id}/abonement`);*/}
+                                    {/*}}>Удалить</button>*/}
                                     <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.abonement.title}</h3>
                                     <h5 style={{color: 'white', marginTop: '50px'}}>Дата покупки: {abonement.purchase_date}</h5>
                                     <h5 style={{color: 'white', marginTop: '50px'}}>Дата окончания: {abonement.date_of_end}</h5>
@@ -206,9 +247,9 @@ const ClientPage = () => {
 
                 </div>
             </div>
-            {showModalEditAccount &&
+            {showModalEditClient &&
                 <EditModal
-                    onClose={handleEditAccount}
+                    onClose={handleEditClientModal}
                     children={
                         <Form
                             onSubmit={handleEditClient}
@@ -225,7 +266,7 @@ const ClientPage = () => {
             }
             {showModalAddBalance &&
                 <EditModal
-                    onClose={handleAddBalance}
+                    onClose={handleAddBalanceModal}
                     children={
                         <Form
                             title={'Пополнение баланса'}
@@ -239,13 +280,22 @@ const ClientPage = () => {
             }
             {showModalAddAbonement &&
                 <EditModal
-                    onClose={handleAddAbonement}
+                    onClose={handleAddAbonementModal}
                     children={
                         <Form
+                            onSubmit={handleAddAbonement}
                             title={'Добавление абонемента'}
                             children={
                                 <div>
-                                    <input type="text" name="client_name" id="client_name" placeholder="Название"/>
+                                    <select id="state" required name="state" className={styles.select} onChange={(e) => setAbonementAdd(e.target.value)}>
+                                        <option value="" disabled selected>абонементы</option>
+                                        {abonements.map((abonement)=>
+                                            (<option key={abonement.id} value={abonement.id}>{abonement.title}</option>)
+                                        )}
+                                    </select>
+                                    <input type="text" name="status" id="status" placeholder="Статус" onChange={(e) => setAbonementStatus(e.target.value)}/>
+                                    <input type="text" name="activities_left" id="activities_left" placeholder="Активитес лефт" onChange={(e) => setAbonementActivitiesLeft(e.target.value)}/>
+                                    <input type="date" name="date_of_end" id="date_of_end" placeholder="Дата окончания" onChange={(e) => setAbonementEndDate(e.target.value)}/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>

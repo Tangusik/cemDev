@@ -39,7 +39,6 @@ const Admin = () => {
     const [abonementLessonCount, setAbonementLessonCount] = useState([]);
     const [abonementSportType, setAbonementSportType] = useState([]);
 
-    const [deletedItemId, setDeletedItemId] = useState([]);
     const [deletedItemEndpoint, setDeletedEndpoint] = useState([]);
 
     const handleRoles = () => {
@@ -166,19 +165,18 @@ const Admin = () => {
 
     useEffect(() => {
         const performDeletion = async () => {
-            if (deletedItemEndpoint !== '' && deletedItemId !== '') {
-                await fetchDelete(deletedItemEndpoint, deletedItemId).then((res) => {
+            if (deletedItemEndpoint !== '') {
+                await fetchDelete(deletedItemEndpoint).then((res) => {
                     if (res){
                         window.location.reload()
                     }
                 });
-                setDeletedItemId('');
                 setDeletedEndpoint('');
             }
         };
 
         performDeletion();
-    }, [deletedItemEndpoint, deletedItemId]);
+    }, [deletedItemEndpoint]);
 
 
 
@@ -193,8 +191,7 @@ const Admin = () => {
                     <div key={role.id} className={styles.row}>
                         <div style={{color: '#293241'}}>{role.name}</div>
                         <div style={{cursor: 'pointer'}} onClick={() => {
-                            setDeletedEndpoint('delete_role');
-                            setDeletedItemId(role.id);
+                            setDeletedEndpoint(`delete_role/${role.id}`);
                         }}><img src={iconCross} alt=''/></div>
                     </div>
                 )}
@@ -226,8 +223,7 @@ const Admin = () => {
                         <div key={employeeState.id} className={styles.row}>
                             <div style={{color: '#293241'}}>{employeeState.name}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint('tr_status_delete');
-                                setDeletedItemId(employeeState.id);
+                                setDeletedEndpoint(`tr_status_delete/${employeeState.id}`);
                             }}><img src={iconCross} alt=''/></div>
                         </div>
                     )}
@@ -259,8 +255,7 @@ const Admin = () => {
                         <div key={clientsState.id} className={styles.row}>
                             <div style={{color: '#293241'}}>{clientsState.name}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint('cl_status_delete');
-                                setDeletedItemId(clientsState.id);
+                                setDeletedEndpoint(`cl_status_delete/${clientsState.id}`);
                             }}><img src={iconCross} alt=''/></div>
                         </div>
                     )}
@@ -292,8 +287,7 @@ const Admin = () => {
                         <div key={area.id} className={styles.row}>
                             <div style={{color: '#293241'}}>{area.address}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint('area_delete');
-                                setDeletedItemId(area.id);
+                                setDeletedEndpoint(`area_delete/${area.id}`);
                             }}><img src={iconCross} alt=''/></div>
                         </div>
                     )}
@@ -325,8 +319,7 @@ const Admin = () => {
                         <div key={sportType.id} className={styles.row}>
                             <div style={{color: '#293241'}}>{sportType.title}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint('sport_type_delete');
-                                setDeletedItemId(sportType.id);
+                                setDeletedEndpoint(`sport_type_delete/${sportType.id}`);
                             }}><img src={iconCross} alt=''/></div>
                         </div>
                     )}
@@ -358,8 +351,7 @@ const Admin = () => {
                         <div key={abonement.id} className={styles.row}>
                             <div style={{color: '#293241'}}>{abonement.title}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint('abonement_delete');
-                                setDeletedItemId(abonement.id);
+                                setDeletedEndpoint(`abonement_delete/${abonement.id}`);
                             }}><img src={iconCross} alt=''/></div>
                         </div>
                     )}

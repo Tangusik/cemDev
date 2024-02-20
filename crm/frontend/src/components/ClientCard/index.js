@@ -14,7 +14,7 @@ const ClientCard = (props) =>{
     };
 
     const handleDelete = async () => {
-        await fetchDelete('client', id).then((res) => {
+        await fetchDelete(`client/${id}`).then((res) => {
             if (res) {
                 window.location.reload()
             }

@@ -839,6 +839,7 @@ def client_abonements(request, pk):
             return Response(status=status.HTTP_202_ACCEPTED)
         else:
             return Response(serializer.errors, status=400)
+
 @api_view(['GET'])  # детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_groups(request, pk):

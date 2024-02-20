@@ -51,12 +51,11 @@ urlpatterns = [
 
     #___________client_detail_info
     path("client/<int:pk>", views.client_detail),                   #DONE
-    path("client/<int:pk>/abonements", views.client_abonements),    #DONE
+    path("client/<int:pk>/abonements", views.client_abonements),    #FIX - добавить удаление + передавай id с гетом
     path("client/<int:pk>/groups", views.client_groups),            #DONE
     path("client/<int:pk>/acts", views.client_activities),
 
-
-    #добавление абонемента клиенту #смотреть абонементы клиента но с методом пост
+    #удаление абонемента у конкретного клиента
     #редактирование клиента  # сделано методом пост в client_detail
     #пополнить баланс
     #добавить тренера
