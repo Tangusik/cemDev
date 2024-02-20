@@ -127,7 +127,7 @@ class AbonementhistorySerializer(serializers.ModelSerializer):
     abonement = AbonementSerializer()
     class Meta:
         model = PurchaseHistory
-        fields = ['abonement', 'purchase_date', "status", 'activities_left', 'date_of_end']
+        fields = ['abonement', 'purchase_date', "status", 'activities_left', 'date_of_end', 'id']
 
 
 class AbonementAddSerializer(serializers.Serializer):

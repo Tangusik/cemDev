@@ -810,7 +810,7 @@ def client_detail(request, pk):
             if 'first_name' in serializer.data:
                 client.first_name = serializer.data["first_name"]
             if 'last_name' in serializer.data:
-                client.last_name = serializer.data['last_name']:
+                client.last_name = serializer.data['last_name']
             if 'birth_date' in serializer.data:
                 client.birth_date = serializer.data['birth_date']
             client.save()
