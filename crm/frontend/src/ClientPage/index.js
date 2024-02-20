@@ -152,9 +152,9 @@ const ClientPage = () => {
                         <div className={styles.list}>
                             {clientAbonements && clientAbonements.map((abonement) => (
                                 <div style={{height: '400px', minWidth: '300px', backgroundColor: '#43638d', borderRadius: '10px'}}>
-                                    {/*<button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}} onClick={() => {*/}
-                                    {/*    setDeletedAbonementEndpoint(`client/${abonement.id}/abonement`);*/}
-                                    {/*}}>Удалить</button>*/}
+                                    <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}} onClick={() => {
+                                        setDeletedAbonementEndpoint(`client/${abonement.id}/abonement`);
+                                    }}>Удалить</button>
                                     <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.abonement.title}</h3>
                                     <h5 style={{color: 'white', marginTop: '50px'}}>Дата покупки: {abonement.purchase_date}</h5>
                                     <h5 style={{color: 'white', marginTop: '50px'}}>Дата окончания: {abonement.date_of_end}</h5>
