@@ -827,7 +827,7 @@ def client_abonements(request, pk):
         cl_abonements = PurchaseHistory.objects.filter(client=client)
         serializer = AbonementhistorySerializer(cl_abonements, context={'request': request},many=True)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
-    if request.method == "POST":
+    elif request.method == "POST":
         serializer = AbonementAddSerializer(data = request.data)
         client = get_object_or_404(Client, pk = pk)
         if serializer.is_valid():
@@ -839,6 +839,16 @@ def client_abonements(request, pk):
             return Response(status=status.HTTP_202_ACCEPTED)
         else:
             return Response(serializer.errors, status=400)
+
+@api_view(["DELETE"])   #детальная инфа о клиенте
+@permission_classes([IsAuthenticated])
+def client_abonements(request, pk, ab_id):
+    if request.method == "GET":
+        client = get_object_or_404(Client, pk=pk)
+        del_ab = get_object_or_404(PurchaseHistory, pk = ab_id)
+        del_ab.delete()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    
 
 @api_view(['GET'])  # детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
