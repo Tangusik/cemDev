@@ -842,8 +842,8 @@ def client_abonements(request, pk):
 
 @api_view(["DELETE"])   #детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
-def client_abonements(request, pk, ab_id):
-    if request.method == "GET":
+def client_abonements_delete(request, pk, ab_id):
+    if request.method == "DELETE":
         client = get_object_or_404(Client, pk=pk)
         del_ab = get_object_or_404(PurchaseHistory, pk = ab_id)
         del_ab.delete()

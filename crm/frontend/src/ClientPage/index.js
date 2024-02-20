@@ -26,9 +26,6 @@ const ClientPage = () => {
     const [birthDate, setBirthDate] = useState('');
 
     const [abonementAdd, setAbonementAdd] = useState(null);
-    const [abonementStatus, setAbonementStatus] = useState(null);
-    const [abonementActivitiesLeft, setAbonementActivitiesLeft] = useState(null);
-    const [abonementEndDate, setAbonementEndDate] = useState(null);
 
     const [deletedAbonementEndpoint, setDeletedAbonementEndpoint] = useState([]);
 
@@ -92,13 +89,10 @@ const ClientPage = () => {
         let data = {
             client: id,
             abonement: abonementAdd,
-            status: abonementStatus,
-            activities_left: abonementActivitiesLeft,
-            date_of_end: abonementEndDate,
         };
         await fetchPost( `client/${id}/abonements`, data);
         setShowModalAddAbonement(false)
-        window.location.reload();
+        // window.location.reload();
     };
 
     useEffect(() => {
@@ -153,12 +147,11 @@ const ClientPage = () => {
                             {clientAbonements && clientAbonements.map((abonement) => (
                                 <div style={{height: '400px', minWidth: '300px', backgroundColor: '#43638d', borderRadius: '10px'}}>
                                     <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}} onClick={() => {
-                                        setDeletedAbonementEndpoint(`client/${abonement.id}/abonement`);
+                                        setDeletedAbonementEndpoint(`client/${id}/abonements/${abonement.id}`);
                                     }}>Удалить</button>
                                     <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.abonement.title}</h3>
                                     <h5 style={{color: 'white', marginTop: '50px'}}>Дата покупки: {abonement.purchase_date}</h5>
                                     <h5 style={{color: 'white', marginTop: '50px'}}>Дата окончания: {abonement.date_of_end}</h5>
-                                    <h5 style={{color: 'white', marginTop: '50px'}}>Активтес лефт: {abonement.activities_left}</h5>
                                     <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.status}</h3>
                                 </div>
                             ))}
@@ -293,9 +286,6 @@ const ClientPage = () => {
                                             (<option key={abonement.id} value={abonement.id}>{abonement.title}</option>)
                                         )}
                                     </select>
-                                    <input type="text" name="status" id="status" placeholder="Статус" onChange={(e) => setAbonementStatus(e.target.value)}/>
-                                    <input type="text" name="activities_left" id="activities_left" placeholder="Активитес лефт" onChange={(e) => setAbonementActivitiesLeft(e.target.value)}/>
-                                    <input type="date" name="date_of_end" id="date_of_end" placeholder="Дата окончания" onChange={(e) => setAbonementEndDate(e.target.value)}/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
