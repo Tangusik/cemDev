@@ -46,17 +46,17 @@ urlpatterns = [
     path("area_delete/<int:id>", views.delete_area),                #DONE
     path("sport_types", views.sport_types),                         #DONE
     path("sport_type_delete/<int:id>", views.delete_sport_type),    #DONE
-    path("abonements", views.abonements),                           #FIX нужно подумать про диапазон времени при добавлении(просто оставить дни?)
+    path("abonements", views.abonements),                           #DONE
     path("abonement_delete/<int:id>", views.delete_abonement),      #DONE
 
     #___________client_detail_info
     path("client/<int:pk>", views.client_detail),                   #DONE
-    path("client/<int:pk>/abonements", views.client_abonements),    #FIX - добавить удаление + передавай id с гетом
-    path("client/<int:pk>/abonements/<int:ab_id>", views.client_abonements_delete),
+    path("client/<int:pk>/abonements", views.client_abonements),    #DONE
+    path("client/<int:pk>/abonements/<int:ab_id>", views.client_abonements_delete), #DONE
     path("client/<int:pk>/groups", views.client_groups),            #DONE
     path("client/<int:pk>/acts", views.client_activities),
 
-    #удаление абонемента у конкретного клиента
+
     #пополнить баланс
     #добавить тренера
     #получить все сущесвующие гурппы (не одного тренера, а все)

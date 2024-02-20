@@ -92,7 +92,7 @@ const ClientPage = () => {
         };
         await fetchPost( `client/${id}/abonements`, data);
         setShowModalAddAbonement(false)
-        // window.location.reload();
+        window.location.reload();
     };
 
     useEffect(() => {
@@ -151,7 +151,7 @@ const ClientPage = () => {
                                     }}>Удалить</button>
                                     <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.abonement.title}</h3>
                                     <h5 style={{color: 'white', marginTop: '50px'}}>Дата покупки: {abonement.purchase_date}</h5>
-                                    <h5 style={{color: 'white', marginTop: '50px'}}>Дата окончания: {abonement.date_of_end}</h5>
+                                    {abonement.date_of_end && <h5 style={{color: 'white', marginTop: '50px'}}>Дата окончания: {abonement.date_of_end}</h5>}
                                     <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.status}</h3>
                                 </div>
                             ))}
