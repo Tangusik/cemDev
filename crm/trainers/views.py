@@ -832,7 +832,10 @@ def client_abonements(request, pk):
         client = get_object_or_404(Client, pk = pk)
         if serializer.is_valid():
             ab = get_object_or_404(Abonement, pk = serializer.data['abonement'])
-            if ab.duration is not None: end_date = datetime.date.today() + ab.duration
+            if ab.duration is not None: 
+                end_date = datetime.date.today() + ab.duration
+            else:
+                end_date = None
             ab.clients.add(client, through_defaults={"activities_left": ab.lesson_count, "date_of_end":end_date})
             client.balance -= ab.price
             client.save()
