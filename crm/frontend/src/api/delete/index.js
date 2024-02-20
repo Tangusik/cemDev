@@ -13,10 +13,10 @@ function getCSRFToken() {
     return csrfToken;
 }
 
-export const fetchDelete = async (endpoint, id) => {
+export const fetchDelete = async (endpoint) => {
     try {
         const port = 8000;
-        const url = `http://localhost:${port}/crm/${endpoint}/${id}`
+        const url = `http://localhost:${port}/crm/${endpoint}`
         const response = await axios.delete(url, {
             withCredentials: true,
             headers: {'X-CSRFToken': getCSRFToken()}
