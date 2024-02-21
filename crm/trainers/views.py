@@ -557,6 +557,25 @@ def log_out(request):
     logout(request)
     return Response(status=status.HTTP_200_OK)
 
+@api_view(['POST'])             #Получение всех ролей и создание новых
+@permission_classes([IsAuthenticated])
+def create_trainer(request):
+    serializer = TrainerCreationSerializer(data=request.data)
+    if serializer.is_valid():
+        user = User.objects.create_user(username= serializer.data['email'],
+                                        email= serializer.data['email'],
+                                        password = serializer.data['password'],
+                                        first_name = serializer.data['first_name'],
+                                        last_name = serializer.data['last_name'])
+
+        role = get_object_or_404(Role, pk=serializer.data['role'])
+        Trainer.objects.create(user = user, otchestv=serializer.data['otchestv'],
+                               birthdate = serializer.data['birth_date'], role=role)
+        return Response(status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 @api_view(['GET','POST'])             #Получение всех ролей и создание новых
@@ -849,10 +868,20 @@ def client_abonements_delete(request, pk, ab_id):
     if request.method == "DELETE":
         client = get_object_or_404(Client, pk=pk)
         del_ab = get_object_or_404(PurchaseHistory, pk = ab_id)
-        del_ab.delete()
+        del_ab.clients.remove(client)
         return Response(status=status.HTTP_202_ACCEPTED)
     
-
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def add_balance(request, pk):
+    serializer = AddBalanceSerializer(data = request.data)
+    client = get_object_or_404(Client, pk=pk)
+    if serializer.is_valid():
+        client.balance += serializer.data
+        client.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response(serializer.errors, status=400)
 @api_view(['GET'])  # детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_groups(request, pk):

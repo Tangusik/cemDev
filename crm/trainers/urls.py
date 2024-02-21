@@ -29,6 +29,7 @@ urlpatterns = [
     #___________colleagues
     path('trainer_list', views.trainer_list),                       #DONE
     path("trainer_groups", views.trainers_groups),                  #DONE
+    path("trainer_create", views.create_trainer),
 
     #___________main_info
     path("trainer_card", views.trainer_info_card),                  #DONE
@@ -55,6 +56,7 @@ urlpatterns = [
     path("client/<int:pk>/abonements/<int:ab_id>", views.client_abonements_delete), #DONE
     path("client/<int:pk>/groups", views.client_groups),            #DONE
     path("client/<int:pk>/acts", views.client_activities),
+    path("client/<int:pk>/addbalance", views.add_balance),
 
 
     #пополнить баланс
