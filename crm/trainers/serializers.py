@@ -132,3 +132,6 @@ class AbonementhistorySerializer(serializers.ModelSerializer):
 
 class AbonementAddSerializer(serializers.Serializer):
     abonement = IntegerField(required = True)
+
+class AddBalanceSerializer(serializers.Serializer):
+    balance=IntegerField(required =True)

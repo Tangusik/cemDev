@@ -849,10 +849,20 @@ def client_abonements_delete(request, pk, ab_id):
     if request.method == "DELETE":
         client = get_object_or_404(Client, pk=pk)
         del_ab = get_object_or_404(PurchaseHistory, pk = ab_id)
-        del_ab.delete()
+        del_ab.clients.remove(client)
         return Response(status=status.HTTP_202_ACCEPTED)
     
-
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def add_balance(request, pk):
+    serializer = AddBalanceSerializer(data = request.data)
+    client = get_object_or_404(Client, pk=pk)
+    if serializer.is_valid():
+        client.balance += serializer.data
+        client.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response(serializer.errors, status=400)
 @api_view(['GET'])  # детальная инфа о клиенте
 @permission_classes([IsAuthenticated])
 def client_groups(request, pk):
