@@ -29,6 +29,7 @@ urlpatterns = [
     #___________colleagues
     path('trainer_list', views.trainer_list),                       #DONE
     path("trainer_groups", views.trainers_groups),                  #DONE
+    path("trainer_create", views.create_trainer),
 
     #___________main_info
     path("trainer_card", views.trainer_info_card),                  #DONE

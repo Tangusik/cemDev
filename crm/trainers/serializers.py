@@ -32,7 +32,7 @@ class TrainerStateEditSerializer(Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email',"id"]
+        fields = ("__all__")
 
 class TrainerSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -44,6 +44,14 @@ class TrainerSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class TrainerCreationSerializer(serializers.Serializer):
+    first_name = CharField()
+    last_name = CharField()
+    otchestv = CharField()
+    email = EmailField()
+    password = CharField()
+    birth_date = DateField()
+    role = IntegerField()
 
 
 
