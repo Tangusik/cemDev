@@ -143,3 +143,15 @@ class AbonementAddSerializer(serializers.Serializer):
 
 class AddBalanceSerializer(serializers.Serializer):
     balance=IntegerField(required =True)
+
+
+class ClientIdSer(serializers.Serializer):
+    id = IntegerField()
+class GroupCreationSerializer(serializers.Serializer):
+    team_name = CharField()
+    trainer = IntegerField()
+    sport_type = IntegerField()
+    area = IntegerField()
+    members = ClientIdSer(many = True)
+    date_end = DateField()
+
