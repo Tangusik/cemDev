@@ -26,6 +26,7 @@ const ClientPage = () => {
     const [birthDate, setBirthDate] = useState('');
 
     const [abonementAdd, setAbonementAdd] = useState(null);
+    const [balanceAdd, setBalanceAdd] = useState(null);
 
     const [deletedAbonementEndpoint, setDeletedAbonementEndpoint] = useState([]);
 
@@ -68,7 +69,6 @@ const ClientPage = () => {
         }, {});
     }
 
-
     const handleEditClient = async (event) => {
         event.preventDefault();
 
@@ -94,6 +94,17 @@ const ClientPage = () => {
         setShowModalAddAbonement(false)
         window.location.reload();
     };
+
+    const handleAddBalance = async (event) => {
+        event.preventDefault();
+
+        let data = {
+            balance: balanceAdd,
+        };
+        await fetchPost( `client/${id}/addbalance`, data);
+        setShowModalAddBalance(false)
+        // window.location.reload();
+    }
 
     useEffect(() => {
         const performDeletion = async () => {
@@ -262,10 +273,11 @@ const ClientPage = () => {
                     onClose={handleAddBalanceModal}
                     children={
                         <Form
+                            onSubmit={handleAddBalance}
                             title={'Пополнение баланса'}
                             children={
                                 <div>
-                                    <input type="text" name="client_balance" id="client_balance" placeholder="Сумма"/>
+                                    <input type="text" name="client_balance" id="client_balance" placeholder="Сумма" onChange={(e) => setBalanceAdd(e.target.value)}/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
