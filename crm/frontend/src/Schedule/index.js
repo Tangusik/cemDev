@@ -3,7 +3,6 @@ import styles from './index.module.css';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import moment from 'moment';
-import axios from "axios";
 import EditModal from "../components/EditModal";
 import Button from "../components/Button";
 import {fetchGet} from "../api/get";
@@ -14,7 +13,8 @@ const Calendar = () => {
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
     const [showCard, setShowCard] = useState(false);
     const [card, setCard] = useState({sport: '', area: '', trainer: '', time: '', date: '',});
-    // const [clientActs, setClientActs] = useState(null);
+    const [clientId, setClientId] = useState(null);
+    const [clients, setClients] = useState([]);
 
     const [data, setData] = useState([]);
 
@@ -23,14 +23,25 @@ const Calendar = () => {
         setData(response);
     };
 
-    // useEffect( () => {
-    //     const fetchData = async () => {
-    //         const responseClientActs = await fetchGet(`client/${id}/acts`);
-    //         setClientActs(responseClientActs);
-    //     }
-    //
-    //     fetchData();
-    // }, []);
+    useEffect( () => {
+        const fetchData = async () => {
+            const clients = await fetchGet('client_list');
+            setClients(clients);
+        }
+
+        fetchData();
+    }, []);
+
+    useEffect( () => {
+        if (clientId) {
+            const fetchData = async () => {
+                const responseClientActs = await fetchGet(`client/${clientId}/acts`);
+                setData(responseClientActs);
+            }
+
+            fetchData();
+        }
+    }, [clientId]);
 
     const renderWeekdayHeaders = () => {
         const weekdays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
@@ -71,6 +82,7 @@ const Calendar = () => {
     const handleChooseCommonSchedule = () => {
         fetchData('scheduleAll').then(r => console.log(r));
     };
+
 
     const renderContent = (i) => {
         let content = [];
@@ -138,6 +150,13 @@ const Calendar = () => {
                 <Button title={'Мое расписание'} onClick={handleChooseOwnSchedule}></Button>
                 <Button title={'Общее расписание'} onClick={handleChooseCommonSchedule}></Button>
             </div>
+            <select id="clients" required name="clients" className={styles.selectClient}
+                    onChange={(e) => setClientId(e.target.value)}>
+                <option value="" disabled selected>клиенты</option>
+                {clients.map((client) =>
+                    (<option key={client.id} value={client.id}>{client.first_name} {client.last_name}</option>)
+                )}
+            </select>
             <div className={styles.selects}>
                 <select value={selectedMonth} onChange={handleMonthChange} style={{color: "black"}} className={styles.select}>
                     {Array.from({ length: 12 }, (_, i) => (

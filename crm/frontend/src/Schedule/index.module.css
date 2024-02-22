@@ -54,6 +54,37 @@
     background-color: #eeeaf1;
 }
 
+.selectClient {
+    height: 30px;
+    width: 180px;
+
+    padding: 0 10px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    cursor: pointer;
+
+    border-radius: 1em;
+
+    text-align-last: center;
+    font-size: 16px;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+    color: #1b1b1b;
+    background: transparent;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.selectClient:hover {
+    background-color: #eeeaf1;
+}
+
 .container {
     width: 200px;
     display: grid;
