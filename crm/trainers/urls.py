@@ -21,15 +21,21 @@ urlpatterns = [
     #___________schedule
     path("schedule", views.schedule),                               #DONE
     path("scheduleAll", views.schedule_all),                        #DONE
+    path("schedule_trainer/<int:id>", views.schedule_trainer), 
+    path("all_groups", views.all_groups),
 
     #___________clients
     path('client_list', views.client_list),                         #DONE
     path('add_client', views.add_client),                           #DONE
+    path('all_groups', views.all_groups),
+    path('group_creation', views.group_creation),
 
     #___________colleagues
     path('trainer_list', views.trainer_list),                       #DONE
     path("trainer_groups", views.trainers_groups),                  #DONE
     path("trainer_create", views.create_trainer),
+    path("trainer_delete", views.delete_trainer),
+
 
     #___________main_info
     path("trainer_card", views.trainer_info_card),                  #DONE
@@ -59,10 +65,7 @@ urlpatterns = [
     path("client/<int:pk>/addbalance", views.add_balance),          #DONE
 
 
-    #получить все сущесвующие гурппы (не одного тренера, а все)
     #добавить группу
-    #получить все занятия тренера конкретного
-              #я должна передать id тренера, а ты вернуть его расписание, подобное есть во вьюшке schedule
-    #удаление тренера
+    
 
     ]

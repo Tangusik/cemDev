@@ -969,6 +969,52 @@ def trainers_groups(request):
     serializer = TeamSerializer(teams, context={'request': request}, many = True)
     return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
 
+@api_view(['GET'])                      #Группы и клиенты тренера
+@permission_classes([IsAuthenticated])
+def all_groups(request):
+    teams = Team.objects.all()
+    serializer = TeamSerializer(teams, context={'request': request}, many = True)
+    return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def group_creation(request):
+    serializer = GroupCreationSerializer(data=request.data)
+
+    if serializer.is_valid():
+
+        team_name = serializer.data['team_name']
+        members = serializer.data['members']
+        tr = get_object_or_404(Trainer, pk=serializer.data['trainer'])
+        sp_type = get_object_or_404(SportType, pk=serializer.data['sport_type'])
+        area = get_object_or_404(Area, pk=serializer.data['area'])
+        team = Team.objects.create(name=team_name, trainer=tr, sport_type=sp_type)
+
+        date_end = serializer.data['date_end']
+
+        for client in members:
+            cl = get_object_or_404(Client, pk=client)
+            team.clients.add(cl)
+
+        date1 = datetime.date.today()
+        date2 = datetime.datetime.strptime(date_end, '%Y-%m-%d')
+
+        while date1 <= date2.date():
+            if str(date1.weekday()) in days:
+                act = Activity(act_date=date1, act_time_begin=act_begin_time,
+                               act_time_end=act_end_time,
+                               trainer=tr, area=area,
+                               status="Состоится",
+                                sport=sp_type)
+                act.save()
+                for client in members:
+                    act.clients.add(client)
+                act.save()
+            date1 = date1 + datetime.timedelta(days=1)
+
+
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -976,3 +1022,45 @@ def schedule_all(request):
     acts = Activity.objects.all()
     serializer = ActivitiesSerializer(acts, context={'request': request},many=True)
     return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_trainer(request, id):
+    trainer = get_object_or_404(Trainer, pk=id)
+    trainer.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def all_groups(request):
+    groups = Team.objects.all()
+    serializer = TeamSerializer(groups, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def schedule_trainer(request,id):
+    trainer = get_object_or_404(Trainer, pk=id)
+    acts = Activity.objects.filter(trainer=trainer)
+    serializer = ActivitiesSerializer(acts, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
