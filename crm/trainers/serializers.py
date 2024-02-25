@@ -1,7 +1,7 @@
 from .models import *
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.serializers import CharField, Serializer, EmailField, IntegerField, BooleanField, DateField, DateTimeField
+from rest_framework.serializers import CharField, Serializer, EmailField, IntegerField, BooleanField, DateField, DateTimeField, TimeField
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -78,9 +78,10 @@ class ActivitiesSerializer(serializers.ModelSerializer):
 class TeamSerializer(serializers.ModelSerializer):
     clients = ClientSerializer(many=True)
     sport_type = serializers.StringRelatedField()
+    trainer = TrainerSerializer()
     class Meta:
         model = Team
-        fields = ('name','clients', 'sport_type')
+        fields = ('name','clients', 'sport_type','trainer')
 
 
 
@@ -147,6 +148,14 @@ class AddBalanceSerializer(serializers.Serializer):
 
 class ClientIdSer(serializers.Serializer):
     id = IntegerField()
+
+
+class ActCreationSerializer(serializers.Serializer):
+    day_of_week = IntegerField()
+    time_begin = TimeField()
+    time_end = TimeField()
+
+
 class GroupCreationSerializer(serializers.Serializer):
     team_name = CharField()
     trainer = IntegerField()
@@ -154,4 +163,5 @@ class GroupCreationSerializer(serializers.Serializer):
     area = IntegerField()
     members = ClientIdSer(many = True)
     date_end = DateField()
+    acts = ActCreationSerializer(many=True)
 
