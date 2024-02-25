@@ -30,9 +30,11 @@ const Clients = () => {
 
     const handleAllClients = () => {
         setShowModalAllClients(!showModalAllClients);
+        setShowModalGroups(false);
     }
     const handleGroups = () => {
         setShowModalGroups(!showModalGroups);
+        setShowModalAllClients(false);
     }
 
     const handleAddClient = () => {
@@ -130,7 +132,7 @@ const Clients = () => {
                 {showModalGroups ? (
                     <div>
                         {groups.map((group) => (
-                            <div>{group.name} {group.sport_type} {group.trainer}</div>
+                            <div>{group.name} {group.sport_type} {group.trainer.user.first_name} {group.trainer.user.last_name}</div>
                         ))}
                          <span style={{  display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                             <Button type={"change"} title={"Добавить группу"} onClick={handleAddGroup}></Button>
