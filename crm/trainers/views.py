@@ -993,28 +993,24 @@ def group_creation(request):
         date_end = serializer.data['date_end']
         acts = serializer.data['acts']
 
-
-        '''
-        for client in members:
-            cl = get_object_or_404(Client, pk=client)
-            team.clients.add(cl)
-
         date1 = datetime.date.today()
         date2 = datetime.datetime.strptime(date_end, '%Y-%m-%d')
 
-        while date1 <= date2.date():
-            if str(date1.weekday()) in days:
-                act = Activity(act_date=date1, act_time_begin=act_begin_time,
-                               act_time_end=act_end_time,
+        all_days= all_days = (date1 + timedelta(days=i) for i in range((date2 - date1).days + 1))
+
+        for act in acts:
+            for act_date in all_days:
+                if act_date.weekday() == act[0]:
+                    act = Activity(act_date=act_date, act_time_begin=act[1],
+                               act_time_end=act[2],
                                trainer=tr, area=area,
                                status="Состоится",
-                                sport=sp_type)
-                act.save()
-                for client in members:
-                    act.clients.add(client)
-                act.save()
-            date1 = date1 + datetime.timedelta(days=1)
-        '''
+                               sport=sp_type)
+                    
+                    for client in members:
+                        act.clients.add(get_object_or_404(Client, pk=client))
+                    act.save()
+        return Response(status=status.HTTP_201_CREATED)
 
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
