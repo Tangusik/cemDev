@@ -49,7 +49,7 @@ const Admin = () => {
     const [trainerEmail, setTrainerEmail] = useState([]);
     const [trainerBirthday, setTrainerBirthday] = useState([]);
     const [trainerRole, setTrainerRole] = useState([]);
-    const [trainerSportTypes, setTrainerSportTypes] = useState([]);
+    const [trainerPassword, setTrainerPassword] = useState([]);
 
     const handleRoles = () => {
         setShowModalRoles(!showModalRoles)
@@ -168,7 +168,7 @@ const Admin = () => {
             sport_type: abonementSportType,
             ...(abonementIsDuration && {
                 duration: abonementDuration,
-                // duration_type: abonementDurationType,
+                duration_type: abonementDurationType,
             }),
             ...(abonementIsLessonCount && {
                 lesson_count: abonementLessonCount,
@@ -189,6 +189,7 @@ const Admin = () => {
             birth_date: trainerBirthday,
             email: trainerEmail,
             role: trainerRole,
+            password: trainerPassword,
         };
         await fetchPost( 'trainer_create', data);
         setShowModalTrainers(false)
@@ -240,12 +241,13 @@ const Admin = () => {
                             title={'Добавление сотрудника'}
                             children={
                                 <div>
-                                    <input type="text" placeholder="Имя" onChange={(e) => setRole(e.target.value)} required/>
-                                    <input type="text" placeholder="Фамилия" onChange={(e) => setRole(e.target.value)} required/>
-                                    <input type="text" placeholder="Отчество" onChange={(e) => setRole(e.target.value)} required/>
-                                    <input type="date" placeholder="Дата рождения" onChange={(e) => setRole(e.target.value)} required/>
-                                    <input type="text" placeholder="Почта" onChange={(e) => setRole(e.target.value)} required/>
-                                    <select className={styles.selectSport} onChange={(e) => setAbonementSportType(e.target.value)}>
+                                    <input type="text" placeholder="Имя" onChange={(e) => setTrainerFirstName(e.target.value)} required/>
+                                    <input type="text" placeholder="Фамилия" onChange={(e) => setTrainerLastName(e.target.value)} required/>
+                                    <input type="text" placeholder="Отчество" onChange={(e) => setTrainerMiddleName(e.target.value)} required/>
+                                    <input type="date" placeholder="Дата рождения" onChange={(e) => setTrainerBirthday(e.target.value)} required/>
+                                    <input type="text" placeholder="Почта" onChange={(e) => setTrainerEmail(e.target.value)} required/>
+                                    <input type="text" placeholder="Пароль" onChange={(e) => setTrainerPassword(e.target.value)} required/>
+                                    <select className={styles.select} onChange={(e) => setTrainerRole(e.target.value)}>
                                         <option value="" disabled selected>роль</option>
                                         {roles.map((role)=>
                                             (<option key={role.id} value={role.id}>{role.name}</option>)
@@ -462,7 +464,7 @@ const Admin = () => {
                                                 disabled={!abonementIsDuration}
                                                 onChange={e => setAbonementDuration(e.target.value)}
                                             />
-                                            <select name="duration_type" className={styles.selectSport} onChange={(e) => setAbonementDurationType(e.target.value)} style={{width:'fit-content'}}>
+                                            <select name="duration_type" className={styles.select} onChange={(e) => setAbonementDurationType(e.target.value)} style={{width:'fit-content'}}>
                                                 <option value="" disabled selected>диапазон</option>
                                                 <option value="days">Дней</option>
                                                 <option value="weeks">Недель</option>
@@ -484,7 +486,7 @@ const Admin = () => {
                                                 onChange={(e) => setAbonementLessonCount(e.target.value)}
                                             />
                                         </div>
-                                        <select id="select_sport" name="sport" className={styles.selectSport} onChange={(e) => setAbonementSportType(e.target.value)}>
+                                        <select id="select_sport" name="sport" className={styles.select} onChange={(e) => setAbonementSportType(e.target.value)}>
                                             <option value="" disabled selected>вид спорта</option>
                                             {sportTypes.map((sportType)=>
                                                 (<option key={sportType.id} value={sportType.id}>{sportType.title}</option>)
