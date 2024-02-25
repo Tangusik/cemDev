@@ -1022,3 +1022,45 @@ def schedule_all(request):
     acts = Activity.objects.all()
     serializer = ActivitiesSerializer(acts, context={'request': request},many=True)
     return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_trainer(request, id):
+    trainer = get_object_or_404(Trainer, pk=id)
+    trainer.delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def all_groups(request):
+    groups = Team.objects.all()
+    serializer = TeamSerializer(groups, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def schedule_trainer(request,id):
+    trainer = get_object_or_404(Trainer, pk=id)
+    acts = Activity.objects.filter(trainer=trainer)
+    serializer = ActivitiesSerializer(acts, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
