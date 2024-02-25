@@ -991,7 +991,10 @@ def group_creation(request):
         team = Team.objects.create(name=team_name, trainer=tr, sport_type=sp_type)
 
         date_end = serializer.data['date_end']
+        acts = serializer.data['acts']
 
+
+        '''
         for client in members:
             cl = get_object_or_404(Client, pk=client)
             team.clients.add(cl)
@@ -1011,10 +1014,10 @@ def group_creation(request):
                     act.clients.add(client)
                 act.save()
             date1 = date1 + datetime.timedelta(days=1)
+        '''
 
-
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
