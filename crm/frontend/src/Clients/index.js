@@ -15,6 +15,8 @@ const Clients = () => {
     const [chosenClientState, setChosenClientState] = useState([]);
     const [clientsStates, setClientsStates] = useState([]);
 
+    const [groups, setGroups] = useState([]);
+
     const [showModalAllClients, setShowModalAllClients] = useState(false);
     const [showModalGroups, setShowModalGroups] = useState(false);
 
@@ -42,11 +44,14 @@ const Clients = () => {
 
     useEffect( () => {
         const fetchData = async () => {
-            const response = await fetchGet('client_list');
-            setClients(response);
+            const clients = await fetchGet('client_list');
+            setClients(clients);
 
             const clientsStates = await fetchGet('cl_statuses');
             setClientsStates(clientsStates)
+
+            const groups = await fetchGet('all_groups');
+            setGroups(groups)
         }
 
         fetchData();
@@ -124,6 +129,9 @@ const Clients = () => {
                 }
                 {showModalGroups ? (
                     <div>
+                        {groups.map((group) => (
+                            <div>{group.name} {group.sport_type} {group.trainer}</div>
+                        ))}
                          <span style={{  display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                             <Button type={"change"} title={"Добавить группу"} onClick={handleAddGroup}></Button>
                          </span>

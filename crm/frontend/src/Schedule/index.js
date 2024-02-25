@@ -13,8 +13,12 @@ const Calendar = () => {
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
     const [showCard, setShowCard] = useState(false);
     const [card, setCard] = useState({sport: '', area: '', trainer: '', time: '', date: '',});
+
     const [clientId, setClientId] = useState(null);
     const [clients, setClients] = useState([]);
+
+    const [trainerId, setTrainerId] = useState(null);
+    const [trainers, setTrainers] = useState([]);
 
     const [data, setData] = useState([]);
 
@@ -27,6 +31,9 @@ const Calendar = () => {
         const fetchData = async () => {
             const clients = await fetchGet('client_list');
             setClients(clients);
+
+            const trainers = await fetchGet('trainer_list');
+            setTrainers(trainers)
         }
 
         fetchData();
@@ -42,6 +49,17 @@ const Calendar = () => {
             fetchData();
         }
     }, [clientId]);
+
+    useEffect( () => {
+        if (trainerId) {
+            const fetchData = async () => {
+                const responseTrainerActs = await fetchGet(`schedule_trainer/${trainerId}`);
+                setData(responseTrainerActs);
+            }
+
+            fetchData();
+        }
+    }, [trainerId]);
 
     const renderWeekdayHeaders = () => {
         const weekdays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
@@ -150,11 +168,18 @@ const Calendar = () => {
                 <Button title={'Мое расписание'} onClick={handleChooseOwnSchedule}></Button>
                 <Button title={'Общее расписание'} onClick={handleChooseCommonSchedule}></Button>
             </div>
-            <select id="clients" required name="clients" className={styles.selectClient}
+            <select required name="clients" className={styles.selectClient}
                     onChange={(e) => setClientId(e.target.value)}>
                 <option value="" disabled selected>клиенты</option>
                 {clients.map((client) =>
                     (<option key={client.id} value={client.id}>{client.first_name} {client.last_name}</option>)
+                )}
+            </select>
+            <select required name="clients" className={styles.selectClient}
+                    onChange={(e) => setTrainerId(e.target.value)}>
+                <option value="" disabled selected>сотрудники</option>
+                {trainers.map((trainer) =>
+                    (<option key={trainer.user.id} value={trainer.user.id}>{trainer.user.first_name} {trainer.user.last_name}</option>)
                 )}
             </select>
             <div className={styles.selects}>
