@@ -16,6 +16,7 @@ const Admin = () => {
     const [showModalAreas, setShowModalAreas] = useState(false);
     const [showModalTypeSports, setShowModalTypeSports] = useState(false);
     const [showModalAbonements, setShowModalAbonements] = useState(false);
+    const [showModalTrainers, setShowModalTrainers] = useState(false);
 
     const [roles, setRoles] = useState([]);
     const [employeeStates, setEmployeeStates] = useState([]);
@@ -23,6 +24,7 @@ const Admin = () => {
     const [areas, setAreas] = useState([]);
     const [sportTypes, setSportTypes] = useState([]);
     const [abonements, setAbonements] = useState([]);
+    const [trainers, setTrainers] = useState([]);
 
     const [role, setRole] = useState([]);
     const [employeeState, setEmployeeState] = useState([]);
@@ -41,6 +43,14 @@ const Admin = () => {
 
     const [deletedItemEndpoint, setDeletedEndpoint] = useState([]);
 
+    const [trainerLastName, setTrainerLastName] = useState([]);
+    const [trainerFirstName, setTrainerFirstName] = useState([]);
+    const [trainerMiddleName, setTrainerMiddleName] = useState([]);
+    const [trainerEmail, setTrainerEmail] = useState([]);
+    const [trainerBirthday, setTrainerBirthday] = useState([]);
+    const [trainerRole, setTrainerRole] = useState([]);
+    const [trainerSportTypes, setTrainerSportTypes] = useState([]);
+
     const handleRoles = () => {
         setShowModalRoles(!showModalRoles)
     }
@@ -58,6 +68,9 @@ const Admin = () => {
     }
     const handleAbonements = () => {
         setShowModalAbonements(!showModalAbonements)
+    }
+    const handleTrainers = () => {
+        setShowModalTrainers(!showModalTrainers)
     }
 
     useEffect(() => {
@@ -79,6 +92,9 @@ const Admin = () => {
 
             const abonements = await fetchGet('abonements');
             setAbonements(abonements)
+
+            const trainers = await fetchGet('trainer_list');
+            setTrainers(trainers)
 
         };
 
@@ -163,6 +179,22 @@ const Admin = () => {
         window.location.reload();
     };
 
+    const handleAddTrainer = async (event) => {
+        event.preventDefault();
+
+        const data = {
+            first_name: trainerFirstName,
+            last_name: trainerLastName,
+            otchestv: trainerMiddleName,
+            birth_date: trainerBirthday,
+            email: trainerEmail,
+            role: trainerRole,
+        };
+        await fetchPost( 'trainer_create', data);
+        setShowModalTrainers(false)
+        window.location.reload();
+    }
+
     useEffect(() => {
         const performDeletion = async () => {
             if (deletedItemEndpoint !== '') {
@@ -182,6 +214,51 @@ const Admin = () => {
 
     return (
         <div>
+            <Container
+                title={"Тренера"}
+                polosa={true}
+                children={
+                    <>
+                        {trainers && trainers.map((trainer) =>
+                            <div key={trainer.id} className={styles.row}>
+                                <div style={{color: '#293241'}}>{trainer.user.first_name} {trainer.user.last_name}</div>
+                                {/*<div style={{cursor: 'pointer'}} onClick={() => {*/}
+                                {/*    setDeletedEndpoint(`delete_role/${role.id}`);*/}
+                                {/*}}><img src={iconCross} alt=''/></div>*/}
+                            </div>
+                        )}
+                        <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить сотрудника"} onClick={handleTrainers}></Button>
+                    </>
+                }
+            ></Container>
+            {showModalTrainers &&
+                <EditModal
+                    onClose={handleRoles}
+                    children={
+                        <Form
+                            onSubmit={handleAddTrainer}
+                            title={'Добавление сотрудника'}
+                            children={
+                                <div>
+                                    <input type="text" placeholder="Имя" onChange={(e) => setRole(e.target.value)} required/>
+                                    <input type="text" placeholder="Фамилия" onChange={(e) => setRole(e.target.value)} required/>
+                                    <input type="text" placeholder="Отчество" onChange={(e) => setRole(e.target.value)} required/>
+                                    <input type="date" placeholder="Дата рождения" onChange={(e) => setRole(e.target.value)} required/>
+                                    <input type="text" placeholder="Почта" onChange={(e) => setRole(e.target.value)} required/>
+                                    <select className={styles.selectSport} onChange={(e) => setAbonementSportType(e.target.value)}>
+                                        <option value="" disabled selected>роль</option>
+                                        {roles.map((role)=>
+                                            (<option key={role.id} value={role.id}>{role.name}</option>)
+                                        )}
+                                    </select>
+                                    <input type="submit" value="Добавить"/>
+                                </div>}
+                        ></Form>}>
+                </EditModal>
+            }
+
+
+
             <Container
                 title={"Роли сотрудников"}
                 polosa={true}

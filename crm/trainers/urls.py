@@ -57,14 +57,14 @@ urlpatterns = [
     path("client/<int:pk>/abonements", views.client_abonements),    #DONE
     path("client/<int:pk>/abonements/<int:ab_id>", views.client_abonements_delete), #DONE
     path("client/<int:pk>/groups", views.client_groups),            #DONE
-    path("client/<int:pk>/acts", views.client_activities),
-    path("client/<int:pk>/addbalance", views.add_balance),
+    path("client/<int:pk>/acts", views.client_activities),          #DONE
+    path("client/<int:pk>/addbalance", views.add_balance),          #DONE
 
 
-    #пополнить баланс
-    #добавить тренера
     #получить все сущесвующие гурппы (не одного тренера, а все)
     #добавить группу
-
+    #получить все занятия тренера конкретного
+              #я должна передать id тренера, а ты вернуть его расписание, подобное есть во вьюшке schedule
+    #удаление тренера
 
     ]

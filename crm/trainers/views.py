@@ -557,7 +557,7 @@ def log_out(request):
     logout(request)
     return Response(status=status.HTTP_200_OK)
 
-@api_view(['POST'])             #Получение всех ролей и создание новых
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_trainer(request):
     serializer = TrainerCreationSerializer(data=request.data)
@@ -877,7 +877,7 @@ def add_balance(request, pk):
     serializer = AddBalanceSerializer(data = request.data)
     client = get_object_or_404(Client, pk=pk)
     if serializer.is_valid():
-        client.balance += serializer.data
+        client.balance += serializer.data['balance']
         client.save()
         return Response(status=status.HTTP_202_ACCEPTED)
     else:
