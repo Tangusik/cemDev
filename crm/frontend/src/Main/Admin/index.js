@@ -223,9 +223,9 @@ const Admin = () => {
                         {trainers && trainers.map((trainer) =>
                             <div key={trainer.id} className={styles.row}>
                                 <div style={{color: '#293241'}}>{trainer.user.first_name} {trainer.user.last_name}</div>
-                                {/*<div style={{cursor: 'pointer'}} onClick={() => {*/}
-                                {/*    setDeletedEndpoint(`delete_role/${role.id}`);*/}
-                                {/*}}><img src={iconCross} alt=''/></div>*/}
+                                <div style={{cursor: 'pointer'}} onClick={() => {
+                                    setDeletedEndpoint(`trainer_delete/${trainer.user.id}`);
+                                }}><img src={iconCross} alt=''/></div>
                             </div>
                         )}
                         <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить сотрудника"} onClick={handleTrainers}></Button>

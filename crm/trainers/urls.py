@@ -21,20 +21,19 @@ urlpatterns = [
     #___________schedule
     path("schedule", views.schedule),                               #DONE
     path("scheduleAll", views.schedule_all),                        #DONE
-    path("schedule_trainer/<int:id>", views.schedule_trainer), 
-    path("all_groups", views.all_groups),
+    path("schedule_trainer/<int:id>", views.schedule_trainer),      #DONE
 
     #___________clients
     path('client_list', views.client_list),                         #DONE
     path('add_client', views.add_client),                           #DONE
-    path('all_groups', views.all_groups),
-    path('group_creation', views.group_creation),
+    path('all_groups', views.all_groups),                           #DONE
+    path('group_creation', views.group_creation),                   #IN PROGRESS
 
     #___________colleagues
     path('trainer_list', views.trainer_list),                       #DONE
     path("trainer_groups", views.trainers_groups),                  #DONE
-    path("trainer_create", views.create_trainer),
-    path("trainer_delete", views.delete_trainer),
+    path("trainer_create", views.create_trainer),                   #DONE
+    path("trainer_delete/<int:id>", views.delete_trainer),          #DONE
 
 
     #___________main_info
