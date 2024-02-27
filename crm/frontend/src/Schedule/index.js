@@ -12,7 +12,7 @@ const Calendar = () => {
     const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
     const [showCard, setShowCard] = useState(false);
-    const [card, setCard] = useState({sport: '', area: '', trainer: '', time: '', date: '',});
+    const [card, setCard] = useState({sport: '', area: '', trainer: '', time: '', date: '', clients: []});
 
     const [clientId, setClientId] = useState(null);
     const [clients, setClients] = useState([]);
@@ -101,6 +101,29 @@ const Calendar = () => {
         fetchData('scheduleAll').then(r => console.log(r));
     };
 
+    const [checkedClients, setCheckedClients] = useState({});
+
+    const handleCheckboxChange = (clientId, isChecked) => {
+        setCheckedClients(prevState => ({
+            ...prevState,
+            [clientId]: isChecked
+        }));
+    };
+
+    useEffect(() => {
+        const initialCheckedState = {};
+        if (card){
+            card.clients.forEach(client => {
+                initialCheckedState[client.id] = false;
+            });
+            setCheckedClients(initialCheckedState);
+        }
+
+    }, [card]);
+
+    useEffect(() => {
+        console.log(checkedClients);
+    }, [checkedClients]);
 
     const renderContent = (i) => {
         let content = [];
@@ -155,11 +178,6 @@ const Calendar = () => {
         return items;
     };
 
-    useEffect(() => {
-
-    }, [selectedMonth, selectedYear])
-
-
     return (
         <div>
             <Header></Header>
@@ -203,7 +221,19 @@ const Calendar = () => {
                         onClose={handleShowCard}
                         children={
                             <div className={styles.cardMainContainer}>
-                                <div className={styles.card}>{card.area}</div>
+                                <div className={styles.card} key={card.id}>
+                                    <div>{card.area}</div>
+                                    <div>{card.clients.map((client)=> (
+                                        <div className={styles.client} key={card.id}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={checkedClients[client.id] || false}
+                                                    onChange={(e) => handleCheckboxChange(client.id, e.target.checked)}
+                                                ></input>
+                                                <div>{client.first_name}</div>
+                                        </div>
+                                    ))}</div>
+                                </div>
                             </div>
                         }>
                     </EditModal>
