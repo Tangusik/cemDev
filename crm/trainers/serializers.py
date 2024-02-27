@@ -166,5 +166,4 @@ class GroupCreationSerializer(serializers.Serializer):
     acts = ActCreationSerializer(many=True)
 
 class MarkSerializer(serializers.Serializer):
-    client_id = IntegerField(required=True)
     presence = BooleanField(required=True)

@@ -6,13 +6,14 @@ import moment from 'moment';
 import EditModal from "../components/EditModal";
 import Button from "../components/Button";
 import {fetchGet} from "../api/get";
+import {fetchPost} from "../api/post";
 
 const Calendar = () => {
     const now = new Date();
     const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
     const [showCard, setShowCard] = useState(false);
-    const [card, setCard] = useState({sport: '', area: '', trainer: '', time: '', date: '', clients: []});
+    const [card, setCard] = useState({id: '', sport: '', area: '', trainer: '', time: '', date: '', clients: []});
 
     const [clientId, setClientId] = useState(null);
     const [clients, setClients] = useState([]);
@@ -125,6 +126,20 @@ const Calendar = () => {
         console.log(checkedClients);
     }, [checkedClients]);
 
+    const handleMark = async () => {
+        const data = Object.keys(checkedClients).reduce((acc, clientId) => {
+            acc[clientId] = checkedClients[clientId] ? true : false;
+            return acc;
+        }, {});
+
+        const dataSend = {
+            presence: data,
+        }
+
+        console.log(data);
+        await fetchPost( `mark/${card.id}`, dataSend);
+    }
+
     const renderContent = (i) => {
         let content = [];
         data.map((Obj) => {
@@ -233,6 +248,7 @@ const Calendar = () => {
                                                 <div>{client.first_name}</div>
                                         </div>
                                     ))}</div>
+                                    <Button onClick={handleMark}>Отметить</Button>
                                 </div>
                             </div>
                         }>
