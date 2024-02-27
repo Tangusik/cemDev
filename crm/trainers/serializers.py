@@ -165,3 +165,6 @@ class GroupCreationSerializer(serializers.Serializer):
     date_end = DateField()
     acts = ActCreationSerializer(many=True)
 
+class MarkSerializer(serializers.Serializer):
+    client_id = IntegerField(required=True)
+    presence = BooleanField(required=True)

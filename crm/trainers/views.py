@@ -1047,7 +1047,20 @@ def schedule_trainer(request,id):
     return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
 
 
-
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def mark(request, id):
+    serializer = MarkSerializer(data=request.data)
+    if serializer.is_valid():
+        activity = get_object_or_404(Activity, pk=id)
+        for client in serializer.data.presences:
+            cl = get_object_or_404(Client, pk=client)
+            presence = Presence.objects.get_or_create(client=cl, activity=activity)
+            presence.presence = serializer.data.presences[client]
+            presence.save()
+        return Response(status=status.HTTP_202_ACCEPTED)      
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

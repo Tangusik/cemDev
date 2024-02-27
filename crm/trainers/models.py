@@ -93,9 +93,9 @@ class Activity(models.Model):
 
 
 class Presence(models.Model):
-    activity = models.ForeignKey(Activity, on_delete=models.DO_NOTHING)
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
-    presence = models.BooleanField(blank=False, null=True, default=False)
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    presence = models.BooleanField(blank=False, default=False)
 
 class News(models.Model):
     title = models.CharField(max_length=200)
