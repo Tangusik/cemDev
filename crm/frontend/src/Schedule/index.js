@@ -113,7 +113,7 @@ const Calendar = () => {
 
     useEffect(() => {
         const initialCheckedState = {};
-        if (card){
+        if (card && card.clients){
             card.clients.forEach(client => {
                 initialCheckedState[client.id] = false;
             });
@@ -122,10 +122,6 @@ const Calendar = () => {
 
     }, [card]);
 
-    useEffect(() => {
-        console.log(checkedClients);
-    }, [checkedClients]);
-
     const handleMark = async () => {
         const data = Object.keys(checkedClients).reduce((acc, clientId) => {
             acc[clientId] = checkedClients[clientId] ? true : false;
@@ -133,10 +129,9 @@ const Calendar = () => {
         }, {});
 
         const dataSend = {
-            presence: data,
+            presences: data,
         }
 
-        console.log(data);
         await fetchPost( `mark/${card.id}`, dataSend);
     }
 
@@ -237,8 +232,8 @@ const Calendar = () => {
                         children={
                             <div className={styles.cardMainContainer}>
                                 <div className={styles.card} key={card.id}>
-                                    <div>{card.area}</div>
-                                    <div>{card.clients.map((client)=> (
+                                    <div>{card.area && card.area}</div>
+                                    <div>{card.clients && card.clients.map((client)=> (
                                         <div className={styles.client} key={card.id}>
                                                 <input
                                                     type="checkbox"
