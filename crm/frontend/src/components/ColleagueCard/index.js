@@ -13,7 +13,7 @@ const ColleagueCard = (props) =>{
                     <div>{state}</div>
                 </div>
                 <div className={styles.back}>
-                    <div>ссылка на страничку</div>
+                    <div className={styles.center} >ссылка на страничку</div>
                 </div>
             </div>
     )

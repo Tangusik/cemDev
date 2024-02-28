@@ -9,33 +9,27 @@
     position: relative;
 }
 
-.scheduleType {
+.headerShedule {
+    width: 100%;
+
+    margin-top: 20px;
+
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 4em;
-
-    margin-top: 2em;
-    margin-bottom: 1em;
+    justify-content: space-around;
 }
 
-/*.optionalSelects {*/
-/*    background-color: #575757;*/
-
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    align-items: flex-end;*/
-/*    justify-content: space-around;*/
-
-/*    margin-top: 2em;*/
-/*    margin-bottom: 1em;*/
-/*}*/
+.scheduleType {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
 .optionalSelects {
-    position: absolute;
-    top: 0;
-    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 
@@ -44,10 +38,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 50px;
-
-    margin-top: 2em;
-    margin-bottom: 2em;
+    gap: 20px;
 }
 
 .select {
@@ -79,6 +70,8 @@
     height: 30px;
     width: 180px;
 
+    line-height: 30px;
+
     padding: 0 10px;
 
     white-space: nowrap;
@@ -89,7 +82,7 @@
 
     border-radius: 1em;
 
-    text-align-last: center;
+    text-align: center;
     font-size: 16px;
 
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
@@ -167,6 +160,8 @@
     align-items: center;
     overflow: hidden;
     justify-content: center;
+
+    margin-top: 40px;
 }
 
 .weekday {

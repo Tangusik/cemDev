@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Search from "../components/Search";
 import axios from "axios";
 import styles from "../Colleagues/index.module.css";
 import ColleagueCard from "../components/ColleagueCard";
@@ -53,13 +52,7 @@ const Colleagues = () => {
                         onChange={handleSearchChange}>
                     </input>
                 </div>
-                <div>
-                    {/*{filteredColleagues.map(colleague => (*/}
-                    {/*    <div key={colleague.user.id}>{getFullName(colleague)}</div>*/}
-                    {/*))}*/}
-                </div>
             </div>
-            {/*<Search colleagues={colleagues}></Search>*/}
             <div className={styles.cards}>
                 {filteredColleagues.length===0 && <p>Нет клиентов</p>}
                 {filteredColleagues.map((colleague) => (
