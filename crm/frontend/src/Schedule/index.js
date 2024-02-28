@@ -192,9 +192,26 @@ const Calendar = () => {
         <div>
             <Header></Header>
             <div className={styles.page}>
+            <div className={styles.headerShedule}>
+            <div className={styles.scheduleType}>
+                <div onClick={handleChooseOwnSchedule} className={styles.selectClient}>Мое расписание</div>
+                <div onClick={handleChooseCommonSchedule} className={styles.selectClient}>Общее расписание</div>
+            </div>
             <div className={styles.selects}>
-                <Button title={'Мое расписание'} onClick={handleChooseOwnSchedule}></Button>
-                <Button title={'Общее расписание'} onClick={handleChooseCommonSchedule}></Button>
+                <select value={selectedMonth} onChange={handleMonthChange} className={styles.select}>
+                    {Array.from({ length: 12 }, (_, i) => (
+                        <option key={`month-${i}`} value={i}>
+                            {new Date(selectedYear, i).toLocaleString('default', { month: 'short' })}
+                        </option>
+                    ))}
+                </select>
+                <select value={selectedYear} onChange={handleYearChange} className={styles.select}>
+                    {Array.from({ length: 9 }, (_, i) => now.getFullYear() - 4 + i).map((year) => (
+                        <option key={`year-${year}`} value={year}>
+                            {year}
+                        </option>
+                    ))}
+                </select>
             </div>
             <div className={styles.optionalSelects}>
                 <select required name="clients" className={styles.selectClient}
@@ -212,21 +229,6 @@ const Calendar = () => {
                     )}
                 </select>
             </div>
-            <div className={styles.selects}>
-                <select value={selectedMonth} onChange={handleMonthChange} style={{color: "black"}} className={styles.select}>
-                    {Array.from({ length: 12 }, (_, i) => (
-                        <option key={`month-${i}`} value={i}>
-                            {new Date(selectedYear, i).toLocaleString('default', { month: 'short' })}
-                        </option>
-                    ))}
-                </select>
-                <select value={selectedYear} onChange={handleYearChange} style={{color: "black"}} className={styles.select}>
-                    {Array.from({ length: 9 }, (_, i) => now.getFullYear() - 4 + i).map((year) => (
-                        <option key={`year-${year}`} value={year}>
-                            {year}
-                        </option>
-                    ))}
-                </select>
             </div>
                 {showCard &&
                     <EditModal
