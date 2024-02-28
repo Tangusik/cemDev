@@ -66,6 +66,8 @@ class ActivitySerializer(serializers.ModelSerializer):
         model = Activity
         fields = ("__all__")
 
+
+
 class ActivitiesSerializer(serializers.ModelSerializer):
     trainer = TrainerSerializer(many=False)
     clients = ClientSerializer(many=True)
@@ -167,3 +169,8 @@ class GroupCreationSerializer(serializers.Serializer):
 
 class MarkSerializer(serializers.Serializer):
     presences = DictField(required=True)
+
+class PresencesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Presence
+        fields = ('client', 'presence')

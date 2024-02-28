@@ -23,6 +23,7 @@ urlpatterns = [
     path("scheduleAll", views.schedule_all),                        #DONE
     path("schedule_trainer/<int:id>", views.schedule_trainer),      #DONE
     path("mark/<int:id>", views.mark),
+    path("presences/<int:id>",views.presences_lesson),
 
     #___________clients
     path('client_list', views.client_list),                         #DONE
