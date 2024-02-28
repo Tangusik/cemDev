@@ -192,24 +192,26 @@ const Calendar = () => {
         <div>
             <Header></Header>
             <div className={styles.page}>
-            <div className={styles.scheduleType}>
+            <div className={styles.selects}>
                 <Button title={'Мое расписание'} onClick={handleChooseOwnSchedule}></Button>
                 <Button title={'Общее расписание'} onClick={handleChooseCommonSchedule}></Button>
             </div>
-            <select required name="clients" className={styles.selectClient}
-                    onChange={(e) => setClientId(e.target.value)}>
-                <option value="" disabled selected>клиенты</option>
-                {clients.map((client) =>
-                    (<option key={client.id} value={client.id}>{client.first_name} {client.last_name}</option>)
-                )}
-            </select>
-            <select required name="clients" className={styles.selectClient}
-                    onChange={(e) => setTrainerId(e.target.value)}>
-                <option value="" disabled selected>сотрудники</option>
-                {trainers.map((trainer) =>
-                    (<option key={trainer.user.id} value={trainer.user.id}>{trainer.user.first_name} {trainer.user.last_name}</option>)
-                )}
-            </select>
+            <div className={styles.optionalSelects}>
+                <select required name="clients" className={styles.selectClient}
+                        onChange={(e) => setClientId(e.target.value)}>
+                    <option value="" disabled selected>клиенты</option>
+                    {clients.map((client) =>
+                        (<option key={client.id} value={client.id}>{client.first_name} {client.last_name}</option>)
+                    )}
+                </select>
+                <select required name="clients" className={styles.selectClient}
+                        onChange={(e) => setTrainerId(e.target.value)}>
+                    <option value="" disabled selected>сотрудники</option>
+                    {trainers.map((trainer) =>
+                        (<option key={trainer.user.id} value={trainer.user.id}>{trainer.user.first_name} {trainer.user.last_name}</option>)
+                    )}
+                </select>
+            </div>
             <div className={styles.selects}>
                 <select value={selectedMonth} onChange={handleMonthChange} style={{color: "black"}} className={styles.select}>
                     {Array.from({ length: 12 }, (_, i) => (
