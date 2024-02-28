@@ -1026,7 +1026,10 @@ def schedule_all(request):
 #@permission_classes([IsAuthenticated])
 def presences_lesson(request, id):
     act = get_object_or_404(Activity, pk=id)
-    presences = Presence.objects.filter(activity=act)
+    presences = []
+    for client in act.clients.all():
+        presence = Presence.objects.get_or_create(activity=act, client=client)
+        presences.append(presence[0])
     serializer = PresencesSerializer(presences, context={'request': request},many=True)
     return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
 
