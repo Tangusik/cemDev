@@ -1022,6 +1022,13 @@ def schedule_all(request):
     serializer = ActivitiesSerializer(acts, context={'request': request},many=True)
     return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
 
+@api_view(['GET'])
+#@permission_classes([IsAuthenticated])
+def presences_lesson(request, id):
+    act = get_object_or_404(Activity, pk=id)
+    presences = Presence.objects.filter(activity=act)
+    serializer = PresencesSerializer(presences, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -1057,8 +1064,8 @@ def mark(request, id):
         for client in presences:
             cl = get_object_or_404(Client, pk=client)
             presence = Presence.objects.get_or_create(client=cl, activity=activity)
-            presence.presence = presences[client]
-            presence.save()
+            presence[0].presence = presences[client]
+            presence[0].save()
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
