@@ -1053,10 +1053,11 @@ def mark(request, id):
     serializer = MarkSerializer(data=request.data)
     if serializer.is_valid():
         activity = get_object_or_404(Activity, pk=id)
-        for client in serializer.data.presences:
+        presences = serializer.data['presences']
+        for client in presences:
             cl = get_object_or_404(Client, pk=client)
             presence = Presence.objects.get_or_create(client=cl, activity=activity)
-            presence.presence = serializer.data.presences[client]
+            presence.presence = presences[client]
             presence.save()
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
