@@ -63,7 +63,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     area = serializers.StringRelatedField()
     sport = serializers.StringRelatedField()
     class Meta:
-        model = Activity
+        model = Lesson
         fields = ("__all__")
 
 
@@ -74,7 +74,7 @@ class ActivitiesSerializer(serializers.ModelSerializer):
     area = serializers.StringRelatedField()
     sport = serializers.StringRelatedField()
     class Meta:
-        model = Activity
+        model = Lesson
         fields = ("__all__")
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -82,7 +82,7 @@ class TeamSerializer(serializers.ModelSerializer):
     sport_type = serializers.StringRelatedField()
     trainer = TrainerSerializer()
     class Meta:
-        model = Team
+        model = Group
         fields = ('name','clients', 'sport_type','trainer')
 
 

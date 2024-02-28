@@ -117,6 +117,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+MEDIA_ROOT = '/static/img'
 
 
 CSRF_TRUSTED_ORIGINS = ["chrome-extension://amknoiejhlmhancpahfcfcfhllgkpbld", "http://localhost:3000"]

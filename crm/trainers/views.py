@@ -1023,7 +1023,7 @@ def schedule_all(request):
     return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
 
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def presences_lesson(request, id):
     act = get_object_or_404(Activity, pk=id)
     presences = []
