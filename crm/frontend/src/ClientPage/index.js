@@ -157,7 +157,7 @@ const ClientPage = () => {
                         <div className={styles.list}>
                             {clientAbonements && clientAbonements.map((abonement) => (
                                 <div style={{height: '400px', minWidth: '300px', backgroundColor: '#43638d', borderRadius: '10px'}}>
-                                    <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px'}} onClick={() => {
+                                    <button style={{float: 'right', padding: '10px', borderRadius:'0 30px 0 30px', cursor: 'pointer'}} onClick={() => {
                                         setDeletedAbonementEndpoint(`client/${id}/abonements/${abonement.id}`);
                                     }}>Удалить</button>
                                     <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.abonement.title}</h3>
