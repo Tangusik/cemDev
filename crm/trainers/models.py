@@ -48,14 +48,16 @@ class Trainer(models.Model):
     state = models.ForeignKey(TrainerState, models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return self.user.firstName
+        return self.user.first_name
 
 class Area(models.Model):
     address = models.CharField(blank=True, max_length=50, default='Адрес площадки')
     def __str__(self):
         return self.address
+
 class Family(models.Model):
     pass
+
 class Group(models.Model):
     title = models.CharField(max_length=20, blank=False)
     clients = models.ManyToManyField(Client)
@@ -90,6 +92,7 @@ class Abonement(models.Model):
 
 class PurchaseHistoryStatus(models.Model):
     title = models.CharField(max_length=30)
+    
 class PurchaseHistory(models.Model):
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
     abonement = models.ForeignKey(Abonement, on_delete=models.DO_NOTHING)
