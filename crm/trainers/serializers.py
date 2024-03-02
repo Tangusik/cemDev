@@ -8,7 +8,7 @@ class ClientSerializer(serializers.ModelSerializer):
     state = serializers.StringRelatedField()
     class Meta:
         model = Client
-        fields = ('first_name', 'last_name', 'birth_date', 'state', 'balance',"id")
+        fields = ('firstName', 'lastName', 'birthDate', 'state', 'balance',"id",'middleName')
 
 class UserAuthSerializer(Serializer):
     username = CharField(required=True)
@@ -32,7 +32,7 @@ class TrainerStateEditSerializer(Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("__all__")
+        fields = ("first_name","last_name", "id", "email")
 
 class TrainerSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -40,7 +40,7 @@ class TrainerSerializer(serializers.ModelSerializer):
     state = serializers.StringRelatedField()
     class Meta:
         model = Trainer
-        fields = ['user', 'otchestv', 'birthdate', 'role', 'state']
+        fields = ['user', 'middleName', 'birthDate', 'role', 'state']
         depth = 1
 
 
@@ -57,7 +57,7 @@ class TrainerCreationSerializer(serializers.Serializer):
 
 
 
-class ActivitySerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     trainer = TrainerSerializer()
     clients = ClientSerializer(many=True)
     area = serializers.StringRelatedField()
@@ -77,13 +77,13 @@ class ActivitiesSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = ("__all__")
 
-class TeamSerializer(serializers.ModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):
     clients = ClientSerializer(many=True)
     sport_type = serializers.StringRelatedField()
     trainer = TrainerSerializer()
     class Meta:
         model = Group
-        fields = ('name','clients', 'sport_type','trainer')
+        fields = ('title','clients', 'trainer','sport_type')
 
 
 
