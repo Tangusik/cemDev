@@ -3,43 +3,30 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.login_page, name='login_page'),
-    path('login', views.log_in, name='login'),
-    path('logout', views.log_out, name='logout'),
-    
-
-#     path('clients/team_creation', views.team_creation, name='team_creation'),
-#     path('clients', views.clients, name='clients'),
-    #path('client/<int:client_id>', views.client_info, name='client_info'),
-#     path('trainers', views.trainers, name='trainers'),
-#     path('trainers/add_action', views.trainers_add_action, name='trainers_add_action'),
-#     path('main/edit_profile', views.edit, name="profile_edit"),
-    #path('client/<int:client_id>/add_balance', views.add_balance, name='add_balance'),
-    #path('client/<int:client_id>/buy_abonement', views.buy_abonement, name='buy_abonement'),
-    #path('client/<int:client_id>/delete_abonement/<int:abonement_id>', views.delete_abonement, name='delete_abonement'),
-
+    path('login', views.log_in, name='login'),                      #DONe
+    path('logout', views.log_out, name='logout'),                   #DONe
     #___________schedule
-    path("schedule", views.schedule),                               #DONE
-    path("scheduleAll", views.schedule_all),                        #DONE
-    path("schedule_trainer/<int:id>", views.schedule_trainer),      #DONE
+    path("schedule", views.schedule),                               #DONe                                 
+    path("scheduleAll", views.schedule_all),                        #DONe
+    path("schedule_trainer/<int:id>", views.schedule_trainer),      #DONe
     path("mark/<int:id>", views.mark),
-    path("presences/<int:id>",views.presences_lesson),
+    path("presences/<int:id>",views.presences_lesson),              #DONe
 
     #___________clients
-    path('client_list', views.client_list),                         #DONE
+    path('client_list', views.client_list),                         #DONe
     path('add_client', views.add_client),                           #DONE
-    path('all_groups', views.all_groups),                           #DONE
+    path('all_groups', views.all_groups),                           #DONe
     path('group_creation', views.group_creation),                   #IN PROGRESS
 
     #___________colleagues
-    path('trainer_list', views.trainer_list),                       #DONE
-    path("trainer_groups", views.trainers_groups),                  #DONE
+    path('trainer_list', views.trainer_list),                       #DONe
+    path("trainer_groups", views.trainers_groups),                  #DONe
     path("trainer_create", views.create_trainer),                   #DONE
     path("trainer_delete/<int:id>", views.delete_trainer),          #DONE
 
 
     #___________main_info
-    path("trainer_card", views.trainer_info_card),                  #DONE
+    path("trainer_card", views.trainer_info_card),                  #DONe
     path("change_tr_state", views.user_state_edit),                 #DONE
     path("user_edit", views.user_edit),                             #DONE
 
