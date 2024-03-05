@@ -8,7 +8,7 @@ class ClientSerializer(serializers.ModelSerializer):
     state = serializers.StringRelatedField()
     class Meta:
         model = Client
-        fields = ('firstName', 'lastName', 'birthDate', 'state', 'balance',"id",'middleName')
+        fields = ('firstName', 'lastName', 'birthDate', 'state', 'balance',"id",'middleName', 'avatar')
 
 class UserAuthSerializer(Serializer):
     username = CharField(required=True)
