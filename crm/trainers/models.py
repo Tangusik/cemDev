@@ -26,7 +26,7 @@ class Client(models.Model):
     middleName = models.CharField(blank=True, max_length=30)
     address = models.CharField(blank=True, max_length=100)
     regDate = models.DateField(auto_now=True, blank=True)
-    birthDate = models.DateField(auto_now=False, blank=True, default=datetime.date(2023, 1, 1))
+    birthDate = models.DateField(auto_now=False, blank=False, default=datetime.date(2023, 1, 1))
     state = models.ForeignKey(ClientState, models.CASCADE, blank=True, null=True)
     balance = models.IntegerField(default=0, blank=False)
     def __str__(self):
@@ -92,7 +92,7 @@ class Abonement(models.Model):
 
 class PurchaseHistoryStatus(models.Model):
     title = models.CharField(max_length=30)
-    
+
 class PurchaseHistory(models.Model):
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
     abonement = models.ForeignKey(Abonement, on_delete=models.DO_NOTHING)
