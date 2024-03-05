@@ -21,9 +21,10 @@ class UserEditSerializer(Serializer):
     email = EmailField(required=False)
 
 class ClientEditSerializer(Serializer):
-    first_name = CharField(required=False)
-    last_name = CharField(required=False)
-    birth_date = DateField(required=False)
+    firstName = CharField(required=False)
+    lastName = CharField(required=False)
+    middleName = CharField(required=False)
+    birthDate = DateField(required=False)
 
 
 class TrainerStateEditSerializer(Serializer):
@@ -47,10 +48,10 @@ class TrainerSerializer(serializers.ModelSerializer):
 class TrainerCreationSerializer(serializers.Serializer):
     first_name = CharField()
     last_name = CharField()
-    otchestv = CharField()
+    middleName = CharField()
     email = EmailField()
     password = CharField()
-    birth_date = DateField()
+    birthDate = DateField()
     role = IntegerField()
 
 
@@ -122,7 +123,7 @@ class SportTypeSerializer(serializers.ModelSerializer):
 class AbonementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Abonement
-        fields = ("title","price","duration","lesson_count","sport", "id")
+        fields = ("title","price","duration","lessonCount","sportType", "id")
 
 class AbonementCreationSerializer(serializers.Serializer):
     title = CharField(required=True)
@@ -138,7 +139,7 @@ class AbonementhistorySerializer(serializers.ModelSerializer):
     abonement = AbonementSerializer()
     class Meta:
         model = PurchaseHistory
-        fields = ['abonement', 'purchase_date', "status", 'activities_left', 'date_of_end', 'id']
+        fields = ['abonement', 'purchaseDate', "status", 'activitiesLeft', 'endDate', 'id']
 
 
 class AbonementAddSerializer(serializers.Serializer):

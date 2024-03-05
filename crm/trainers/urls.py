@@ -14,43 +14,43 @@ urlpatterns = [
 
     #___________clients
     path('client_list', views.client_list),                         #DONe
-    path('add_client', views.add_client),                           #DONE
+    path('add_client', views.add_client),                           #DONe
     path('all_groups', views.all_groups),                           #DONe
     path('group_creation', views.group_creation),                   #IN PROGRESS
 
     #___________colleagues
     path('trainer_list', views.trainer_list),                       #DONe
     path("trainer_groups", views.trainers_groups),                  #DONe
-    path("trainer_create", views.create_trainer),                   #DONE
-    path("trainer_delete/<int:id>", views.delete_trainer),          #DONE
+    path("trainer_create", views.create_trainer),                   #DONe
+    path("trainer_delete/<int:id>", views.delete_trainer),          #DONe
 
 
     #___________main_info
     path("trainer_card", views.trainer_info_card),                  #DONe
-    path("change_tr_state", views.user_state_edit),                 #DONE
-    path("user_edit", views.user_edit),                             #DONE
+    path("change_tr_state", views.user_state_edit),                 #DONe
+    path("user_edit", views.user_edit),                             #DONe
 
     #___________main
-    path("roles", views.roles),                                     #DONE
-    path("delete_role/<int:id>", views.delete_role),                #DONE
-    path("tr_statuses", views.tr_statuses),                         #DONE
-    path("tr_status_delete/<int:id>", views.delete_tr_status),      #DONE
-    path("cl_statuses", views.cl_statuses),                         #DONE
-    path("cl_status_delete/<int:id>", views.delete_cl_status),      #DONE
-    path("areas", views.areas),                                     #DONE
-    path("area_delete/<int:id>", views.delete_area),                #DONE
-    path("sport_types", views.sport_types),                         #DONE
-    path("sport_type_delete/<int:id>", views.delete_sport_type),    #DONE
-    path("abonements", views.abonements),                           #DONE
-    path("abonement_delete/<int:id>", views.delete_abonement),      #DONE
+    path("roles", views.roles),                                     #DONe
+    path("delete_role/<int:id>", views.delete_role),                #DONe
+    path("tr_statuses", views.tr_statuses),                         #DONe
+    path("tr_status_delete/<int:id>", views.delete_tr_status),      #DONe
+    path("cl_statuses", views.cl_statuses),                         #DONe
+    path("cl_status_delete/<int:id>", views.delete_cl_status),      #DONe
+    path("areas", views.areas),                                     #DONe
+    path("area_delete/<int:id>", views.delete_area),                #DONe
+    path("sport_types", views.sport_types),                         #DONe
+    path("sport_type_delete/<int:id>", views.delete_sport_type),    #DONe
+    path("abonements", views.abonements),                           #DONe
+    path("abonement_delete/<int:id>", views.delete_abonement),      #DONe
 
     #___________client_detail_info
-    path("client/<int:pk>", views.client_detail),                   #DONE
-    path("client/<int:pk>/abonements", views.client_abonements),    #DONE
-    path("client/<int:pk>/abonements/<int:ab_id>", views.client_abonements_delete), #DONE
-    path("client/<int:pk>/groups", views.client_groups),            #DONE
-    path("client/<int:pk>/acts", views.client_activities),          #DONE
-    path("client/<int:pk>/addbalance", views.add_balance),          #DONE
+    path("client/<int:pk>", views.client_detail),                   #DONe
+    path("client/<int:pk>/abonements", views.client_abonements),    #DONe
+    path("client/<int:pk>/abonements/<int:ab_id>", views.client_abonements_delete), #DONe
+    path("client/<int:pk>/groups", views.client_groups),            #DONe
+    path("client/<int:pk>/acts", views.client_activities),          #DONe
+    path("client/<int:pk>/addbalance", views.add_balance),          #DONe
 
 
     # добавить группу 1
