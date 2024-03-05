@@ -52,8 +52,8 @@ def create_trainer(request):
                                         last_name = serializer.data['last_name'])
 
         role = get_object_or_404(Role, pk=serializer.data['role'])
-        Trainer.objects.create(user = user, otchestv=serializer.data['otchestv'],
-                               birthdate = serializer.data['birth_date'], role=role)
+        Trainer.objects.create(user = user, middleName=serializer.data['middleName'],
+                               birthDate = serializer.data['birthDate'], role=role)
         return Response(status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -92,7 +92,7 @@ def delete_role(request, id):
 @permission_classes([IsAuthenticated])
 def tr_statuses(request):                         
     trainer = request.user.trainer
-    if trainer.role.name.lower() == "директор":
+    if trainer.role.title.lower() == "директор":
         if request.method == "POST":
             serializer = TrainerStateSerializer(data = request.data)
             if serializer.is_valid():
@@ -121,7 +121,7 @@ def delete_tr_status(request, id):
 @permission_classes([IsAuthenticated])
 def cl_statuses(request):                         
     trainer = request.user.trainer
-    if trainer.role.name.lower() == "директор":
+    if trainer.role.title.lower() == "директор":
         if request.method == "POST":
             serializer = ClientStateSerializer(data = request.data)
             if serializer.is_valid():
@@ -148,7 +148,7 @@ def delete_cl_status(request, id):
 @permission_classes([IsAuthenticated])
 def areas(request):                         
     trainer = request.user.trainer
-    if trainer.role.name.lower() == "директор":
+    if trainer.role.title.lower() == "директор":
         if request.method == "POST":
             serializer = AreaSerializer(data = request.data)
             if serializer.is_valid():
@@ -176,7 +176,7 @@ def delete_area(request, id):
 @permission_classes([IsAuthenticated])
 def sport_types(request):                         
     trainer = request.user.trainer
-    if trainer.role.name.lower() == "директор":
+    if trainer.role.title.lower() == "директор":
         if request.method == "POST":
             serializer = SportTypeSerializer(data = request.data)
             if serializer.is_valid():
@@ -205,7 +205,7 @@ def delete_sport_type(request, id):
 @permission_classes([IsAuthenticated])
 def abonements(request):                         
     trainer = request.user.trainer
-    if trainer.role.name.lower() == "директор":
+    if trainer.role.title.lower() == "директор":
         if request.method == "POST":
             serializer = AbonementCreationSerializer(data = request.data)
             if serializer.is_valid():
@@ -229,10 +229,8 @@ def abonements(request):
                 else:
                     dur = None
 
-                sport_type  = get_object_or_404(SportType, pk=data['sport_type'])
-                abonement = Abonement.objects.create(title=data['title'], 
-                price=data['price'], 
-                lesson_count=count, duration=dur, sport=sport_type)
+                sport_type = get_object_or_404(SportType, pk=data['sport_type'])
+                abonement = Abonement.objects.create(title=data['title'], price=data['price'], lessonCount=count, duration=dur, sportType=sport_type)
                 return Response(status=status.HTTP_201_CREATED)
 
             else:
@@ -271,7 +269,7 @@ def user_edit(request):
             User.objects.filter(pk=user.id).update(email = data['email'])
             User.objects.filter(pk=user.id).update(username = data['email'])
         if "otchestv" in data:
-            Trainer.objects.filter(pk = request.user.id).update(otchestv = data['otchestv'])
+            Trainer.objects.filter(pk = request.user.id).update(middleName = data['otchestv'])
         return Response(status=status.HTTP_202_ACCEPTED)
     else:
         return Response(serializer.errors, status=400)
@@ -309,12 +307,14 @@ def client_detail(request, pk):
     else:
         serializer = ClientEditSerializer(data = request.data)
         if serializer.is_valid():
-            if 'first_name' in serializer.data:
-                client.first_name = serializer.data["first_name"]
-            if 'last_name' in serializer.data:
-                client.last_name = serializer.data['last_name']
-            if 'birth_date' in serializer.data:
-                client.birth_date = serializer.data['birth_date']
+            if 'firstName' in serializer.data:
+                client.firstName = serializer.data["firstName"]
+            if 'lastName' in serializer.data:
+                client.lastName = serializer.data['lastName']
+            if 'middleName' in serializer.data:
+                client.middleName = serializer.data['middleName']
+            if 'birthDate' in serializer.data:
+                client.birthDate = serializer.data['birthDate']
             client.save()
             return Response(status=status.HTTP_202_ACCEPTED)
         else:
@@ -338,7 +338,8 @@ def client_abonements(request, pk):
                 end_date = datetime.date.today() + ab.duration
             else:
                 end_date = None
-            ab.clients.add(client, through_defaults={"activities_left": ab.lesson_count, "date_of_end":end_date})
+            stat = get_object_or_404(PurchaseHistoryStatus, pk=1)
+            ab.clients.add(client, through_defaults={"activitiesLeft": ab.lessonCount, "endDate":end_date, "status":stat})
             client.balance -= ab.price
             client.save()
             return Response(status=status.HTTP_202_ACCEPTED)
@@ -351,7 +352,7 @@ def client_abonements_delete(request, pk, ab_id):
     if request.method == "DELETE":
         client = get_object_or_404(Client, pk=pk)
         del_ab = get_object_or_404(PurchaseHistory, pk = ab_id)
-        del_ab.clients.remove(client)
+        del_ab.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
     
 @api_view(["POST"])
@@ -520,6 +521,8 @@ def presences_lesson(request, id):
 @permission_classes([IsAuthenticated])
 def delete_trainer(request, id):
     trainer = get_object_or_404(Trainer, pk=id)
+    user = get_object_or_404(User, pk=id)
+    user.delete()
     trainer.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
 
