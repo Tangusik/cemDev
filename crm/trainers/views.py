@@ -548,16 +548,23 @@ def schedule_trainer(request,id):
 def mark(request, id):
     serializer = MarkSerializer(data=request.data)
     if serializer.is_valid():
-        activity = get_object_or_404(Activity, pk=id)
-        presences = serializer.data['presences']
-        for client in presences:
-            cl = get_object_or_404(Client, pk=client)
-            presence = Presence.objects.get_or_create(client=cl, activity=activity)
-            presence[0].presence = presences[client]
-            presence[0].save()
+        activity = get_object_or_404(Lesson, pk=id)
+        presences = [dict(item) for item in serializer.data['presences']]
+        print(presences)
+        for presence in presences:
+            print(presence)
+            cl = get_object_or_404(Client, pk=presence["client"])
+            curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
+            if curr_presence.presence != presence["presence"]:
+                curr_presence.presence = presence["presence"]
+                change_ab()
+                curr_presence.save()
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def change_ab():
+    pass
 
 
 
