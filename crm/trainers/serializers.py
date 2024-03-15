@@ -1,7 +1,7 @@
 from .models import *
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.serializers import CharField, Serializer, EmailField, IntegerField, BooleanField, DateField, DateTimeField, TimeField, DictField
+from rest_framework.serializers import ListField, CharField, Serializer, EmailField, IntegerField, BooleanField, DateField, DateTimeField, TimeField, DictField
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -168,10 +168,10 @@ class GroupCreationSerializer(serializers.Serializer):
     date_end = DateField()
     acts = ActCreationSerializer(many=True)
 
-class MarkSerializer(serializers.Serializer):
-    presences = DictField(required=True)
+class PresencesSerializer(serializers.Serializer):
+    client = IntegerField()
+    presence = BooleanField()
 
-class PresencesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Presence
-        fields = ('client', 'presence')
+class MarkSerializer(serializers.Serializer):
+    presences = ListField(child = PresencesSerializer() ,required=True)
+
