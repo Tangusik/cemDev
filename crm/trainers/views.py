@@ -472,25 +472,28 @@ def group_creation(request):
         tr = get_object_or_404(Trainer, pk=serializer.data['trainer'])
         sp_type = get_object_or_404(SportType, pk=serializer.data['sport_type'])
         area = get_object_or_404(Area, pk=serializer.data['area'])
-        team = Team.objects.create(name=team_name, trainer=tr, sport_type=sp_type)
+        team = Group.objects.create(title=team_name, trainer=tr, sportType=sp_type)
+        for abonement in serializer.data['abonements']:
+            team.possibleAbonements.add(get_object_or_404(Abonement, pk=abonement))
+        team.save()
+
 
         date_end = serializer.data['date_end']
         acts = serializer.data['acts']
 
         date1 = datetime.date.today()
-        date2 = datetime.datetime.strptime(date_end, '%Y-%m-%d')
+        date2 = datetime.datetime.strptime(date_end, '%Y-%m-%d').date()
 
         all_days= all_days = (date1 + timedelta(days=i) for i in range((date2 - date1).days + 1))
 
         for act in acts:
             for act_date in all_days:
-                if act_date.weekday() == act[0]:
-                    act = Activity(act_date=act_date, act_time_begin=act[1],
-                               act_time_end=act[2],
+                if act_date.weekday() == act["day_of_week"]:
+                    act = Lesson.objects.create(actDate=act_date, actTimeBegin=act["time_begin"],
+                               actTimeEnd=act["time_end"],
                                trainer=tr, area=area,
-                               status="Состоится",
-                               sport=sp_type)
-                    
+                               status="Состоится",)
+                               
                     for client in members:
                         act.clients.add(get_object_or_404(Client, pk=client))
                     act.save()
