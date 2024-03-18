@@ -148,25 +148,23 @@ class AbonementAddSerializer(serializers.Serializer):
 class AddBalanceSerializer(serializers.Serializer):
     balance=IntegerField(required =True)
 
-
 class ClientIdSer(serializers.Serializer):
     id = IntegerField()
-
 
 class ActCreationSerializer(serializers.Serializer):
     day_of_week = IntegerField()
     time_begin = TimeField()
-    time_end = TimeField()
-
+    time_end = TimeField() 
 
 class GroupCreationSerializer(serializers.Serializer):
     team_name = CharField()
     trainer = IntegerField()
     sport_type = IntegerField()
     area = IntegerField()
-    members = ClientIdSer(many = True)
+    members = ListField(child = IntegerField())
     date_end = DateField()
     acts = ActCreationSerializer(many=True)
+    abonements = ListField(child=IntegerField(), required=True)
 
 class PresencesSerializer(serializers.Serializer):
     client = IntegerField()
