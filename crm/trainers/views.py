@@ -553,20 +553,18 @@ def mark(request, id):
     if serializer.is_valid():
         activity = get_object_or_404(Lesson, pk=id)
         presences = [dict(item) for item in serializer.data['presences']]
-        print(presences)
         for presence in presences:
-            print(presence)
             cl = get_object_or_404(Client, pk=presence["client"])
             curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
             if curr_presence.presence != presence["presence"]:
                 curr_presence.presence = presence["presence"]
-                change_ab()
+                change_ab(presence["presence"], activity)
                 curr_presence.save()
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def change_ab():
+def change_ab(presence, lesson):
     pass
 
 
