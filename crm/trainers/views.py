@@ -456,8 +456,8 @@ def trainers_groups(request):
 @api_view(['GET'])                      #Группы и клиенты тренера
 @permission_classes([IsAuthenticated])
 def all_groups(request):
-    teams = Team.objects.all()
-    serializer = TeamSerializer(teams, context={'request': request}, many = True)
+    teams = Group.objects.all()
+    serializer = GroupSerializer(teams, context={'request': request}, many = True)
     return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
 
 @api_view(['POST'])
@@ -558,14 +558,21 @@ def mark(request, id):
             curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
             if curr_presence.presence != presence["presence"]:
                 curr_presence.presence = presence["presence"]
-                change_ab(presence["presence"], activity)
+                change_ab(curr_presence, activity)
                 curr_presence.save()
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def change_ab(presence, lesson):
-    pass
+    possible_abonements = lesson.group.possibleAbonements.all()
+    cl_abs = presence.client.purchasehistory_set.filter(status__title= "Активен").order_by("purchaseDate")
+    if presence.presence:
+        for cl_ab in cl_abs:
+            if cl_ab.abonement in possible_abonements and cl_ab.activitiesLeft is not None:
+                    cl_ab.activitiesLeft -= 1
+                    break
+    else
 
 
 

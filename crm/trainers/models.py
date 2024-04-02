@@ -65,7 +65,8 @@ class Abonement(models.Model):
     lessonCount = models.IntegerField(blank=True, null=True)
     clients = models.ManyToManyField(Client, through="PurchaseHistory")
     sportType = models.ForeignKey(SportType, on_delete=models.DO_NOTHING, blank=True)
-
+    def __str__(self):
+        return self.title
 class Group(models.Model):
     title = models.CharField(max_length=20, blank=False)
     clients = models.ManyToManyField(Client)
@@ -93,6 +94,8 @@ class Presence(models.Model):
 
 class PurchaseHistoryStatus(models.Model):
     title = models.CharField(max_length=30)
+    def __str__(self):
+        return self.title
 
 class PurchaseHistory(models.Model):
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
@@ -101,7 +104,8 @@ class PurchaseHistory(models.Model):
     status = models.ForeignKey(PurchaseHistoryStatus, on_delete=models.DO_NOTHING)
     activitiesLeft = models.IntegerField(blank=True, null=True)
     endDate = models.DateField(blank=True, null=True)
-
+    def __str__(self):
+        return self.abonement.title + " " + self.purchaseDate.strftime("%d.%m.%Y")
 
 
 
