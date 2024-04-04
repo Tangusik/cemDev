@@ -13,3 +13,5 @@ admin.site.register(Role)
 admin.site.register(Area)
 admin.site.register(PurchaseHistory)
 admin.site.register(PurchaseHistoryStatus)
+
+

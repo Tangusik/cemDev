@@ -58,11 +58,21 @@ class Area(models.Model):
 class Family(models.Model):
     pass
 
+class Abonement(models.Model):
+    title = models.CharField(max_length=50, blank=False, default="имя абонемента")
+    price = models.IntegerField(blank=False, default=0, null=True)
+    duration = models.DurationField(blank=True, null=True)
+    lessonCount = models.IntegerField(blank=True, null=True)
+    clients = models.ManyToManyField(Client, through="PurchaseHistory")
+    sportType = models.ForeignKey(SportType, on_delete=models.DO_NOTHING, blank=True)
+    def __str__(self):
+        return self.title
 class Group(models.Model):
     title = models.CharField(max_length=20, blank=False)
     clients = models.ManyToManyField(Client)
     sportType = models.ForeignKey(SportType, on_delete=models.SET_NULL, blank=False, null=True)
     trainer = models.ForeignKey(Trainer, models.DO_NOTHING, blank=False, null=True)
+    possibleAbonements = models.ManyToManyField(Abonement)
     def __str__(self):
         return self.title
 
@@ -82,16 +92,10 @@ class Presence(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     presence = models.BooleanField(blank=False, default=False)
 
-class Abonement(models.Model):
-    title = models.CharField(max_length=50, blank=False, default="имя абонемента")
-    price = models.IntegerField(blank=False, default=0, null=True)
-    duration = models.DurationField(blank=True, null=True)
-    lessonCount = models.IntegerField(blank=True, null=True)
-    clients = models.ManyToManyField(Client, through="PurchaseHistory")
-    sportType = models.ForeignKey(SportType, on_delete=models.DO_NOTHING, blank=True)
-
 class PurchaseHistoryStatus(models.Model):
     title = models.CharField(max_length=30)
+    def __str__(self):
+        return self.title
 
 class PurchaseHistory(models.Model):
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
@@ -100,7 +104,8 @@ class PurchaseHistory(models.Model):
     status = models.ForeignKey(PurchaseHistoryStatus, on_delete=models.DO_NOTHING)
     activitiesLeft = models.IntegerField(blank=True, null=True)
     endDate = models.DateField(blank=True, null=True)
-
+    def __str__(self):
+        return self.abonement.title + " " + self.purchaseDate.strftime("%d.%m.%Y")
 
 
 

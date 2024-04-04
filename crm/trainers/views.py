@@ -456,8 +456,8 @@ def trainers_groups(request):
 @api_view(['GET'])                      #Группы и клиенты тренера
 @permission_classes([IsAuthenticated])
 def all_groups(request):
-    teams = Team.objects.all()
-    serializer = TeamSerializer(teams, context={'request': request}, many = True)
+    teams = Group.objects.all()
+    serializer = GroupSerializer(teams, context={'request': request}, many = True)
     return JsonResponse(serializer.data, safe=False, json_dumps_params={'ensure_ascii': False})
 
 @api_view(['POST'])
@@ -472,25 +472,28 @@ def group_creation(request):
         tr = get_object_or_404(Trainer, pk=serializer.data['trainer'])
         sp_type = get_object_or_404(SportType, pk=serializer.data['sport_type'])
         area = get_object_or_404(Area, pk=serializer.data['area'])
-        team = Team.objects.create(name=team_name, trainer=tr, sport_type=sp_type)
+        team = Group.objects.create(title=team_name, trainer=tr, sportType=sp_type)
+        for abonement in serializer.data['abonements']:
+            team.possibleAbonements.add(get_object_or_404(Abonement, pk=abonement))
+        team.save()
+
 
         date_end = serializer.data['date_end']
         acts = serializer.data['acts']
 
         date1 = datetime.date.today()
-        date2 = datetime.datetime.strptime(date_end, '%Y-%m-%d')
+        date2 = datetime.datetime.strptime(date_end, '%Y-%m-%d').date()
 
         all_days= all_days = (date1 + timedelta(days=i) for i in range((date2 - date1).days + 1))
 
         for act in acts:
             for act_date in all_days:
-                if act_date.weekday() == act[0]:
-                    act = Activity(act_date=act_date, act_time_begin=act[1],
-                               act_time_end=act[2],
+                if act_date.weekday() == act["day_of_week"]:
+                    act = Lesson.objects.create(actDate=act_date, actTimeBegin=act["time_begin"],
+                               actTimeEnd=act["time_end"],
                                trainer=tr, area=area,
-                               status="Состоится",
-                               sport=sp_type)
-                    
+                               status="Состоится",)
+                               
                     for client in members:
                         act.clients.add(get_object_or_404(Client, pk=client))
                     act.save()
@@ -550,21 +553,26 @@ def mark(request, id):
     if serializer.is_valid():
         activity = get_object_or_404(Lesson, pk=id)
         presences = [dict(item) for item in serializer.data['presences']]
-        print(presences)
         for presence in presences:
-            print(presence)
             cl = get_object_or_404(Client, pk=presence["client"])
             curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
             if curr_presence.presence != presence["presence"]:
                 curr_presence.presence = presence["presence"]
-                change_ab()
+                change_ab(curr_presence, activity)
                 curr_presence.save()
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def change_ab():
-    pass
+def change_ab(presence, lesson):
+    possible_abonements = lesson.group.possibleAbonements.all()
+    cl_abs = presence.client.purchasehistory_set.filter(status__title= "Активен").order_by("purchaseDate")
+    if presence.presence:
+        for cl_ab in cl_abs:
+            if cl_ab.abonement in possible_abonements and cl_ab.activitiesLeft is not None:
+                    cl_ab.activitiesLeft -= 1
+                    break
+    else
 
 
 
