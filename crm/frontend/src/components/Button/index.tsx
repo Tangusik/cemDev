@@ -1,20 +1,18 @@
 import React from 'react';
 import styles from './index.module.css';
+import {IButtonProps} from "./types.ts";
 
 export const ButtonType = ['main', 'change'];
 
-const Button = (props) => {
-    const { type, style, className, children, onClick, title } = props;
-
+const Button = (props: IButtonProps) => {
     return (
         <button
-            type={type}
-            style={style}
-            className={type === "main" ? styles.main : styles.change}
-            onClick={onClick}
+            style={props.style}
+            className={props.buttonType === "primary" ? styles.main : styles.change}
+            onClick={props.onClick}
         >
-            {title}
-            {children}
+            {props.title}
+            {props.children}
         </button>
     );
 }

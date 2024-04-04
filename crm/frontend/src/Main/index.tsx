@@ -8,14 +8,13 @@ import Admin from "./Admin/index.tsx";
 import Trainer from "./Trainer/index.tsx";
 
 const Main = () => {
-    const [userRole, setUserRole] = useState(null);
-
     return (
         <div>
             <Header></Header>
-            <MainInfo setUserRole={setUserRole}></MainInfo>
+            {/*<MainInfo setUserRole={setUserRole}></MainInfo>*/}
             <ToDoList></ToDoList>
-            {userRole === 'директор' ? <Admin></Admin> : <Trainer></Trainer>}
+            <Admin></Admin>
+            {/*<Trainer></Trainer>*/}
             <Slider title={"Новости"} text={"Какой-то текст"}></Slider>
             <Footer></Footer>
         </div>

@@ -1,13 +1,14 @@
 import styles from './index.module.css';
+import {ISliderProps} from "./types.ts";
+import React from "react";
 
-const Slider = (props) => {
-    const { title, text } = props;
+const Slider = (props: ISliderProps) => {
     return (
         <div className={styles.slider}>
             <div className={styles.sliderField}>
-                <h2 className={styles.name}>{title}</h2>
+                <h2 className={styles.name}>{props.title}</h2>
                 <div className={styles.sliderText}>
-                    <h4>{text}</h4>
+                    <h4>{props.text}</h4>
                 </div>
             </div>
             <button className={styles.prevSlider}>Prev</button>

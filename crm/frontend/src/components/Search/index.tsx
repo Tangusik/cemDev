@@ -1,19 +1,20 @@
 import styles from './index.module.css';
-import { useState } from "react";
+import React, { useState } from "react";
+import {ISearchProps} from "./types.ts";
+import {ITrainer} from "../../api/types/types.ts";
 
-const Search = (props) => {
-    const { colleagues } = props;
+const Search = (props: ISearchProps) => {
     const [searchTerm, setSearchTerm] = useState('');
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = (e: any) => {
         setSearchTerm(e.target.value);
     };
 
-    const getFullName = (colleague) => {
+    const getFullName = (colleague: ITrainer) => {
         return `${colleague.user.first_name} ${colleague.user.last_name}`;
     };
 
-    const filteredColleagues = colleagues.filter(colleague => {
+    const filteredColleagues = props.colleagues.filter(colleague => {
         const fullName = getFullName(colleague).toLowerCase();
         return fullName.includes(searchTerm.toLowerCase());
     });

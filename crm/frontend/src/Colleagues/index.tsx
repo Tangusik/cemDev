@@ -4,6 +4,7 @@ import Footer from "../components/Footer/index.tsx";
 import axios from "axios";
 import styles from "../Colleagues/index.module.css";
 import ColleagueCard from "../components/ColleagueCard/index.tsx";
+import {ITrainer} from "../api/types/types.ts";
 
 const Colleagues = () => {
     const [colleagues, setColleagues] = useState([]);
@@ -26,11 +27,11 @@ const Colleagues = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = (e: any) => {
         setSearchTerm(e.target.value);
     };
 
-    const getFullName = (colleague) => {
+    const getFullName = (colleague: ITrainer) => {
         return `${colleague.user.first_name} ${colleague.user.last_name}`;
     };
 
@@ -55,16 +56,8 @@ const Colleagues = () => {
             </div>
             <div className={styles.cards}>
                 {filteredColleagues.length===0 && <p>Нет клиентов</p>}
-                {filteredColleagues.map((colleague) => (
-                    <ColleagueCard
-                        id={colleague.id}
-                        name={colleague.user.first_name}
-                        lastName={colleague.user.last_name}
-                        surname={colleague.otchestv}
-                        birthdate={colleague.birthdate}
-                        role={colleague.role}
-                        state={colleague.state}
-                    ></ColleagueCard>
+                {filteredColleagues.map((colleague: ITrainer) => (
+                    <ColleagueCard trainer={colleague}/>
                 ))}
             </div>
             <Footer></Footer>
