@@ -1,16 +1,21 @@
 import Container from "../Container/index.tsx";
 import styles from './index.module.css';
 import Button from "../../components/Button/index.tsx";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Form from "../../components/Form/index.tsx";
 import EditModal from "../../components/EditModal/index.tsx";
 import {fetchGet} from '../../api/get/index.ts';
 import {fetchPost} from '../../api/post/index.ts';
 import {fetchDelete} from '../../api/delete/index.ts';
 import iconCross from '../../Icons/cross.svg';
-import {IEmployeeStates, IRoles, ITrainer} from "../../api/types/types.ts";
+import {IAbonement, IArea, IClientState, IEmployeeState, IRole, ISportType, ITrainer} from "../../api/types/types.ts";
+import {StoreContext} from "../../store/storeContext.tsx";
+import {useStore} from "../../hooks/useStore.ts";
 
 const Admin = () => {
+    const { dispatch } = useContext(StoreContext) ?? {};
+    const { trainers = [] } = useStore();
+
     const [showModalRoles, setShowModalRoles] = useState(false);
     const [showModalEmployeeStates, setShowModalEmployeeStates] = useState(false);
     const [showModalClientStates, setShowModalClientStates] = useState(false);
@@ -19,15 +24,15 @@ const Admin = () => {
     const [showModalAbonements, setShowModalAbonements] = useState(false);
     const [showModalTrainers, setShowModalTrainers] = useState(false);
 
-    const [roles, setRoles] = useState<IRoles[]>([]);
-    const [employeeStates, setEmployeeStates] = useState<IEmployeeStates>();
-    const [clientsStates, setClientsStates] = useState<string>('');
-    const [areas, setAreas] = useState<string>('');
-    const [sportTypes, setSportTypes] = useState<string>('');
-    const [abonements, setAbonements] = useState<string>('');
-    const [trainers, setTrainers] = useState<ITrainer[]>([]);
+    // const [roles, setRoles] = useState<Omit<IRole>[]>([]);
+    // const [employeeStates, setEmployeeStates] = useState<IEmployeeState[]>([]);
+    // const [clientsStates, setClientsStates] = useState<IClientState[]>([]);
+    // const [areas, setAreas] = useState<IArea[]>([]);
+    // const [sportTypes, setSportTypes] = useState<ISportType[]>([]);
+    // const [abonements, setAbonements] = useState<IAbonement[]>([]);
+    // const [trainers, setTrainers] = useState<ITrainer[]>([]);
 
-    const [role, setRole] = useState<string>('');
+    const [role, setRole] = useState<IRole>();
     const [employeeState, setEmployeeState] = useState<string>('');
     const [clientsState, setClientsState] = useState<string>('');
     const [area, setArea] = useState<string>('');
@@ -74,33 +79,42 @@ const Admin = () => {
         setShowModalTrainers(!showModalTrainers)
     }
 
+    // useEffect(() => {
+    //     const fetchGetData = async () => {
+    //         const roles = await fetchGet('roles');
+    //         setRoles(roles);
+    //
+    //         const employeeStates = await fetchGet('tr_statuses');
+    //         setEmployeeStates(employeeStates)
+    //
+    //         const clientsStates = await fetchGet('cl_statuses');
+    //         setClientsStates(clientsStates)
+    //
+    //         const areas = await fetchGet('areas');
+    //         setAreas(areas)
+    //
+    //         const sportTypes = await fetchGet('sport_types');
+    //         setSportTypes(sportTypes)
+    //
+    //         const abonements = await fetchGet('abonements');
+    //         setAbonements(abonements)
+    //
+    //         // const trainers = await fetchGet('trainer_list');
+    //         // setTrainers(trainers)
+    //
+    //     };
+    //
+    //     fetchGetData();
+    // }, []);
+
     useEffect(() => {
-        const fetchGetData = async () => {
-            const roles = await fetchGet('roles');
-            setRoles(roles);
-
-            const employeeStates = await fetchGet('tr_statuses');
-            setEmployeeStates(employeeStates)
-
-            const clientsStates = await fetchGet('cl_statuses');
-            setClientsStates(clientsStates)
-
-            const areas = await fetchGet('areas');
-            setAreas(areas)
-
-            const sportTypes = await fetchGet('sport_types');
-            setSportTypes(sportTypes)
-
-            const abonements = await fetchGet('abonements');
-            setAbonements(abonements)
-
-            const trainers = await fetchGet('trainer_list');
-            setTrainers(trainers)
-
+        const fetchTrainers = async () => {
+            const trainersData = await fetchGet('trainer_list');
+            dispatch?.({ type: 'SET_TRAINERS', payload: trainersData });
         };
 
-        fetchGetData();
-    }, []);
+        fetchTrainers();
+    }, [dispatch]);
 
     const handleAddRole = async (event: any) => {
         event.preventDefault();
@@ -180,7 +194,7 @@ const Admin = () => {
         window.location.reload();
     };
 
-    const handleAddTrainer = async (event: any) => {
+    const handleAddTrainer = (event: any) => {
         event.preventDefault();
 
         const data = {
@@ -192,7 +206,7 @@ const Admin = () => {
             role: trainerRole,
             password: trainerPassword,
         };
-        await fetchPost( 'trainer_create', data);
+        fetchPost( 'trainer_create', data);
         setShowModalTrainers(false)
         window.location.reload();
     }
@@ -212,9 +226,6 @@ const Admin = () => {
         performDeletion();
     }, [deletedItemEndpoint]);
 
-
-
-    // @ts-ignore
     return (
         <div>
             <Container
@@ -234,271 +245,248 @@ const Admin = () => {
                     </>
                 }
             ></Container>
-            {showModalTrainers &&
-                <EditModal
-                    onClose={handleRoles}
-                    >
-                        <Form
-                            onSubmit={handleAddTrainer}
-                            title={'Добавление сотрудника'}
-                            >
-                                <div>
-                                    <input type="text" placeholder="Имя" onChange={(e) => setTrainerFirstName(e.target.value)} required/>
-                                    <input type="text" placeholder="Фамилия" onChange={(e) => setTrainerLastName(e.target.value)} required/>
-                                    <input type="text" placeholder="Отчество" onChange={(e) => setTrainerMiddleName(e.target.value)} required/>
-                                    <input type="date" placeholder="Дата рождения" onChange={(e) => setTrainerBirthday(e.target.value)} required/>
-                                    <input type="text" placeholder="Почта" onChange={(e) => setTrainerEmail(e.target.value)} required/>
-                                    <input type="text" placeholder="Пароль" onChange={(e) => setTrainerPassword(e.target.value)} required/>
-                                    <select className={styles.select} onChange={(e) => setTrainerRole(e.target.value)}>
-                                        <option value="" disabled selected>роль</option>
-                                        {roles.map((role)=>
-                                            (<option key={role.id} value={role.id}>{role.name}</option>)
-                                        )}
-                                    </select>
-                                    <input type="submit" value="Добавить"/>
-                                </div>
-                        </Form>
-                </EditModal>
-            }
+        {/*    {showModalTrainers &&*/}
+        {/*        <EditModal onClose={handleRoles}>*/}
+        {/*                <Form title={'Добавление сотрудника'}>*/}
+        {/*                        <div>*/}
+        {/*                            <input type="text" placeholder="Имя" onChange={(e) => setTrainerFirstName(e.target.value)} required/>*/}
+        {/*                            <input type="text" placeholder="Фамилия" onChange={(e) => setTrainerLastName(e.target.value)} required/>*/}
+        {/*                            <input type="text" placeholder="Отчество" onChange={(e) => setTrainerMiddleName(e.target.value)} required/>*/}
+        {/*                            <input type="date" placeholder="Дата рождения" onChange={(e) => setTrainerBirthday(e.target.value)} required/>*/}
+        {/*                            <input type="text" placeholder="Почта" onChange={(e) => setTrainerEmail(e.target.value)} required/>*/}
+        {/*                            <input type="text" placeholder="Пароль" onChange={(e) => setTrainerPassword(e.target.value)} required/>*/}
+        {/*                            <select className={styles.select} onChange={(e) => setTrainerRole(e.target.value)}>*/}
+        {/*                                <option value="" disabled selected>роль</option>*/}
+        {/*                                {roles.map((role)=>*/}
+        {/*                                    (<option key={role.id} value={role.id}>{role.title}</option>)*/}
+        {/*                                )}*/}
+        {/*                            </select>*/}
+        {/*                            <button onClick={handleAddTrainer}/>*/}
+        {/*                        </div>*/}
+        {/*                </Form>*/}
+        {/*        </EditModal>*/}
+        {/*    }*/}
 
-
-
-            <Container
-                title={"Роли сотрудников"}
-                polosa={true}
-                children={
-                <>
-                {roles && roles.map((role) =>
-                    <div key={role.id} className={styles.row}>
-                        <div style={{color: '#293241'}}>{role.name}</div>
-                        <div style={{cursor: 'pointer'}} onClick={() => {
-                            setDeletedEndpoint(`delete_role/${role.id}`);
-                        }}><img src={iconCross} alt=''/></div>
-                    </div>
-                )}
-                    <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить роль"} onClick={handleRoles}></Button>
-                </>
-                }
-            ></Container>
-            {showModalRoles &&
-                <EditModal
-                    onClose={handleRoles}
-                    modalChildren={
-                        <Form
-                            onSubmit={handleAddRole}
-                            title={'Добавление роли'}
-                            children={
-                                <div>
-                                    <input type="text" name="role" placeholder="Название роли" onChange={(e) => setRole(e.target.value)} required/>
-                                    <input type="submit" value="Добавить"/>
-                                </div>}
-                        ></Form>}>
-                </EditModal>
-            }
-            <Container
-                title={"Статусы сотрудников"}
-                polosa={true}
-                children={
-                <>
-                    {employeeStates && employeeStates.map((employeeState) =>
-                        <div key={employeeState.id} className={styles.row}>
-                            <div style={{color: '#293241'}}>{employeeState.name}</div>
-                            <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint(`tr_status_delete/${employeeState.id}`);
-                            }}><img src={iconCross} alt=''/></div>
-                        </div>
-                    )}
-                    <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить статус"} onClick={handleEmployeeStates}></Button>
-                </>
-                }
-            ></Container>
-            {showModalEmployeeStates &&
-                <EditModal
-                    onClose={handleEmployeeStates}
-                    modalChildren={
-                        <Form
-                            onSubmit={handleAddEmployeeState}
-                            title={'Добавление статуса сотрудников'}
-                            children={
-                                <div>
-                                    <input type="text" name="trainer_state" placeholder="Название статуса" onChange={(e) => setEmployeeState(e.target.value)} required/>
-                                    <input type="submit" value="Добавить"/>
-                                </div>}
-                        ></Form>}>
-                </EditModal>
-            }
-            <Container
-                title={"Статусы клиентов"}
-                polosa={true}
-                children={
-                <>
-                    {clientsStates && clientsStates.map((clientsState) =>
-                        <div key={clientsState.id} className={styles.row}>
-                            <div style={{color: '#293241'}}>{clientsState.name}</div>
-                            <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint(`cl_status_delete/${clientsState.id}`);
-                            }}><img src={iconCross} alt=''/></div>
-                        </div>
-                    )}
-                    <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить статус"} onClick={handleClientStates}></Button>
-                </>
-                }
-            ></Container>
-            {showModalClientStates &&
-                <EditModal
-                    onClose={handleClientStates}
-                    modalChildren={
-                        <Form
-                            onSubmit={handleAddClientState}
-                            title={'Добавление статуса клиентов'}
-                            children={
-                                <div>
-                                    <input type="text" name="client_state" placeholder="Название статуса" onChange={(e) => setClientsState(e.target.value)} required/>
-                                    <input type="submit" value="Добавить"/>
-                                </div>}
-                        ></Form>}>
-                </EditModal>
-            }
-            <Container
-                title={"Площадки"}
-                polosa={true}
-                children={
-                <>
-                    {areas && areas.map((area) =>
-                        <div key={area.id} className={styles.row}>
-                            <div style={{color: '#293241'}}>{area.address}</div>
-                            <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint(`area_delete/${area.id}`);
-                            }}><img src={iconCross} alt=''/></div>
-                        </div>
-                    )}
-                    <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить площадку"} onClick={handleAreas}></Button>
-                </>
-                }
-            ></Container>
-            {showModalAreas &&
-                <EditModal
-                    onClose={handleAreas}
-                    modalChildren={
-                        <Form
-                            onSubmit={handleAddAreas}
-                            title={'Добавление площадки'}
-                            children={
-                                <div>
-                                    <input type="text" name="address" placeholder="Адрес площадки" onChange={(e) => setArea(e.target.value)} required/>
-                                    <input type="submit" value="Добавить"/>
-                                </div>}
-                        ></Form>}>
-                </EditModal>
-            }
-            <Container
-                title={"Виды спорта"}
-                polosa={true}
-                children={
-                <>
-                    {sportTypes && sportTypes.map((sportType)=>
-                        <div key={sportType.id} className={styles.row}>
-                            <div style={{color: '#293241'}}>{sportType.title}</div>
-                            <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint(`sport_type_delete/${sportType.id}`);
-                            }}><img src={iconCross} alt=''/></div>
-                        </div>
-                    )}
-                    <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить вид спорта"} onClick={handleTypeSports}></Button>
-                </>
-                }
-            ></Container>
-            {showModalTypeSports &&
-                <EditModal
-                    onClose={handleTypeSports}
-                    modalChildren={
-                        <Form
-                            onSubmit={handleAddTypeSports}
-                            title={'Добавление вида спорта'}
-                            children={
-                                <div>
-                                    <input type="text" name="title" placeholder="Вид спорта" onChange={(e) => setSportType(e.target.value)} required/>
-                                    <input type="submit" value="Добавить"/>
-                                </div>}
-                        ></Form>}>
-                </EditModal>
-            }
-            <Container
-                title={"Абонементы"}
-                polosa={true}
-                children={
-                <>
-                    {abonements && abonements.map((abonement)=>
-                        <div key={abonement.id} className={styles.row}>
-                            <div style={{color: '#293241'}}>{abonement.title}</div>
-                            <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint(`abonement_delete/${abonement.id}`);
-                            }}><img src={iconCross} alt=''/></div>
-                        </div>
-                    )}
-                    <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить абонемент"} onClick={handleAbonements}></Button>
-                </>
-                }
-            ></Container>
-            {showModalAbonements &&
-                <EditModal
-                    onClose={handleAbonements}
-                    modalChildren={
-                        <Form
-                            onSubmit={handleAddAbonements}
-                            title={'Добавление абонемента'}
-                            children={
-                                <div>
-                                    <input type="text" name="title" placeholder="Название абонемента" onChange={(e) => setAbonementName(e.target.value)} required/>
-                                        <input type="text" name="price" placeholder="Цена абонемента" onChange={(e) => setAbonementPrice(e.target.value)} required/>
-                                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                            <input
-                                                type="checkbox"
-                                                checked={abonementIsDuration}
-                                                onChange={e => setAbonementIsDuration(e.target.checked)}
-                                                style={{width: '20px', marginLeft: '-20px'}}
-                                            />
-                                            <input
-                                                type="text"
-                                                name="duration"
-                                                placeholder="Длительность"
-                                                style={{ marginRight: '1em'}}
-                                                disabled={!abonementIsDuration}
-                                                onChange={e => setAbonementDuration(e.target.value)}
-                                            />
-                                            <select name="duration_type" className={styles.select} onChange={(e) => setAbonementDurationType(e.target.value)} style={{width:'fit-content'}}>
-                                                <option value="" disabled selected>диапазон</option>
-                                                <option value="days">Дней</option>
-                                                <option value="weeks">Недель</option>
-                                                <option value="month">Месяцев</option>
-                                            </select>
-                                        </div>
-                                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                            <input
-                                                type="checkbox"
-                                                checked={abonementIsLessonCount}
-                                                onChange={e => setAbonementIsLessonCount(e.target.checked)}
-                                                style={{width: '20px', marginLeft: '-20px'}}
-                                            />
-                                            <input
-                                                type="text"
-                                                name="count"
-                                                placeholder="Количество занятий"
-                                                disabled={!abonementIsLessonCount}
-                                                onChange={(e) => setAbonementLessonCount(e.target.value)}
-                                            />
-                                        </div>
-                                        <select id="select_sport" name="sport" className={styles.select} onChange={(e) => setAbonementSportType(e.target.value)}>
-                                            <option value="" disabled selected>вид спорта</option>
-                                            {sportTypes.map((sportType)=>
-                                                (<option key={sportType.id} value={sportType.id}>{sportType.title}</option>)
-                                            )}
-                                        </select>
-                                    <input type="submit" value="Добавить"/>
-                                </div>}
-                        ></Form>}>
-                </EditModal>
-            }
+        {/*    <Container*/}
+        {/*        title={"Роли сотрудников"}*/}
+        {/*        polosa={true}*/}
+        {/*        children={*/}
+        {/*        <>*/}
+        {/*            {roles && roles.map((role) =>*/}
+        {/*                <div key={role.} className={styles.row}>*/}
+        {/*                    <div style={{color: '#293241'}}>{role.title}</div>*/}
+        {/*                    <div style={{cursor: 'pointer'}} onClick={() => {*/}
+        {/*                        setDeletedEndpoint(`delete_role/${role.id}`);*/}
+        {/*                    }}><img src={iconCross} alt=''/></div>*/}
+        {/*                </div>*/}
+        {/*            )}*/}
+        {/*            <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить роль"} onClick={handleRoles}></Button>*/}
+        {/*        </>*/}
+        {/*        }*/}
+        {/*    ></Container>*/}
+        {/*    {showModalRoles &&*/}
+        {/*        <EditModal onClose={handleRoles}>*/}
+        {/*                <Form*/}
+        {/*                    title={'Добавление роли'}>*/}
+        {/*                    <div>*/}
+        {/*                        <input*/}
+        {/*                            type="text"*/}
+        {/*                            name="role"*/}
+        {/*                            placeholder="Название роли"*/}
+        {/*                            onChange={(e) => setRole(e.target.value)} required/>*/}
+        {/*                        <button onClick={handleAddRole}/>*/}
+        {/*                    </div>*/}
+        {/*                </Form>*/}
+        {/*        </EditModal>*/}
+        {/*    }*/}
+        {/*    <Container*/}
+        {/*        title={"Статусы сотрудников"}*/}
+        {/*        polosa={true}*/}
+        {/*        children={*/}
+        {/*        <>*/}
+        {/*            {employeeStates && employeeStates.map((employeeState) =>*/}
+        {/*                <div key={employeeState.id} className={styles.row}>*/}
+        {/*                    <div style={{color: '#293241'}}>{employeeState.name}</div>*/}
+        {/*                    <div style={{cursor: 'pointer'}} onClick={() => {*/}
+        {/*                        setDeletedEndpoint(`tr_status_delete/${employeeState.id}`);*/}
+        {/*                    }}><img src={iconCross} alt=''/></div>*/}
+        {/*                </div>*/}
+        {/*            )}*/}
+        {/*            <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить статус"} onClick={handleEmployeeStates}></Button>*/}
+        {/*        </>*/}
+        {/*        }*/}
+        {/*    ></Container>*/}
+        {/*    {showModalEmployeeStates &&*/}
+        {/*        <EditModal onClose={handleEmployeeStates}>*/}
+        {/*            <Form title={'Добавление статуса сотрудников'}>*/}
+        {/*                <div>*/}
+        {/*                    <input type="text" name="trainer_state" placeholder="Название статуса"*/}
+        {/*                           onChange={(e) => setEmployeeState(e.target.value)} required/>*/}
+        {/*                    <button onClick={handleAddEmployeeState}/>*/}
+        {/*                </div>*/}
+        {/*            </Form>*/}
+        {/*        </EditModal>*/}
+        {/*    }*/}
+        {/*    <Container*/}
+        {/*        title={"Статусы клиентов"}*/}
+        {/*        polosa={true}*/}
+        {/*        children={*/}
+        {/*        <>*/}
+        {/*            {clientsStates && clientsStates.map((clientsState) =>*/}
+        {/*                <div key={clientsState.id} className={styles.row}>*/}
+        {/*                    <div style={{color: '#293241'}}>{clientsState.title}</div>*/}
+        {/*                    <div style={{cursor: 'pointer'}} onClick={() => {*/}
+        {/*                        setDeletedEndpoint(`cl_status_delete/${clientsState.id}`);*/}
+        {/*                    }}><img src={iconCross} alt=''/></div>*/}
+        {/*                </div>*/}
+        {/*            )}*/}
+        {/*            <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить статус"} onClick={handleClientStates}></Button>*/}
+        {/*        </>*/}
+        {/*        }*/}
+        {/*    ></Container>*/}
+        {/*    {showModalClientStates &&*/}
+        {/*        <EditModal onClose={handleClientStates}>*/}
+        {/*            <Form title={'Добавление статуса клиентов'}>*/}
+        {/*                <div>*/}
+        {/*                    <input type="text" name="client_state" placeholder="Название статуса"*/}
+        {/*                           onChange={(e) => setClientsState(e.target.value)} required/>*/}
+        {/*                    <button onClick={handleAddClientState}/>*/}
+        {/*                </div>*/}
+        {/*            </Form>*/}
+        {/*        </EditModal>*/}
+        {/*    }*/}
+        {/*    <Container*/}
+        {/*        title={"Площадки"}*/}
+        {/*        polosa={true}*/}
+        {/*        children={*/}
+        {/*        <>*/}
+        {/*            {areas && areas.map((area) =>*/}
+        {/*                <div key={area.id} className={styles.row}>*/}
+        {/*                    <div style={{color: '#293241'}}>{area.address}</div>*/}
+        {/*                    <div style={{cursor: 'pointer'}} onClick={() => {*/}
+        {/*                        setDeletedEndpoint(`area_delete/${area.id}`);*/}
+        {/*                    }}><img src={iconCross} alt=''/></div>*/}
+        {/*                </div>*/}
+        {/*            )}*/}
+        {/*            <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить площадку"} onClick={handleAreas}></Button>*/}
+        {/*        </>*/}
+        {/*        }*/}
+        {/*    ></Container>*/}
+        {/*    {showModalAreas &&*/}
+        {/*        <EditModal onClose={handleAreas}>*/}
+        {/*            <Form title={'Добавление площадки'}>*/}
+        {/*                <div>*/}
+        {/*                    <input type="text" name="address" placeholder="Адрес площадки"*/}
+        {/*                           onChange={(e) => setArea(e.target.value)} required/>*/}
+        {/*                    <button onClick={handleAddAreas}/>*/}
+        {/*                </div>*/}
+        {/*            </Form>*/}
+        {/*        </EditModal>*/}
+        {/*    }*/}
+        {/*    <Container*/}
+        {/*        title={"Виды спорта"}*/}
+        {/*        polosa={true}*/}
+        {/*        children={*/}
+        {/*        <>*/}
+        {/*            {sportTypes && sportTypes.map((sportType)=>*/}
+        {/*                <div key={sportType.id} className={styles.row}>*/}
+        {/*                    <div style={{color: '#293241'}}>{sportType.title}</div>*/}
+        {/*                    <div style={{cursor: 'pointer'}} onClick={() => {*/}
+        {/*                        setDeletedEndpoint(`sport_type_delete/${sportType.id}`);*/}
+        {/*                    }}><img src={iconCross} alt=''/></div>*/}
+        {/*                </div>*/}
+        {/*            )}*/}
+        {/*            <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить вид спорта"} onClick={handleTypeSports}></Button>*/}
+        {/*        </>*/}
+        {/*        }*/}
+        {/*    ></Container>*/}
+        {/*    {showModalTypeSports &&*/}
+        {/*        <EditModal onClose={handleTypeSports}>*/}
+        {/*            <Form title={'Добавление вида спорта'}>*/}
+        {/*                <div>*/}
+        {/*                    <input type="text" name="title" placeholder="Вид спорта"*/}
+        {/*                           onChange={(e) => setSportType(e.target.value)} required/>*/}
+        {/*                    <button onClick={handleAddTypeSports}/>*/}
+        {/*                </div>*/}
+        {/*            </Form>*/}
+        {/*        </EditModal>*/}
+        {/*    }*/}
+        {/*    <Container*/}
+        {/*        title={"Абонементы"}*/}
+        {/*        polosa={true}*/}
+        {/*        children={*/}
+        {/*        <>*/}
+        {/*            {abonements && abonements.map((abonement)=>*/}
+        {/*                <div key={abonement.id} className={styles.row}>*/}
+        {/*                    <div style={{color: '#293241'}}>{abonement.title}</div>*/}
+        {/*                    <div style={{cursor: 'pointer'}} onClick={() => {*/}
+        {/*                        setDeletedEndpoint(`abonement_delete/${abonement.id}`);*/}
+        {/*                    }}><img src={iconCross} alt=''/></div>*/}
+        {/*                </div>*/}
+        {/*            )}*/}
+        {/*            <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить абонемент"} onClick={handleAbonements}></Button>*/}
+        {/*        </>*/}
+        {/*        }*/}
+        {/*    ></Container>*/}
+        {/*    {showModalAbonements &&*/}
+        {/*        <EditModal onClose={handleAbonements}>*/}
+        {/*                <Form title={'Добавление абонемента'}>*/}
+        {/*                        <div>*/}
+        {/*                            <input type="text" name="title" placeholder="Название абонемента"*/}
+        {/*                                   onChange={(e) => setAbonementName(e.target.value)} required/>*/}
+        {/*                            <input type="text" name="price" placeholder="Цена абонемента"*/}
+        {/*                                   onChange={(e) => setAbonementPrice(e.target.value)} required/>*/}
+        {/*                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>*/}
+        {/*                                <input*/}
+        {/*                                    type="checkbox"*/}
+        {/*                                    checked={abonementIsDuration}*/}
+        {/*                                    onChange={e => setAbonementIsDuration(e.target.checked)}*/}
+        {/*                                    style={{width: '20px', marginLeft: '-20px'}}*/}
+        {/*                                />*/}
+        {/*                                <input*/}
+        {/*                                    type="text"*/}
+        {/*                                    name="duration"*/}
+        {/*                                    placeholder="Длительность"*/}
+        {/*                                    style={{marginRight: '1em'}}*/}
+        {/*                                    disabled={!abonementIsDuration}*/}
+        {/*                                    onChange={e => setAbonementDuration(e.target.value)}*/}
+        {/*                                />*/}
+        {/*                                <select name="duration_type" className={styles.select}*/}
+        {/*                                        onChange={(e) => setAbonementDurationType(e.target.value)}*/}
+        {/*                                        style={{width: 'fit-content'}}>*/}
+        {/*                                    <option value="" disabled selected>диапазон</option>*/}
+        {/*                                    <option value="days">Дней</option>*/}
+        {/*                                    <option value="weeks">Недель</option>*/}
+        {/*                                    <option value="month">Месяцев</option>*/}
+        {/*                                </select>*/}
+        {/*                            </div>*/}
+        {/*                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>*/}
+        {/*                                <input*/}
+        {/*                                    type="checkbox"*/}
+        {/*                                    checked={abonementIsLessonCount}*/}
+        {/*                                    onChange={e => setAbonementIsLessonCount(e.target.checked)}*/}
+        {/*                                    style={{width: '20px', marginLeft: '-20px'}}*/}
+        {/*                                />*/}
+        {/*                                <input*/}
+        {/*                                    type="text"*/}
+        {/*                                    name="count"*/}
+        {/*                                    placeholder="Количество занятий"*/}
+        {/*                                    disabled={!abonementIsLessonCount}*/}
+        {/*                                    onChange={(e) => setAbonementLessonCount(e.target.value)}*/}
+        {/*                                />*/}
+        {/*                            </div>*/}
+        {/*                            <select id="select_sport" name="sport" className={styles.select}*/}
+        {/*                                    onChange={(e) => setAbonementSportType(e.target.value)}>*/}
+        {/*                                <option value="" disabled selected>вид спорта</option>*/}
+        {/*                                {sportTypes.map((sportType) =>*/}
+        {/*                                    (<option key={sportType.id} value={sportType.id}>{sportType.title}</option>)*/}
+        {/*                                )}*/}
+        {/*                            </select>*/}
+        {/*                            <button onClick={handleAbonements}/>*/}
+        {/*                        </div>*/}
+        {/*                </Form>*/}
+        {/*        </EditModal>*/}
+        {/*    }*/}
         </div>
     );
 }

@@ -6,15 +6,15 @@ import {IFormProps} from "./types.ts";
 const Form = (props: IFormProps) => {
     return (
     <div className={styles.form}>
-        <form className={styles.decor} action="" method="post" onSubmit={props.onSubmit}>
+        <div className={styles.decor}>
             <div className={styles.formLeftDecoration}/>
             <div className={styles.formRightDecoration}/>
             <div className={styles.circle}/>
             <div className={styles.formInner}>
                 <h3 style={{marginBottom: '25px'}}>{props.title}</h3>
-                {props.formChildren}
+                {props.children}
             </div>
-        </form>
+        </div>
     </div>
     )}
 export default Form;

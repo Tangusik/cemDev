@@ -26,15 +26,12 @@ const Trainer = () => {
         <div>
             <Container
                 title={"Мои группы и клиенты"}
-                polosa={true}
-                children={
+                polosa={true}>
                     <>
                         {data.map((group, index) => (
                             <GroupItem key={index} group={group}></GroupItem>
                         ))}
                     </>
-                }
-            >
             </Container>
 
             <Container

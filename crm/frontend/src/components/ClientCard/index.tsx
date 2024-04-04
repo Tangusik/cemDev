@@ -3,18 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import iconCross from "../../Icons/cross.svg";
 import React, {useEffect} from "react";
 import {fetchDelete} from "../../api/delete/index.ts";
+import {IClientCard} from "./types.ts";
 
-const ClientCard = (props) =>{
-    const { id, firstName, lastName, birthday, state, balance } = props;
+const ClientCard = (props: IClientCard) =>{
+    const client = props.client;
 
     let navigate = useNavigate();
 
     const handleOnClick = () => {
-        navigate(`/client/${id}`);
+        navigate(`/client/${client.id}`);
     };
 
     const handleDelete = async () => {
-        await fetchDelete(`client/${id}`).then((res) => {
+        await fetchDelete(`client/${client.id}`).then((res) => {
             if (res) {
                 window.location.reload()
             }
@@ -25,7 +26,7 @@ const ClientCard = (props) =>{
             <details>
                 <summary>
                     <div className={styles.summary}>
-                        <div className={styles.name}>{firstName} {lastName}</div>
+                        <div className={styles.name}>{client.firstName} {client.lastName}</div>
                         <div style={{cursor: 'pointer'}}
                              onClick={(event)=> {
                                  event.stopPropagation();
@@ -38,10 +39,10 @@ const ClientCard = (props) =>{
                 <div className={styles.cards_elements}>
                     <div className={styles.card}>
                         <div className={styles.front}>
-                            <div>{birthday}</div>
-                            <div className={styles.center} style={{fontWeight: 'bold', fontSize: '20px'}}>{firstName} {lastName}</div>
-                            <div>баланс: {balance}</div>
-                            <div>{state}</div>
+                            <div>{client.birthDate}</div>
+                            <div className={styles.center} style={{fontWeight: 'bold', fontSize: '20px'}}>{client.firstName} {client.lastName}</div>
+                            <div>баланс: {client.balance}</div>
+                            <div>{client.state.title}</div>
                         </div>
                         <div className={styles.back}>
                             <div onClick={handleOnClick} className={styles.center}>ссылка на страничку</div>
