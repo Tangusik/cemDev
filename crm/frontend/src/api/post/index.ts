@@ -13,16 +13,21 @@ function getCSRFToken() {
     return csrfToken;
 }
 
-export const fetchDelete = async (endpoint) => {
+export const fetchPost = async (endpoint: string, data: any) => {
+    const port = 8000;
+    const url = `http://localhost:${port}/crm/${endpoint}`;
     try {
-        const port = 8000;
-        const url = `http://localhost:${port}/crm/${endpoint}`
-        const response = await axios.delete(url, {
+        const response = await axios.post(url, data, {
             withCredentials: true,
             headers: {'X-CSRFToken': getCSRFToken()}
         });
-        return response;
+
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            console.error('Ошибка при отправке запроса:', response.statusText);
+        }
     } catch (error) {
-        console.error(error);
+        console.error('Произошла ошибка:', error);
     }
 };
