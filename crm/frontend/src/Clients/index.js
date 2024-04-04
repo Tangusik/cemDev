@@ -15,7 +15,13 @@ const Clients = () => {
     const [chosenClientState, setChosenClientState] = useState([]);
     const [clientsStates, setClientsStates] = useState([]);
 
+    const [sportTypes, setSportTypes] = useState([]);
+    const [trainers, setTrainers] = useState([]);
     const [groups, setGroups] = useState([]);
+
+    const [areas, setAreas] = useState([]);
+    const [abonementSportType, setAbonementSportType] = useState([]);
+    const [trainerId, setTrainerId] = useState([]);
 
     const [showModalAllClients, setShowModalAllClients] = useState(false);
     const [showModalGroups, setShowModalGroups] = useState(false);
@@ -54,6 +60,15 @@ const Clients = () => {
 
             const groups = await fetchGet('all_groups');
             setGroups(groups)
+
+            const sportTypes = await fetchGet('sport_types');
+            setSportTypes(sportTypes)
+
+            const trainers = await fetchGet('trainer_list');
+            setTrainers(trainers)
+
+            const areas = await fetchGet('areas');
+            setAreas(areas)
         }
 
         fetchData();
@@ -148,43 +163,41 @@ const Clients = () => {
                             <Form
                                 title={'Добавление группы'}
                                 children={
-                                    <div>
+                                    <div className={styles.col}>
                                         <input type="text" id="name" name="title" placeholder="Название"/>
-                                            <p>
-                                                <select multiple name="members" className="select">
-                                                    <option value="{{client.id}}"></option>
-                                                </select>
-                                            </p>
-                                            <p>Тренер:</p>
-                                            <p>
-                                                <select name="trainer" className="select">
-                                                    <option value="{{trainer.user.id}}"></option>
-                                                </select>
-                                            </p>
-                                            <p>
-                                                <select name="sport_type" className="select">
-                                                    <option value="{{type.id}}"></option>
-                                                </select>
-                                            </p>
-                                            <p>
-                                                <select name="area" className="select">
-                                                    <option value="{{area.id}}"></option>
-                                                </select>
-                                            </p>
-                                            <p>Занятия:</p>
-                                            <p>До какого числа будут проходить занятия: <input type="date" name="date_end"/></p>
-                                            <p>Дни недели:
-                                                <select multiple name="days" className="select">
-                                                    <option value="0">Понедельник</option>
-                                                    <option value="1">Вторник</option>
-                                                    <option value="2">Среда</option>
-                                                    <option value="3">Четверг</option>
-                                                    <option value="4">Пятница</option>
-                                                    <option value="5">Суббота</option>
-                                                    <option value="6">Воскресенье</option>
-                                                </select></p>
-                                            <input type="time" name="act_begin_time" placeholder="Время начала занятий"/>
-                                            <input type="time" name="act_end_time" placeholder="Время конца занятий"/>
+                                        <select required className={styles.select}
+                                                onChange={(e) => setTrainerId(e.target.value)}>
+                                            <option value="" disabled selected>тренер</option>
+                                            {trainers.map((trainer) =>
+                                                (<option key={trainer.id} value={trainer.id}>{trainer.user.first_name} {trainer.user.last_name}</option>)
+                                            )}
+                                        </select>
+                                        <select id="select_sport" name="sport" className={styles.select} onChange={(e) => setAbonementSportType(e.target.value)}>
+                                            <option value="" disabled selected>вид спорта</option>
+                                            {sportTypes && sportTypes.map((sportType)=>
+                                                (<option key={sportType.id} value={sportType.id}>{sportType.title}</option>)
+                                            )}
+                                        </select>
+                                        <select className={styles.select} onChange={(e) => setAreas(e.target.value)}>
+                                            <option value="" disabled selected>площадка</option>
+                                            {areas && areas.map((area)=>
+                                                (<option key={area.id} value={area.id}>{area.address}</option>)
+                                            )}
+                                        </select>
+
+                                        <div>До какого числа будут проходить занятия: <input type="date"/></div>
+                                        <select className={styles.select} onChange={(e) => setAreas(e.target.value)}>
+                                            <option value="" disabled selected>дни недели</option>
+                                            <option value="0">Понедельник</option>
+                                            <option value="1">Вторник</option>
+                                            <option value="2">Среда</option>
+                                            <option value="3">Четверг</option>
+                                            <option value="4">Пятница</option>
+                                            <option value="5">Суббота</option>
+                                            <option value="6">Воскресенье</option>
+                                        </select>
+                                            <div>Время начала занятий: <input type="time"/></div>
+                                            <div>Время конца занятий: <input type="time"/></div>
                                             <input type="submit" value="Добавить"/>
                                     </div>}
                             ></Form>}

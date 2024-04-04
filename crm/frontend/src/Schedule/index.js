@@ -18,6 +18,8 @@ const Calendar = () => {
     const [clientId, setClientId] = useState(null);
     const [clients, setClients] = useState([]);
 
+    const [presences, setPresences] = useState(null);
+
     const [trainerId, setTrainerId] = useState(null);
     const [trainers, setTrainers] = useState([]);
 
@@ -84,10 +86,23 @@ const Calendar = () => {
         setSelectedYear(parseInt(event.target.value));
     };
 
-    const handleShowCard = (Obj) => {
+    const handleShowCard = async (Obj) => {
         setShowCard(!showCard);
         setCard(Obj);
     };
+
+    useEffect(() => {
+        async function fetchData() {
+            if (card && card.id !== undefined) {
+                const presences = await fetchGet(`presences/${card.id}`);
+                setPresences(presences);
+                console.log(presences);
+            }
+        }
+
+        fetchData();
+    }, [card]);
+
 
     const getDaysInMonth = (month, year) => {
         const date = moment(`${year}-${month}`, 'YYYY-MM');

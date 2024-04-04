@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const fetchGet = async (endpoint) => {
+export const fetchGet = async (endpoint: string) => {
     try {
         const port = 8000;
         axios.defaults.baseURL = `http://localhost:${port}`;
