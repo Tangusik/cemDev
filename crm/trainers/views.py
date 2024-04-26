@@ -487,16 +487,17 @@ def group_creation(request):
         all_days= all_days = (date1 + timedelta(days=i) for i in range((date2 - date1).days + 1))
 
         for act in acts:
+            act=dict(act)
             for act_date in all_days:
                 if act_date.weekday() == act["day_of_week"]:
-                    act = Lesson.objects.create(actDate=act_date, actTimeBegin=act["time_begin"],
+                    lesson = Lesson.objects.create(actDate=act_date, actTimeBegin=act["time_begin"],
                                actTimeEnd=act["time_end"],
                                trainer=tr, area=area,
-                               status="Состоится",)
+                               status="Состоится", group = team)
                                
                     for client in members:
-                        act.clients.add(get_object_or_404(Client, pk=client))
-                    act.save()
+                        lesson.clients.add(get_object_or_404(Client, pk=client))
+                    lesson.save()
         return Response(status=status.HTTP_201_CREATED)
 
     else:
@@ -564,16 +565,6 @@ def mark(request, id):
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def change_ab(presence, lesson):
-    possible_abonements = lesson.group.possibleAbonements.all()
-    cl_abs = presence.client.purchasehistory_set.filter(status__title= "Активен").order_by("purchaseDate")
-    if presence.presence:
-        for cl_ab in cl_abs:
-            if cl_ab.abonement in possible_abonements and cl_ab.activitiesLeft is not None:
-                    cl_ab.activitiesLeft -= 1
-                    break
-    else:
-        pass
 
 
 
