@@ -20,7 +20,7 @@ class SportType(models.Model):
         return self.title
 
 class Client(models.Model):
-    avatar = models.ImageField(upload_to='avatars')
+    avatar = models.ImageField(upload_to='avatars', default="unnamed.jpg")
     firstName = models.CharField(blank=False, max_length=30, default='qwerty')
     lastName = models.CharField(blank=True, max_length=30)
     middleName = models.CharField(blank=True, max_length=30)
@@ -29,6 +29,8 @@ class Client(models.Model):
     birthDate = models.DateField(auto_now=False, blank=False, default=datetime.date(2023, 1, 1))
     state = models.ForeignKey(ClientState, models.CASCADE, blank=True, null=True)
     balance = models.IntegerField(default=0, blank=False)
+    phone = models.CharField(blank=False, default="Не указан", max_length=20)
+    email = models.EmailField(blank=True)
     def __str__(self):
         return self.firstName + self.lastName
 
@@ -46,7 +48,7 @@ class Trainer(models.Model):
     birthDate = models.DateField(auto_now=False)
     role = models.ForeignKey(Role, models.CASCADE, blank=True, null=True)
     state = models.ForeignKey(TrainerState, models.CASCADE, blank=True, null=True)
-
+    phone = models.CharField(blank=False, default="Не указан", max_length=20)
     def __str__(self):
         return self.user.first_name
 
@@ -67,6 +69,7 @@ class Abonement(models.Model):
     sportType = models.ForeignKey(SportType, on_delete=models.DO_NOTHING, blank=True)
     def __str__(self):
         return self.title
+
 class Group(models.Model):
     title = models.CharField(max_length=20, blank=False)
     clients = models.ManyToManyField(Client)
@@ -86,12 +89,6 @@ class Lesson(models.Model):
     status = models.CharField(max_length=20, default="Состоится")
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
-
-class Presence(models.Model):
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    presence = models.BooleanField(blank=False, default=False)
-
 class PurchaseHistoryStatus(models.Model):
     title = models.CharField(max_length=30)
     def __str__(self):
@@ -107,6 +104,12 @@ class PurchaseHistory(models.Model):
     def __str__(self):
         return self.abonement.title + " " + self.purchaseDate.strftime("%d.%m.%Y")
 
+
+class Presence(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    presence = models.BooleanField(blank=False, default=False)
+    paid_by = models.ForeignKey(PurchaseHistory, on_delete=models.SET_NULL, null=True)
 
 
 

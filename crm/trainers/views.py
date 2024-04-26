@@ -572,7 +572,8 @@ def change_ab(presence, lesson):
             if cl_ab.abonement in possible_abonements and cl_ab.activitiesLeft is not None:
                     cl_ab.activitiesLeft -= 1
                     break
-    else
+    else:
+        pass
 
 
 
