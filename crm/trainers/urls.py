@@ -16,6 +16,7 @@ urlpatterns = [
     path('client_list', views.client_list),                         #DONe
     path('add_client', views.add_client),                           #DONe
     path('all_groups', views.all_groups),                           #DONe
+
     path('group_creation', views.group_creation),                   #DONe
 
     #___________colleagues

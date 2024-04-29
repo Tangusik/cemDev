@@ -494,6 +494,7 @@ def group_creation(request):
                                actTimeEnd=act["time_end"],
                                trainer=tr, area=area,
                                status="Состоится", group = team)
+
                                
                     for client in members:
                         lesson.clients.add(get_object_or_404(Client, pk=client))
@@ -564,6 +565,16 @@ def mark(request, id):
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def change_ab(presence, lesson):
+    possible_abonements = lesson.group.possibleAbonements.all()
+    cl_abs = presence.client.purchasehistory_set.filter(status__title= "Активен").order_by("purchaseDate")
+    if presence.presence:
+        for cl_ab in cl_abs:
+            if cl_ab.abonement in possible_abonements and cl_ab.activitiesLeft is not None:
+                    cl_ab.activitiesLeft -= 1
+                    break
+    else
 
 
 
