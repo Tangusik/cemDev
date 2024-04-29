@@ -487,16 +487,18 @@ def group_creation(request):
         all_days= all_days = (date1 + timedelta(days=i) for i in range((date2 - date1).days + 1))
 
         for act in acts:
+            act=dict(act)
             for act_date in all_days:
                 if act_date.weekday() == act["day_of_week"]:
-                    act = Lesson.objects.create(actDate=act_date, actTimeBegin=act["time_begin"],
+                    lesson = Lesson.objects.create(actDate=act_date, actTimeBegin=act["time_begin"],
                                actTimeEnd=act["time_end"],
                                trainer=tr, area=area,
-                               status="Состоится",)
+                               status="Состоится", group = team)
+
                                
                     for client in members:
-                        act.clients.add(get_object_or_404(Client, pk=client))
-                    act.save()
+                        lesson.clients.add(get_object_or_404(Client, pk=client))
+                    lesson.save()
         return Response(status=status.HTTP_201_CREATED)
 
     else:
@@ -573,6 +575,7 @@ def change_ab(presence, lesson):
                     cl_ab.activitiesLeft -= 1
                     break
     else
+
 
 
 
