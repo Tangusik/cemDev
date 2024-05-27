@@ -167,8 +167,9 @@ class GroupCreationSerializer(serializers.Serializer):
     abonements = ListField(child=IntegerField(), required=True)
 
 class PresencesSerializer(serializers.Serializer):
-    client = IntegerField()
-    presence = BooleanField()
+    client = IntegerField(required=True)
+    presence = BooleanField(required=True)
+    paid_by = IntegerField(required=True)
 
 class MarkSerializer(serializers.Serializer):
     presences = ListField(child = PresencesSerializer() ,required=True)
