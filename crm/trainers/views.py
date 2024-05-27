@@ -492,12 +492,7 @@ def group_creation(request):
                     act = Lesson.objects.create(actDate=act_date, actTimeBegin=act["time_begin"],
                                actTimeEnd=act["time_end"],
                                trainer=tr, area=area,
-<<<<<<< HEAD
                                status="Состоится", group = team)
-
-=======
-                               status="Состоится",)
->>>>>>> parent of 1ffade9 (ended group creation)
                                
                     for client in members:
                         act.clients.add(get_object_or_404(Client, pk=client))
@@ -560,42 +555,37 @@ def mark(request, id):
         presences = [dict(item) for item in serializer.data['presences']]
         for presence in presences:
             cl = get_object_or_404(Client, pk=presence["client"])
+            cl_ab = get_object_or_404(PurchaseHistory, pk=presence["paid_by"])
             curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
             if curr_presence.presence != presence["presence"]:
+
+                if presence['presence']:
+                    curr_presence.paid_by = cl_ab
+                else:
+                    curr_presence.paid_by = None
                 curr_presence.presence = presence["presence"]
-                change_ab(curr_presence, activity)
                 curr_presence.save()
+                check_ab(cl_ab)
+
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def change_ab(presence, lesson):
-    possible_abonements = lesson.group.possibleAbonements.all()
-    cl_abs = presence.client.purchasehistory_set.filter(status__title= "Активен").order_by("purchaseDate")
-    if presence.presence:
-        for cl_ab in cl_abs:
-            if cl_ab.abonement in possible_abonements and cl_ab.activitiesLeft is not None:
-                    cl_ab.activitiesLeft -= 1
-                    break
-<<<<<<< HEAD
-    else
 
-=======
-    else:
-        pass
->>>>>>> parent of 1ffade9 (ended group creation)
+def check_ab(purchase_history):
+    inactive_status = get_object_or_404(PurchaseHistoryStatus, pk=2)
+    active_status = get_object_or_404(PurchaseHistoryStatus, pk=1)
+    if purchase_history.activitiesLeft:
+        purchase_history.activitiesLeft = purchase_history.abonement.lessonCount - purchase_history.presence_set.all().count()
+        
+        if purchase_history.activitiesLeft == 0:
+            purchase_history.status = inactive_status
+        else:
+            purchase_history.status = active_status
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    elif purchase_history.endDate:
+        if datetime.date.today() > purchase_history.endDate:
+            purchase_history.status = inactive_status
+    purchase_history.save()
+    print(purchase_history.presence_set.all().count())
 

@@ -20,7 +20,7 @@ class SportType(models.Model):
         return self.title
 
 class Client(models.Model):
-    avatar = models.ImageField(upload_to='avatars', default="unnamed.jpg")
+    avatar = models.ImageField(upload_to='avatars', default="unnamed.jpg", blank=True)
 
     firstName = models.CharField(blank=False, max_length=30, default='qwerty')
     lastName = models.CharField(blank=True, max_length=30)
