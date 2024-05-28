@@ -21,7 +21,7 @@
 
 .select {
     float: right;
-    display: block;
+    /*display: block;*/
     width: content-box;
     margin-bottom: 10px;
     background: #dddddd;
@@ -31,4 +31,18 @@
     font-family: 'Roboto', sans-serif;
     align-items: center;
     color: #3D5A80;
+    cursor: pointer;
+}
+
+.addPhoto {
+    float: left;
+    align-items: center;
+    border-radius: 40px;
+    padding: 3px 6px 3px 6px;
+    background: #dddddd;
+    cursor: pointer;
+}
+
+.date {
+    height: 40px;
 }

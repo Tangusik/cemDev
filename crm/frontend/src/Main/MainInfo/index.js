@@ -15,7 +15,7 @@ const MainInfo = ({ setUserRole }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const [otchestv, setOtchestv] = useState('');
+    const [middleName, setMiddleName] = useState('');
 
     const [statuses, setStatus] = useState('');
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -54,7 +54,7 @@ const MainInfo = ({ setUserRole }) => {
             first_name: firstName,
             last_name: lastName,
             email: email,
-            otchestv: otchestv,
+            middleName: middleName,
         };
         const data = filterObject(noFilterData);
         await fetchPost( 'user_edit', data);
@@ -81,7 +81,7 @@ const MainInfo = ({ setUserRole }) => {
                 {data.user && (
                     <>
                         <div className={styles.userName}>
-                            {data.user.last_name} {data.user.first_name} {data.otchestv}
+                            {data.user.last_name} {data.user.first_name} {data.middleName}
                             <div className={styles.state}>{data.state}</div>
                         </div>
                         <div className={styles.role}>{data.role}</div>
@@ -104,10 +104,10 @@ const MainInfo = ({ setUserRole }) => {
                         onSubmit={handleSubmitEditUser}
                         children={
                             <div>
-                                <input type="text" name="name" placeholder="Имя" defaultValue={data.user.first_name} onChange={(e) => setFirstName(e.target.value)}/>
-                                <input type="text" name="last_name"  placeholder="Фамилия" defaultValue={data.user.last_name} onChange={(e) => setLastName(e.target.value)}/>
-                                <input type="text" name="otchestcv" placeholder="Отчество" defaultValue={data.otchestv} onChange={(e) => setOtchestv(e.target.value)}/>
-                                <input type="text" name="email" placeholder="Почта" defaultValue={data.user.email} onChange={(e) => setEmail(e.target.value)}/>
+                                <input type="text" placeholder="Имя" defaultValue={data.user.first_name} onChange={(e) => setFirstName(e.target.value)}/>
+                                <input type="text" placeholder="Фамилия" defaultValue={data.user.last_name} onChange={(e) => setLastName(e.target.value)}/>
+                                <input type="text" placeholder="Отчество" defaultValue={data.middleName} onChange={(e) => setMiddleName(e.target.value)}/>
+                                <input type="text" placeholder="Почта" defaultValue={data.user.email} onChange={(e) => setEmail(e.target.value)}/>
                                 <input type="submit" value="Добавить"/>
                             </div>}
                     ></Form>}
@@ -122,9 +122,9 @@ const MainInfo = ({ setUserRole }) => {
                         onSubmit={handleSubmitEditStatus}
                         children={
                             <div>
-                                <select name="duration_type" required className={styles.selectSport} style={{width: '100%'}} onChange={(e) => setSelectedStatus(e.target.value)} >
+                                <select required className={styles.selectSport} style={{width: '100%'}} onChange={(e) => setSelectedStatus(e.target.value)} >
                                     {statuses.map((status)=>
-                                        (<option value={status.id} name={status.name}>{status.name}</option>)
+                                        (<option value={status.id} name={status.title}>{status.title}</option>)
                                     )}
                                 </select>
                                 <input type="submit" value="Изменить"/>

@@ -138,7 +138,7 @@ const Calendar = () => {
     const renderContent = (i) => {
         let content = [];
         data.map((Obj) => {
-            Obj.date = new Date(Obj.act_date);
+            Obj.date = new Date(Obj.actDate);
             const objDay = Obj.date.getDate();
             const objMonth = Obj.date.getMonth();
             const objYear = Obj.date.getFullYear();
@@ -150,14 +150,14 @@ const Calendar = () => {
                         <div className={styles.openData}>
                             <div className={styles.sport}>{Obj.sport}</div>
                             <div className={styles.time}>
-                                <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.act_time_begin.slice(0,5)}</span>
-                                <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.act_time_end.slice(0,5)}</span>
+                                <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.actTimeBegin.slice(0,5)}</span>
+                                <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.actTimeEnd.slice(0,5)}</span>
                             </div>
                         </div>
                         {Obj.trainer.user &&
                             <div className={styles.hideData}>
                                 {Obj.status !== 'Состоится' && <span style={{color: '#1b1b1b', fontWeight: 'bold'}}>{Obj.status}</span>}
-                                <span style={{color: '#1b1b1b'}}>{Obj.trainer.user.last_name} {Obj.trainer.user.first_name}</span>
+                                <span style={{color: '#1b1b1b'}}>{Obj.trainer.user.lastName} {Obj.trainer.user.firstName}</span>
                             </div>}
                     </div>
                 );
@@ -217,14 +217,14 @@ const Calendar = () => {
                 <select required name="clients" className={styles.selectClient}
                         onChange={(e) => setClientId(e.target.value)}>
                     <option value="" disabled selected>клиенты</option>
-                    {clients.map((client) =>
-                        (<option key={client.id} value={client.id}>{client.first_name} {client.last_name}</option>)
+                    {clients && clients.map((client) =>
+                        (<option key={client.id} value={client.id}>{client.firstName} {client.lastName}</option>)
                     )}
                 </select>
                 <select required name="clients" className={styles.selectClient}
                         onChange={(e) => setTrainerId(e.target.value)}>
                     <option value="" disabled selected>сотрудники</option>
-                    {trainers.map((trainer) =>
+                    {trainers && trainers.map((trainer) =>
                         (<option key={trainer.user.id} value={trainer.user.id}>{trainer.user.first_name} {trainer.user.last_name}</option>)
                     )}
                 </select>
@@ -244,7 +244,7 @@ const Calendar = () => {
                                                     checked={checkedClients[client.id] || false}
                                                     onChange={(e) => handleCheckboxChange(client.id, e.target.checked)}
                                                 ></input>
-                                                <div>{client.first_name}</div>
+                                                <div>{client.firstName}</div>
                                         </div>
                                     ))}</div>
                                     <Button onClick={handleMark}>Отметить</Button>

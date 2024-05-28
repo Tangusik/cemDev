@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Button from "../components/Button";
@@ -27,6 +26,26 @@ const Clients = () => {
     const [lastName, setLastName] = useState([]);
     const [birthDate, setBirthDate] = useState([]);
     const [balance, setBalance] = useState([]);
+    const [middleName, setMiddleName] = useState([]);
+
+    const fileInputRef = React.useRef(null);
+    const [selectedFiles, setSelectedFiles] = useState(null);
+
+    const handleFileSelect = (event) => {
+        const fileList = event.target.files;
+
+        if (fileList) {
+            const file = Array.from(fileList);
+
+            setSelectedFiles(file);
+        }
+    };
+
+    const handleAttachButton = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
 
     const handleAllClients = () => {
         setShowModalAllClients(!showModalAllClients);
@@ -63,9 +82,11 @@ const Clients = () => {
         event.preventDefault();
 
         const data = {
-            first_name: firstName,
-            last_name: lastName,
-            birth_date: birthDate,
+            firstName: firstName,
+            lastName: lastName,
+            birthDate: birthDate,
+            middleName: middleName,
+            address: 'Address',
             state: chosenClientState,
             balance: balance,
         };
@@ -88,14 +109,14 @@ const Clients = () => {
                             <Button type={"change"} title={"Добавить клиента"} onClick={handleAddClient}></Button>
                         </span>
                         <div className={styles.cards}>
-                            {clients.length===0 && <p>Нет клиентов</p>}
-                            {clients.map((client) => (
+                            {clients.length === 0 && <p>Нет клиентов</p>}
+                            {clients.length !== 0 && clients.map((client) => (
                                 <ClientCard
                                     key={client.id}
                                     id={client.id}
-                                    firstName={client.first_name}
-                                    lastName={client.last_name}
-                                    birthday={client.birth_date}
+                                    firstName={client.firstName}
+                                    lastName={client.lastName}
+                                    birthday={client.birthDate}
                                     state={client.state}
                                     balance={client.balance}
                                 >
@@ -115,16 +136,26 @@ const Clients = () => {
                                 title={'Добавление клиента'}
                                 children={
                                     <div>
-                                        <input type="text" name="first_name" id="first_name" placeholder="Имя" onChange={(e) => setFirstName(e.target.value)}/>
-                                        <input type="text" name="last_name" id="last_name" placeholder="Фамилия" onChange={(e) => setLastName(e.target.value)}/>
-                                        <input type="date" name="birth_date" id="birth_date" placeholder="Дата рождения" onChange={(e) => setBirthDate(e.target.value)}/>
-                                        <input type="text" name="balance" id="balance" placeholder="Баланс" onChange={(e) => setBalance(e.target.value)}/>
-                                        <select id="state" required name="state" className={styles.select} onChange={(e) => setChosenClientState(e.target.value)}>
-                                            {clientsStates.map((state)=>
-                                                (<option key={state.id} value={state.id}>{state.name}</option>)
+                                        <input type="text" required placeholder="Имя"
+                                               onChange={(e) => setFirstName(e.target.value)}/>
+                                        <input type="text" required placeholder="Фамилия"
+                                               onChange={(e) => setLastName(e.target.value)}/>
+                                        <input type="text" required placeholder="Отчество"
+                                               onChange={(e) => setMiddleName(e.target.value)}/>
+                                        <input className={styles.date} type="date" required placeholder="Дата рождения"
+                                               onChange={(e) => setBirthDate(e.target.value)}/>
+                                        <input type="text" required placeholder="Баланс"
+                                               onChange={(e) => setBalance(e.target.value)}/>
+                                        <select required className={styles.select}
+                                                onChange={(e) => setChosenClientState(e.target.value)}>
+                                            {clientsStates.map((state) =>
+                                                (<option key={state.id} value={state.id}>{state.title}</option>)
                                             )}
                                         </select>
-                                        <input type="submit" value="Добавить"/>
+                                        <button className={styles.addPhoto} onClick={handleAttachButton}>Добавить фото</button>
+                                        <input type="file" ref={fileInputRef} style={{display: 'none'}}
+                                               onChange={handleFileSelect} multiple/>
+                                        <input type="submit" value="Добавить" style={{ cursor: "pointer" }}/>
                                     </div>}
                             ></Form>}>
                     </EditModal>
@@ -149,30 +180,30 @@ const Clients = () => {
                                 title={'Добавление группы'}
                                 children={
                                     <div>
-                                        <input type="text" id="name" name="title" placeholder="Название"/>
+                                        <input type="text" placeholder="Название"/>
                                             <p>
-                                                <select multiple name="members" className="select">
-                                                    <option value="{{client.id}}"></option>
+                                                <select multiple className="select">
+                                                    {/*<option value="{{client.id}}"></option>*/}
                                                 </select>
                                             </p>
                                             <p>Тренер:</p>
                                             <p>
-                                                <select name="trainer" className="select">
-                                                    <option value="{{trainer.user.id}}"></option>
+                                                <select className="select">
+                                                    {/*<option>{trainer.user.first_name}</option>*/}
                                                 </select>
                                             </p>
                                             <p>
-                                                <select name="sport_type" className="select">
-                                                    <option value="{{type.id}}"></option>
+                                                <select className="select">
+                                                    {/*<option>{sporttype.}</option>*/}
                                                 </select>
                                             </p>
                                             <p>
-                                                <select name="area" className="select">
-                                                    <option value="{{area.id}}"></option>
+                                                <select className="select">
+                                                    {/*<option>{area.address}</option>*/}
                                                 </select>
                                             </p>
                                             <p>Занятия:</p>
-                                            <p>До какого числа будут проходить занятия: <input type="date" name="date_end"/></p>
+                                            <p>До какого числа будут проходить занятия: <input className={styles.date} type="date" name="date_end"/></p>
                                             <p>Дни недели:
                                                 <select multiple name="days" className="select">
                                                     <option value="0">Понедельник</option>
@@ -183,8 +214,8 @@ const Clients = () => {
                                                     <option value="5">Суббота</option>
                                                     <option value="6">Воскресенье</option>
                                                 </select></p>
-                                            <input type="time" name="act_begin_time" placeholder="Время начала занятий"/>
-                                            <input type="time" name="act_end_time" placeholder="Время конца занятий"/>
+                                            <input type="time" className={styles.date} placeholder="Время начала занятий"/>
+                                            <input type="time" className={styles.date} placeholder="Время конца занятий"/>
                                             <input type="submit" value="Добавить"/>
                                     </div>}
                             ></Form>}

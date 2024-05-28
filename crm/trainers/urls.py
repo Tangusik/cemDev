@@ -16,7 +16,7 @@ urlpatterns = [
     path('client_list', views.client_list),                         #DONe
     path('add_client', views.add_client),                           #DONe
     path('all_groups', views.all_groups),                           #DONe
-    path('group_creation', views.group_creation),                   #IN PROGRESS
+    path('group_creation', views.group_creation),                   #DONe
 
     #___________colleagues
     path('trainer_list', views.trainer_list),                       #DONe
@@ -41,7 +41,7 @@ urlpatterns = [
     path("area_delete/<int:id>", views.delete_area),                #DONe
     path("sport_types", views.sport_types),                         #DONe
     path("sport_type_delete/<int:id>", views.delete_sport_type),    #DONe
-    path("abonements", views.abonements),                           #DONe
+    path("abonements", views.abonements),                           #DO     тут как создать если абонемент по времнеи, а не количесвту уроков
     path("abonement_delete/<int:id>", views.delete_abonement),      #DONe
 
     #___________client_detail_info
@@ -54,6 +54,7 @@ urlpatterns = [
 
 
     # добавить группу 1
+
     # предупреждение о накладках занятий 3
     # поиск клиента и расписание по группам 2
     # посещение возраст абонементы текущии дата начала и окончания абонемента 1
@@ -63,7 +64,6 @@ urlpatterns = [
     # основной и дополнительный абонемент 3
     # "заморозки" 1
     # статистика по количеству людей (таблицы)
-    #
     # 3
     # фильрауции клиентов и групп с заморозками 2
     # фотографии клиентов 3
@@ -71,6 +71,4 @@ urlpatterns = [
     # кнопка чат с клиентом в тг 3
     # братья и сёстры 1
     # неактивен 1
-
-
     ]

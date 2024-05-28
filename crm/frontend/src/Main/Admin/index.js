@@ -51,6 +51,8 @@ const Admin = () => {
     const [trainerRole, setTrainerRole] = useState([]);
     const [trainerPassword, setTrainerPassword] = useState([]);
 
+    const [passwordError, setPasswordError] = useState('');
+
     const handleRoles = () => {
         setShowModalRoles(!showModalRoles)
     }
@@ -105,7 +107,7 @@ const Admin = () => {
         event.preventDefault();
 
         const data = {
-            name: role,
+            title: role,
         };
         await fetchPost( 'roles', data);
         setShowModalRoles(false)
@@ -116,7 +118,7 @@ const Admin = () => {
         event.preventDefault();
 
         const data = {
-            name: employeeState,
+            title: employeeState,
         };
         await fetchPost( 'tr_statuses', data);
         setShowModalEmployeeStates(false)
@@ -127,7 +129,7 @@ const Admin = () => {
         event.preventDefault();
 
         const data = {
-            name: clientsState,
+            title: clientsState,
         };
         await fetchPost( 'cl_statuses', data);
         setShowModalClientStates(false)
@@ -182,11 +184,15 @@ const Admin = () => {
     const handleAddTrainer = async (event) => {
         event.preventDefault();
 
+        if (passwordError) {
+            return;
+        }
+
         const data = {
             first_name: trainerFirstName,
             last_name: trainerLastName,
-            otchestv: trainerMiddleName,
-            birth_date: trainerBirthday,
+            middleName: trainerMiddleName,
+            birthDate: trainerBirthday,
             email: trainerEmail,
             role: trainerRole,
             password: trainerPassword,
@@ -195,6 +201,18 @@ const Admin = () => {
         setShowModalTrainers(false)
         window.location.reload();
     }
+
+    const handlePasswordChange = (event) => {
+        const newPassword = event.target.value;
+        setTrainerPassword(newPassword);
+
+        if (!passwordValidation(newPassword)) {
+            setPasswordError('Пароль должен содержать буквы и цифры и быть длиннее 5 символов');
+        } else {
+            setPasswordError('');
+        }
+    };
+
 
     useEffect(() => {
         const performDeletion = async () => {
@@ -211,6 +229,11 @@ const Admin = () => {
         performDeletion();
     }, [deletedItemEndpoint]);
 
+    const passwordValidation = (pass) => {
+        const containsLettersAndNumbers = /[a-zA-Z].*\d|\d.*[a-zA-Z]/.test(pass);
+        const isLengthValid = pass.length > 5;
+        return containsLettersAndNumbers && isLengthValid;
+    }
 
 
     return (
@@ -234,7 +257,7 @@ const Admin = () => {
             ></Container>
             {showModalTrainers &&
                 <EditModal
-                    onClose={handleRoles}
+                    onClose={handleTrainers}
                     children={
                         <Form
                             onSubmit={handleAddTrainer}
@@ -246,13 +269,14 @@ const Admin = () => {
                                     <input type="text" placeholder="Отчество" onChange={(e) => setTrainerMiddleName(e.target.value)} required/>
                                     <input type="date" placeholder="Дата рождения" onChange={(e) => setTrainerBirthday(e.target.value)} required/>
                                     <input type="text" placeholder="Почта" onChange={(e) => setTrainerEmail(e.target.value)} required/>
-                                    <input type="text" placeholder="Пароль" onChange={(e) => setTrainerPassword(e.target.value)} required/>
+                                    <input type="text" placeholder="Пароль" onChange={(e) => handlePasswordChange(e)} required/>
                                     <select className={styles.select} onChange={(e) => setTrainerRole(e.target.value)}>
                                         <option value="" disabled selected>роль</option>
                                         {roles.map((role)=>
-                                            (<option key={role.id} value={role.id}>{role.name}</option>)
+                                            (<option key={role.id} value={role.id}>{role.title}</option>)
                                         )}
                                     </select>
+                                    {passwordError && <p className={styles.error}>{passwordError}</p>}
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -268,7 +292,7 @@ const Admin = () => {
                 <>
                 {roles && roles.map((role) =>
                     <div key={role.id} className={styles.row}>
-                        <div style={{color: '#293241'}}>{role.name}</div>
+                        <div style={{color: '#293241'}}>{role.title}</div>
                         <div style={{cursor: 'pointer'}} onClick={() => {
                             setDeletedEndpoint(`delete_role/${role.id}`);
                         }}><img src={iconCross} alt=''/></div>
@@ -287,7 +311,7 @@ const Admin = () => {
                             title={'Добавление роли'}
                             children={
                                 <div>
-                                    <input type="text" name="role" placeholder="Название роли" onChange={(e) => setRole(e.target.value)} required/>
+                                    <input type="text" placeholder="Название роли" onChange={(e) => setRole(e.target.value)} required/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -300,7 +324,7 @@ const Admin = () => {
                 <>
                     {employeeStates && employeeStates.map((employeeState) =>
                         <div key={employeeState.id} className={styles.row}>
-                            <div style={{color: '#293241'}}>{employeeState.name}</div>
+                            <div style={{color: '#293241'}}>{employeeState.title}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
                                 setDeletedEndpoint(`tr_status_delete/${employeeState.id}`);
                             }}><img src={iconCross} alt=''/></div>
@@ -319,7 +343,7 @@ const Admin = () => {
                             title={'Добавление статуса сотрудников'}
                             children={
                                 <div>
-                                    <input type="text" name="trainer_state" placeholder="Название статуса" onChange={(e) => setEmployeeState(e.target.value)} required/>
+                                    <input type="text" placeholder="Название статуса" onChange={(e) => setEmployeeState(e.target.value)} required/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -332,7 +356,7 @@ const Admin = () => {
                 <>
                     {clientsStates && clientsStates.map((clientsState) =>
                         <div key={clientsState.id} className={styles.row}>
-                            <div style={{color: '#293241'}}>{clientsState.name}</div>
+                            <div style={{color: '#293241'}}>{clientsState.title}</div>
                             <div style={{cursor: 'pointer'}} onClick={() => {
                                 setDeletedEndpoint(`cl_status_delete/${clientsState.id}`);
                             }}><img src={iconCross} alt=''/></div>
@@ -351,7 +375,7 @@ const Admin = () => {
                             title={'Добавление статуса клиентов'}
                             children={
                                 <div>
-                                    <input type="text" name="client_state" placeholder="Название статуса" onChange={(e) => setClientsState(e.target.value)} required/>
+                                    <input type="text" placeholder="Название статуса" onChange={(e) => setClientsState(e.target.value)} required/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -383,7 +407,7 @@ const Admin = () => {
                             title={'Добавление площадки'}
                             children={
                                 <div>
-                                    <input type="text" name="address" placeholder="Адрес площадки" onChange={(e) => setArea(e.target.value)} required/>
+                                    <input type="text" placeholder="Адрес площадки" onChange={(e) => setArea(e.target.value)} required/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -415,7 +439,7 @@ const Admin = () => {
                             title={'Добавление вида спорта'}
                             children={
                                 <div>
-                                    <input type="text" name="title" placeholder="Вид спорта" onChange={(e) => setSportType(e.target.value)} required/>
+                                    <input type="text" placeholder="Вид спорта" onChange={(e) => setSportType(e.target.value)} required/>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>
@@ -458,7 +482,6 @@ const Admin = () => {
                                             />
                                             <input
                                                 type="text"
-                                                name="duration"
                                                 placeholder="Длительность"
                                                 style={{ marginRight: '1em'}}
                                                 disabled={!abonementIsDuration}
@@ -480,13 +503,12 @@ const Admin = () => {
                                             />
                                             <input
                                                 type="text"
-                                                name="count"
                                                 placeholder="Количество занятий"
                                                 disabled={!abonementIsLessonCount}
                                                 onChange={(e) => setAbonementLessonCount(e.target.value)}
                                             />
                                         </div>
-                                        <select id="select_sport" name="sport" className={styles.select} onChange={(e) => setAbonementSportType(e.target.value)}>
+                                        <select id="select_sport" className={styles.select} onChange={(e) => setAbonementSportType(e.target.value)} required>
                                             <option value="" disabled selected>вид спорта</option>
                                             {sportTypes.map((sportType)=>
                                                 (<option key={sportType.id} value={sportType.id}>{sportType.title}</option>)

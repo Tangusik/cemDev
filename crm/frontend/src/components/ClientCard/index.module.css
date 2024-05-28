@@ -57,6 +57,9 @@
 }
 
 .summary {
+    display: flex;
+    flex-direction: row;
+
     color: #3c3c3c;
     margin-top: 1em;
     margin-left: 3em;
@@ -64,8 +67,6 @@
     list-style: none;
     font-weight: bold !important;
 
-    display: flex;
-    flex-direction: row;
     gap: 10px;
 }
 

@@ -1,11 +1,12 @@
 import styles from './index.module.css';
 import { useNavigate } from 'react-router-dom';
 import iconCross from "../../Icons/cross.svg";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {fetchDelete} from "../../api/delete";
 
 const ClientCard = (props) =>{
     const { id, firstName, lastName, birthday, state, balance } = props;
+    const [showCard, setShowCard] = useState(false);
 
     let navigate = useNavigate();
 
@@ -21,20 +22,23 @@ const ClientCard = (props) =>{
         });
     }
 
+    const handleShowCard = () => {
+        setShowCard(!showCard);
+    }
+
     return (
-            <details>
-                <summary>
-                    <div className={styles.summary}>
-                        <div className={styles.name}>{firstName} {lastName}</div>
-                        <div style={{cursor: 'pointer'}}
-                             onClick={(event)=> {
-                                 event.stopPropagation();
-                                 handleDelete();
-                             }}>
-                            <img src={iconCross} alt=''/>
-                        </div>
-                    </div>
-                </summary>
+        <>
+            <div className={styles.summary}>
+                <div className={styles.name} onClick={handleShowCard}>{firstName} {lastName}</div>
+                <div style={{cursor: 'pointer'}}
+                     onClick={(event)=> {
+                         event.stopPropagation();
+                         handleDelete();
+                     }}>
+                    <img src={iconCross} alt=''/>
+                </div>
+            </div>
+            {showCard &&
                 <div className={styles.cards_elements}>
                     <div className={styles.card}>
                         <div className={styles.front}>
@@ -48,7 +52,8 @@ const ClientCard = (props) =>{
                         </div>
                     </div>
                 </div>
-            </details>
+            }
+        </>
     )
 }
 export default ClientCard;
