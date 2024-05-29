@@ -20,7 +20,8 @@ class SportType(models.Model):
         return self.title
 
 class Client(models.Model):
-    avatar = models.ImageField(upload_to='avatars', blank=True)
+    avatar = models.ImageField(upload_to='avatars', default="unnamed.jpg", blank=True)
+
     firstName = models.CharField(blank=False, max_length=30, default='qwerty')
     lastName = models.CharField(blank=True, max_length=30)
     middleName = models.CharField(blank=True, max_length=30)
@@ -87,11 +88,6 @@ class Lesson(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
 
-class Presence(models.Model):
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    presence = models.BooleanField(blank=False, default=False)
-
 class PurchaseHistoryStatus(models.Model):
     title = models.CharField(max_length=30)
     def __str__(self):
@@ -106,6 +102,12 @@ class PurchaseHistory(models.Model):
     endDate = models.DateField(blank=True, null=True)
     def __str__(self):
         return self.abonement.title + " " + self.purchaseDate.strftime("%d.%m.%Y")
+
+class Presence(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    presence = models.BooleanField(blank=False, default=False)
+    paid_by = models.ForeignKey(PurchaseHistory, on_delete=models.SET_NULL, null=True)
 
 
 
