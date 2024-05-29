@@ -132,8 +132,8 @@ const ClientPage = () => {
                 <div className={styles.side}>
                     <Photo></Photo>
                     <div className={styles.studentData}>
-                        <h3>{client.last_name} {client.first_name}</h3>
-                        <h3>{client.birth_date}</h3>
+                        <h3>{client.lastName} {client.firstName} {client.middleName}</h3>
+                        <h3>{client.birthDate}</h3>
                         <h3>{client.balance}</h3>
                         <h3>{client.state}</h3>
                         {clientGroups && clientGroups.map((group)=> (
