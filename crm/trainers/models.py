@@ -88,11 +88,6 @@ class Lesson(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
 
-class Presence(models.Model):
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    presence = models.BooleanField(blank=False, default=False)
-
 class PurchaseHistoryStatus(models.Model):
     title = models.CharField(max_length=30)
     def __str__(self):
@@ -107,6 +102,12 @@ class PurchaseHistory(models.Model):
     endDate = models.DateField(blank=True, null=True)
     def __str__(self):
         return self.abonement.title + " " + self.purchaseDate.strftime("%d.%m.%Y")
+
+class Presence(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    presence = models.BooleanField(blank=False, default=False)
+    paid_by = models.ForeignKey(PurchaseHistory, on_delete=models.SET_NULL, null=True)
 
 
 
