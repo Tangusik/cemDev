@@ -589,3 +589,4 @@ def check_ab(purchase_history):
     purchase_history.save()
     print(purchase_history.presence_set.all().count())
 
+#[x[x[x[x[x[x[x[]]]]]]]]
