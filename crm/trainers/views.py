@@ -327,6 +327,8 @@ def client_abonements(request, pk):
     if request.method == "GET":
         client = get_object_or_404(Client, pk=pk)
         cl_abonements = PurchaseHistory.objects.filter(client=client)
+        for cl_ab in client_abonements:
+            check_ab(cl_ab)
         serializer = AbonementhistorySerializer(cl_abonements, context={'request': request},many=True)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     elif request.method == "POST":
@@ -555,17 +557,21 @@ def mark(request, id):
         presences = [dict(item) for item in serializer.data['presences']]
         for presence in presences:
             cl = get_object_or_404(Client, pk=presence["client"])
-            cl_ab = get_object_or_404(PurchaseHistory, pk=presence["paid_by"])
-            curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
-            if curr_presence.presence != presence["presence"]:
-
-                if presence['presence']:
-                    curr_presence.paid_by = cl_ab
-                else:
-                    curr_presence.paid_by = None
-                curr_presence.presence = presence["presence"]
-                curr_presence.save()
-                check_ab(cl_ab)
+            if "paid_by" in presence:
+                cl_ab = get_object_or_404(PurchaseHistory, pk=presence["paid_by"])
+                curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
+                if curr_presence.presence != presence["presence"]:
+                    if presence['presence']:
+                        curr_presence.paid_by = cl_ab
+                        curr_presence.paid_missing = None
+                    else:
+                        if presence['paid_missing']:
+                            curr_presence.paid_by = cl_ab
+                        else:
+                            curr_presence.paid_by = None
+                    curr_presence.presence = presence["presence"]
+                    curr_presence.save()
+                    check_ab(cl_ab)
 
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
@@ -589,4 +595,3 @@ def check_ab(purchase_history):
     purchase_history.save()
     print(purchase_history.presence_set.all().count())
 
-#[x[x[x[x[x[x[x[]]]]]]]]
