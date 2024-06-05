@@ -3,3 +3,4 @@ crm/db.sqlite3
 venv
 crm/crm/secret.py
 crm/trainers/migrations
+.idea
