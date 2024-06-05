@@ -23,6 +23,8 @@ const Calendar = () => {
 
     const [data, setData] = useState([]);
 
+    const [clientsAbonements, setClientsAbonemets] = useState([]);
+
     const fetchData = async (url) => {
         const response = await fetchGet(url);
         setData(response);
@@ -35,6 +37,9 @@ const Calendar = () => {
 
             const trainers = await fetchGet('trainer_list');
             setTrainers(trainers)
+
+            const abonements = await fetchGet('');
+            setClientsAbonemets(abonements);
         }
 
         fetchData();
@@ -244,7 +249,8 @@ const Calendar = () => {
                                                     checked={checkedClients[client.id] || false}
                                                     onChange={(e) => handleCheckboxChange(client.id, e.target.checked)}
                                                 ></input>
-                                                <div>{client.firstName}</div>
+                                                <div>{client.firstName} {client.lastName}</div>
+
                                         </div>
                                     ))}</div>
                                     <Button onClick={handleMark}>Отметить</Button>
