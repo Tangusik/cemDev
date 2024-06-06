@@ -60,8 +60,8 @@ const Colleagues = () => {
                         id={colleague.id}
                         name={colleague.user.first_name}
                         lastName={colleague.user.last_name}
-                        surname={colleague.otchestv}
-                        birthdate={colleague.birthdate}
+                        surname={colleague.middleName}
+                        birthdate={colleague.birthDate}
                         role={colleague.role}
                         state={colleague.state}
                     ></ColleagueCard>

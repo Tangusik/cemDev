@@ -103,7 +103,7 @@ const ClientPage = () => {
         };
         await fetchPost( `client/${id}/addbalance`, data);
         setShowModalAddBalance(false)
-        // window.location.reload();
+        window.location.reload();
     }
 
     useEffect(() => {
@@ -161,9 +161,9 @@ const ClientPage = () => {
                                         setDeletedAbonementEndpoint(`client/${id}/abonements/${abonement.id}`);
                                     }}>Удалить</button>
                                     <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.abonement.title}</h3>
-                                    <h5 style={{color: 'white', marginTop: '50px'}}>Дата покупки: {abonement.purchase_date}</h5>
-                                    {abonement.date_of_end && <h5 style={{color: 'white', marginTop: '50px'}}>Дата окончания: {abonement.date_of_end}</h5>}
-                                    <h3 style={{color: 'white', marginTop: '50px'}}>{abonement.status}</h3>
+                                    <h5 style={{color: 'white', marginTop: '50px'}}>Дата покупки: {abonement.purchaseDate}</h5>
+                                    {abonement.endDate && <h5 style={{color: 'white', marginTop: '50px'}}>Дата окончания: {abonement.endDate}</h5>}
+                                    {/*<h3 style={{color: 'white', marginTop: '50px'}}>{abonement.status.title}</h3>*/}
                                 </div>
                             ))}
                         </div>
