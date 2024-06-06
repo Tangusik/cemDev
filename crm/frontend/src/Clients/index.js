@@ -31,6 +31,12 @@ const Clients = () => {
     const fileInputRef = React.useRef(null);
     const [selectedFiles, setSelectedFiles] = useState(null);
 
+    const [sports, setSports] = useState(null);
+    const [selectedSport, setSelectedSport] = useState(null);
+    const [trainers, setTrainers] = useState(null);
+    const [selectedTrainer, setSelectedTrainer] = useState(null);
+    const [abonements, setAbonements] = useState(null);
+
     const handleFileSelect = (event) => {
         const fileList = event.target.files;
 
@@ -71,8 +77,14 @@ const Clients = () => {
             const clientsStates = await fetchGet('cl_statuses');
             setClientsStates(clientsStates)
 
-            const groups = await fetchGet('all_groups');
-            setGroups(groups)
+            const sports = await fetchGet('sport_types');
+            setSports(sports)
+
+            const trainers = await fetchGet('trainer_list');
+            setTrainers(trainers)
+
+            const abonements = await fetchGet('abonements');
+            setAbonements(abonements)
         }
 
         fetchData();
@@ -163,7 +175,7 @@ const Clients = () => {
                 {showModalGroups ? (
                     <div>
                         {groups.map((group) => (
-                            <div>{group.title} {group.sport_type} {group.trainer.user.first_name} {group.trainer.user.last_name}</div>
+                            <div>{group.title} {group.sportType} {group.trainer.user.first_name} {group.trainer.user.last_name}</div>
                         ))}
                          <span style={{  display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                             <Button type={"change"} title={"Добавить группу"} onClick={handleAddGroup}></Button>
@@ -181,42 +193,36 @@ const Clients = () => {
                                 children={
                                     <div>
                                         <input type="text" placeholder="Название"/>
-                                            <p>
-                                                <select multiple className="select">
-                                                    {/*<option value="{{client.id}}"></option>*/}
-                                                </select>
-                                            </p>
-                                            <p>Тренер:</p>
-                                            <p>
-                                                <select className="select">
-                                                    {/*<option>{trainer.user.first_name}</option>*/}
-                                                </select>
-                                            </p>
-                                            <p>
-                                                <select className="select">
-                                                    {/*<option>{sporttype.}</option>*/}
-                                                </select>
-                                            </p>
-                                            <p>
-                                                <select className="select">
-                                                    {/*<option>{area.address}</option>*/}
-                                                </select>
-                                            </p>
-                                            <p>Занятия:</p>
-                                            <p>До какого числа будут проходить занятия: <input className={styles.date} type="date" name="date_end"/></p>
-                                            <p>Дни недели:
-                                                <select multiple name="days" className="select">
-                                                    <option value="0">Понедельник</option>
-                                                    <option value="1">Вторник</option>
-                                                    <option value="2">Среда</option>
-                                                    <option value="3">Четверг</option>
-                                                    <option value="4">Пятница</option>
-                                                    <option value="5">Суббота</option>
-                                                    <option value="6">Воскресенье</option>
-                                                </select></p>
-                                            <input type="time" className={styles.date} placeholder="Время начала занятий"/>
-                                            <input type="time" className={styles.date} placeholder="Время конца занятий"/>
-                                            <input type="submit" value="Добавить"/>
+                                        <select
+                                            className={styles.selectAbonement}
+                                            onChange={(e) => setSelectedSport(e.target.value)}
+                                        >
+                                            <option value="" disabled>Выбрать спорт</option>
+                                            {sports && sports.map((sport) =>
+                                                (<option
+                                                    key={sport.id}
+                                                    value={sport.id}
+                                                >
+                                                    {sport.title}
+                                                </option>)
+                                            )}
+                                        </select>
+                                        <select
+                                            className={styles.selectAbonement}
+                                            onChange={(e) => setSelectedTrainer(e.target.value)}
+                                        >
+                                            <option value="" disabled>Выбрать тренера</option>
+                                            {trainers && trainers.map((trainer) =>
+                                                (<option
+                                                    key={trainer.id}
+                                                    value={trainer.id}
+                                                >
+                                                    {trainer.title}
+                                                </option>)
+                                            )}
+                                        </select>
+
+                                        <Button type="main">Добавить</Button>
                                     </div>}
                             ></Form>}
                     ></EditModal>

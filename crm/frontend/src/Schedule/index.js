@@ -23,7 +23,11 @@ const Calendar = () => {
 
     const [data, setData] = useState([]);
 
-    const [clientsAbonements, setClientsAbonemets] = useState([]);
+    const [isClicked, setIsClicked] = useState({});
+    const [checkedClients, setCheckedClients] = useState({});
+
+    const [clientsAbonements, setClientsAbonements] = useState({});
+    const [abonement, setAbonement] = useState({});
 
     const fetchData = async (url) => {
         const response = await fetchGet(url);
@@ -37,9 +41,6 @@ const Calendar = () => {
 
             const trainers = await fetchGet('trainer_list');
             setTrainers(trainers)
-
-            const abonements = await fetchGet('');
-            setClientsAbonemets(abonements);
         }
 
         fetchData();
@@ -66,6 +67,21 @@ const Calendar = () => {
             fetchData();
         }
     }, [trainerId]);
+
+    const fetchDataAbonements = async (clientId) => {
+        const abonements = await fetchGet(`client/${clientId}/abonements`);
+        setClientsAbonements(prevState => ({
+            ...prevState,
+            [clientId]: abonements,
+        }));
+    };
+
+    const handleClick = (clientId) => {
+        setIsClicked(prevState => ({
+            ...prevState,
+            [clientId]: !prevState[clientId],
+        }));
+    };
 
     const renderWeekdayHeaders = () => {
         const weekdays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
@@ -107,13 +123,15 @@ const Calendar = () => {
         fetchData('scheduleAll').then(r => console.log(r));
     };
 
-    const [checkedClients, setCheckedClients] = useState({});
-
-    const handleCheckboxChange = (clientId, isChecked) => {
+    const handleCheckboxChange = async (clientId, isChecked) => {
         setCheckedClients(prevState => ({
             ...prevState,
             [clientId]: isChecked
         }));
+
+        if (isChecked) {
+            await fetchDataAbonements(clientId);
+        }
     };
 
     useEffect(() => {
@@ -127,18 +145,42 @@ const Calendar = () => {
 
     }, [card]);
 
+    // const handleMark = async () => {
+    //     const data = Object.keys(checkedClients).reduce((acc, clientId) => {
+    //         acc[clientId] = checkedClients[clientId] ? true : false;
+    //         return acc;
+    //     }, {});
+    //
+    //
+    //     const dataSend = {
+    //         presences: data,
+    //     }
+    //     await fetchPost( `mark/${card.id}`, dataSend);
+    // }
+
+    const handleSelectAbonement = (clientId, abonementId) => {
+        setAbonement(prevState => ({
+            ...prevState,
+            [clientId]: abonementId,
+        }));
+    }
     const handleMark = async () => {
-        const data = Object.keys(checkedClients).reduce((acc, clientId) => {
-            acc[clientId] = checkedClients[clientId] ? true : false;
-            return acc;
-        }, {});
+        const data = Object.keys(checkedClients).map(clientId => ({
+            client: parseInt(clientId),
+            presence: checkedClients[clientId],
+            paid_by: abonement[clientId] || null,
+            paid_missing: isClicked[clientId] || false,
+        }));
 
         const dataSend = {
             presences: data,
-        }
+        };
 
-        await fetchPost( `mark/${card.id}`, dataSend);
-    }
+        console.log(data);
+
+        await fetchPost(`mark/${card.id}`, dataSend);
+    };
+
 
     const renderContent = (i) => {
         let content = [];
@@ -153,7 +195,7 @@ const Calendar = () => {
                          style={{backgroundColor: Obj.status === 'Состоится' ? 'white' : '#FFDA73'}}
                          onClick={() => handleShowCard(Obj)}>
                         <div className={styles.openData}>
-                            <div className={styles.sport}>{Obj.sport}</div>
+                            <div className={styles.sport}>{Obj.group.sportType}</div>
                             <div className={styles.time}>
                                 <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.actTimeBegin.slice(0,5)}</span>
                                 <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.actTimeEnd.slice(0,5)}</span>
@@ -243,14 +285,37 @@ const Calendar = () => {
                                 <div className={styles.card} key={card.id}>
                                     <div>{card.area && card.area}</div>
                                     <div>{card.clients && card.clients.map((client)=> (
-                                        <div className={styles.client} key={card.id}>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={checkedClients[client.id] || false}
-                                                    onChange={(e) => handleCheckboxChange(client.id, e.target.checked)}
-                                                ></input>
-                                                <div>{client.firstName} {client.lastName}</div>
-
+                                        <div className={styles.client} key={client.id}>
+                                            <input
+                                                type="checkbox"
+                                                checked={checkedClients[client.id] || false}
+                                                onChange={(e) => handleCheckboxChange(client.id, e.target.checked)}
+                                            ></input>
+                                            <div>{client.firstName} {client.lastName}</div>
+                                            {checkedClients[client.id] &&
+                                                <select
+                                                    className={styles.selectAbonement}
+                                                    onChange={(e) => handleSelectAbonement(client.id, e.target.value)}
+                                                >
+                                                    <option value="" disabled>Выбрать абонемент</option>
+                                                    {clientsAbonements[client.id] && clientsAbonements[client.id].map((clientsAbonement) =>
+                                                        (<option
+                                                            key={clientsAbonement.abonement.id}
+                                                            value={clientsAbonement.abonement.id}
+                                                        >
+                                                            {clientsAbonement.abonement.title}
+                                                        </option>)
+                                                    )}
+                                                </select>
+                                            }
+                                            {!checkedClients[client.id] &&
+                                                <button
+                                                    onClick={() => handleClick(client.id)}
+                                                    className={isClicked[client.id] ? styles.buttonActive : styles.button}
+                                                >
+                                                    Уважительная причина
+                                                </button>
+                                            }
                                         </div>
                                     ))}</div>
                                     <Button onClick={handleMark}>Отметить</Button>

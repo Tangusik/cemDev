@@ -54,21 +54,6 @@ class TrainerCreationSerializer(serializers.Serializer):
     birthDate = DateField()
     role = IntegerField()
 
-
-
-
-
-class LessonSerializer(serializers.ModelSerializer):
-    trainer = TrainerSerializer()
-    clients = ClientSerializer(many=True)
-    area = serializers.StringRelatedField()
-    sport = serializers.StringRelatedField()
-    class Meta:
-        model = Lesson
-        fields = ("__all__")
-
-
-
 class ActivitiesSerializer(serializers.ModelSerializer):
     trainer = TrainerSerializer(many=False)
     clients = ClientSerializer(many=True)
@@ -80,14 +65,22 @@ class ActivitiesSerializer(serializers.ModelSerializer):
 
 class GroupSerializer(serializers.ModelSerializer):
     clients = ClientSerializer(many=True)
-    sport_type = serializers.StringRelatedField()
+    sportType = serializers.StringRelatedField()
     trainer = TrainerSerializer()
     class Meta:
         model = Group
-        fields = ('title','clients', 'trainer','sport_type')
+        fields = ('title','clients', 'trainer','sportType')
 
 
-
+class LessonSerializer(serializers.ModelSerializer):
+    trainer = TrainerSerializer()
+    clients = ClientSerializer(many=True)
+    area = serializers.StringRelatedField()
+    sport = serializers.StringRelatedField()
+    group = GroupSerializer()
+    class Meta:
+        model = Lesson
+        fields = ("__all__")
 
 
 
@@ -170,7 +163,7 @@ class PresencesSerializer(serializers.Serializer):
     client = IntegerField(required=True)
     presence = BooleanField(required=True)
     paid_by = IntegerField(required=False)
-    paid_missing = BooleanField(required=False)
+    paid_missing = BooleanField(required=True)
 
 class MarkSerializer(serializers.Serializer):
     presences = ListField(child = PresencesSerializer() ,required=True)

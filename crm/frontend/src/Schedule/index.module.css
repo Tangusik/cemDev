@@ -229,12 +229,12 @@
 }
 .card {
     position: relative;
-    max-width: 400px;
+    max-width: 600px;
     min-height: 100px;
+    max-height: 800px;
     margin: 0 auto 0;
 
     z-index: 5;
-    max-height: 400px;
     background-color: #3D5A80;
 
     border-radius: 1em;
@@ -256,4 +256,112 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+.selectAbonement {
+    font-size: 14px;
+    height: 30px;
+    width: 180px;
+
+    line-height: 30px;
+
+    padding: 0 10px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    cursor: pointer;
+
+    border-radius: 1em;
+
+    text-align: center;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+    background-color: #eeeaf1;
+    color: #5B80B2;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/*.selectAbonement {*/
+/*    float: right;*/
+/*    display: block;*/
+/*    width: content-box;*/
+/*    margin-bottom: 10px;*/
+/*    background: #dddddd;*/
+/*    outline: none;*/
+/*    border-width: 0;*/
+/*    border-radius: 40px;*/
+/*    font-family: 'Roboto', sans-serif;*/
+/*    align-items: center;*/
+/*    color: #3D5A80;*/
+/*}*/
+
+.button {
+    font-size: 14px;
+    height: 30px;
+    width: 180px;
+
+    line-height: 30px;
+
+    padding: 0 10px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    cursor: pointer;
+
+    border-radius: 1em;
+
+    text-align: center;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+    color: #89ABD9;
+    background: transparent;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.button:hover {
+    background-color: #eeeaf1;
+    color: #5B80B2;
+}
+
+.buttonActive {
+    font-size: 14px;
+    height: 30px;
+    width: 180px;
+
+    line-height: 30px;
+
+    padding: 0 10px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    cursor: pointer;
+
+    border-radius: 1em;
+
+    text-align: center;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+    background-color: #eeeaf1;
+    color: #5B80B2;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }

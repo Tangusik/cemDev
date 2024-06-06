@@ -327,8 +327,8 @@ def client_abonements(request, pk):
     if request.method == "GET":
         client = get_object_or_404(Client, pk=pk)
         cl_abonements = PurchaseHistory.objects.filter(client=client)
-        for cl_ab in client_abonements:
-            check_ab(cl_ab)
+#         for cl_ab in cl_abonements:
+#             check_ab(cl_ab)
         serializer = AbonementhistorySerializer(cl_abonements, context={'request': request},many=True)
         return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
     elif request.method == "POST":
@@ -572,7 +572,6 @@ def mark(request, id):
                     curr_presence.presence = presence["presence"]
                     curr_presence.save()
                     check_ab(cl_ab)
-
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

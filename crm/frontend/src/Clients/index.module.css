@@ -46,3 +46,34 @@
 .date {
     height: 40px;
 }
+
+.selectAbonement {
+    font-size: 14px;
+    height: 30px;
+    width: 180px;
+
+    line-height: 30px;
+
+    margin-bottom: 10px;
+
+    padding: 0 10px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    cursor: pointer;
+
+    border-radius: 1em;
+
+    text-align: center;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+    background-color: #dddddd;
+    color: #5B80B2;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
