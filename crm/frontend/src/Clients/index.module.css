@@ -77,3 +77,34 @@
     -moz-appearance: none;
     appearance: none;
 }
+
+.client {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    /*margin-bottom: 20px;*/
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+    max-width: 600px;
+    min-height: 100px;
+    max-height: 800px;
+    margin: 0 auto 0;
+
+    z-index: 5;
+    background-color: #3D5A80;
+
+    border-radius: 1em;
+
+    text-align: center;
+
+    gap: 10px;
+}

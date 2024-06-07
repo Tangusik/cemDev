@@ -31,11 +31,21 @@ const Clients = () => {
     const fileInputRef = React.useRef(null);
     const [selectedFiles, setSelectedFiles] = useState(null);
 
+    const [groupName, setGroupName] = useState(null);
     const [sports, setSports] = useState(null);
     const [selectedSport, setSelectedSport] = useState(null);
     const [trainers, setTrainers] = useState(null);
     const [selectedTrainer, setSelectedTrainer] = useState(null);
     const [abonements, setAbonements] = useState(null);
+
+    const [showClients, setShowClients] = useState(false);
+    const [showAbonements, setShowAbonements] = useState(false);
+
+    const [checkedClients, setCheckedClients] = useState({});
+    const [checkedAbonements, setCheckedAbonements] = useState({});
+
+    const toggleClients = () => setShowClients(!showClients);
+    const toggleAbonements = () => setShowAbonements(!showAbonements);
 
     const handleFileSelect = (event) => {
         const fileList = event.target.files;
@@ -77,6 +87,9 @@ const Clients = () => {
             const clientsStates = await fetchGet('cl_statuses');
             setClientsStates(clientsStates)
 
+            const groups = await fetchGet('all_groups');
+            setGroups(groups)
+
             const sports = await fetchGet('sport_types');
             setSports(sports)
 
@@ -89,6 +102,20 @@ const Clients = () => {
 
         fetchData();
     }, []);
+
+    const handleCheckboxClients = async (clientId, isChecked) => {
+        setCheckedClients(prevState => ({
+            ...prevState,
+            [clientId]: isChecked
+        }));
+    };
+
+    const handleCheckboxAbonements = async (abonementId, isChecked) => {
+        setCheckedAbonements(prevState => ({
+            ...prevState,
+            [abonementId]: isChecked
+        }));
+    };
 
     const handleFetchAddClient = async (event) => {
         event.preventDefault();
@@ -106,6 +133,23 @@ const Clients = () => {
         setShowModalAddClient(false)
         window.location.reload();
     };
+
+    const handleAddgroup = async () => {
+        const selectedAbonementsList = Object.keys(checkedAbonements).filter(id => checkedAbonements[id]);
+        const selectedMembersList = Object.keys(checkedClients).filter(id => checkedClients[id]);
+
+        const data = {
+            team_name: groupName,
+            trainer: selectedTrainer,
+            sport_type: selectedSport,
+            members: selectedMembersList,
+            abonements: selectedAbonementsList,
+        };
+
+        console.log(data);
+        await fetchPost( 'group_creation', data);
+
+    }
 
     return (
         <div>
@@ -191,10 +235,11 @@ const Clients = () => {
                             <Form
                                 title={'Добавление группы'}
                                 children={
-                                    <div>
-                                        <input type="text" placeholder="Название"/>
+                                    <div className={styles.form}>
+                                        <input type="text" placeholder="Название" onChange={(e) => setGroupName(e.target.value)}/>
                                         <select
                                             className={styles.selectAbonement}
+                                            value={selectedSport || ""}
                                             onChange={(e) => setSelectedSport(e.target.value)}
                                         >
                                             <option value="" disabled>Выбрать спорт</option>
@@ -209,20 +254,55 @@ const Clients = () => {
                                         </select>
                                         <select
                                             className={styles.selectAbonement}
+                                            value={selectedTrainer || ""}
                                             onChange={(e) => setSelectedTrainer(e.target.value)}
                                         >
                                             <option value="" disabled>Выбрать тренера</option>
                                             {trainers && trainers.map((trainer) =>
                                                 (<option
-                                                    key={trainer.id}
-                                                    value={trainer.id}
+                                                    key={trainer.user.id}
+                                                    value={trainer.user.id}
                                                 >
-                                                    {trainer.title}
+                                                    {trainer.user.first_name}  {trainer.user.last_name}
                                                 </option>)
                                             )}
                                         </select>
-
-                                        <Button type="main">Добавить</Button>
+                                        <Button type="button" onClick={toggleClients}>Добавить участников</Button>
+                                        {showClients && (
+                                            <div>
+                                                {clients && clients.map((client) => (
+                                                    <div key={client.id} className={styles.client}>
+                                                        <input
+                                                            type="checkbox"
+                                                            style={{ width: '15px', margin: '0', cursor: 'pointer'}}
+                                                            onChange={(e) => handleCheckboxClients(client.id, e.target.checked)}
+                                                        ></input>
+                                                        <div style={{ display: 'flex', flexDirection: 'row'}}>
+                                                            <div>{client.firstName}</div>
+                                                            <div>{client.lastName}</div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        <Button type="button" onClick={toggleAbonements}>Добавить абонементы</Button>
+                                        {showAbonements && (
+                                            <div>
+                                                {abonements && abonements.map((abonement) => (
+                                                    <div key={abonement.id} className={styles.client}>
+                                                        <input
+                                                            type="checkbox"
+                                                            style={{ width: '15px', margin: '0', cursor: 'pointer'}}
+                                                            onChange={(e) => handleCheckboxAbonements(abonement.id, e.target.checked)}
+                                                        ></input>
+                                                        <div style={{ display: 'flex', flexDirection: 'row'}}>
+                                                            <div>{abonement.title}</div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        <Button type="button"  onClick={handleAddgroup}>Добавить</Button>
                                     </div>}
                             ></Form>}
                     ></EditModal>
