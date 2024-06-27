@@ -295,14 +295,14 @@ const Calendar = () => {
             <div className={styles.optionalSelects}>
                 <select required name="clients" className={styles.selectClient}
                         onChange={(e) => setClientId(e.target.value)}>
-                    <option value="" disabled selected>клиенты</option>
+                    <option value="" selected>клиенты</option>
                     {clients && clients.map((client) =>
                         (<option key={client.id} value={client.id}>{client.firstName} {client.lastName}</option>)
                     )}
                 </select>
                 <select required name="clients" className={styles.selectClient}
                         onChange={(e) => setTrainerId(e.target.value)}>
-                    <option value="" disabled selected>сотрудники</option>
+                    <option value="" selected>сотрудники</option>
                     {trainers && trainers.map((trainer) =>
                         (<option key={trainer.user.id} value={trainer.user.id}>{trainer.user.first_name} {trainer.user.last_name}</option>)
                     )}

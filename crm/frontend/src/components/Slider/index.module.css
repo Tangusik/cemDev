@@ -51,8 +51,10 @@
 
 .prevSlider {
     left: 20px;
+    cursor: pointer;
 }
 
 .nextSlider {
     right: 20px;
+    cursor: pointer;
 }

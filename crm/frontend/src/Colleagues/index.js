@@ -1,21 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import axios from "axios";
 import styles from "../Colleagues/index.module.css";
 import ColleagueCard from "../components/ColleagueCard";
+import {fetchGet} from "../api/get";
 
 const Colleagues = () => {
     const [colleagues, setColleagues] = useState([]);
+    const [employeeStates, setEmployeeStates] = useState([]);
+    const [employeeRoles, setEmployeeRoles] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState('');
+    const [selectedRole, setSelectedRole] = useState('');
 
     useEffect(() => {
         const fetchColleagues = async () => {
             try {
-                const port = 8000;
-                axios.defaults.baseURL = `http://localhost:${port}`;
-                axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/trainer_list');
-                setColleagues(response.data);
+                const colleagues = await fetchGet('trainer_list');
+                setColleagues(colleagues);
+
+                const employeeStates = await fetchGet('tr_statuses');
+                setEmployeeStates(employeeStates);
+
+                const employeeRoles = await fetchGet('roles');
+                setEmployeeRoles(employeeRoles);
             } catch (error) {
                 console.error(error);
             }
@@ -24,10 +32,16 @@ const Colleagues = () => {
         fetchColleagues();
     }, []);
 
-    const [searchTerm, setSearchTerm] = useState('');
-
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
+    };
+
+    const handleStatusChange = (e) => {
+        setSelectedStatus(e.target.value);
+    };
+
+    const handleRoleChange = (e) => {
+        setSelectedRole(e.target.value);
     };
 
     const getFullName = (colleague) => {
@@ -36,7 +50,10 @@ const Colleagues = () => {
 
     const filteredColleagues = colleagues.filter(colleague => {
         const fullName = getFullName(colleague).toLowerCase();
-        return fullName.includes(searchTerm.toLowerCase());
+        const matchesSearchTerm = fullName.includes(searchTerm.toLowerCase());
+        const matchesStatus = selectedStatus ? colleague.state === selectedStatus : true;
+        const matchesRole = selectedRole ? colleague.role === selectedRole : true;
+        return matchesSearchTerm && matchesStatus && matchesRole;
     });
 
     return (
@@ -54,14 +71,32 @@ const Colleagues = () => {
                 </div>
             </div>
             <div className={styles.cards}>
-                {filteredColleagues.length===0 && <p>Нет клиентов</p>}
+                <div className={styles.optionalSelects}>
+                    <select value={selectedStatus} className={styles.select} onChange={handleStatusChange}>
+                        <option value="" selected>все статусы</option>
+                        {employeeStates.map((status, id) => (
+                            <option key={id} value={status.title}>
+                                {status.title}
+                            </option>
+                        ))}
+                    </select>
+                    <select value={selectedRole} className={styles.select} onChange={handleRoleChange}>
+                        <option value="" selected>все роли</option>
+                        {employeeRoles.map((role, id) => (
+                            <option key={id} value={role.title}>
+                                {role.title}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                {filteredColleagues.length === 0 && <p>Нет клиентов</p>}
                 {filteredColleagues.map((colleague) => (
                     <ColleagueCard
                         id={colleague.id}
-                        name={colleague.user.first_name}
+                        firstName={colleague.user.first_name}
                         lastName={colleague.user.last_name}
-                        surname={colleague.middleName}
-                        birthdate={colleague.birthDate}
+                        middleName={colleague.middleName}
+                        birthday={colleague.birthDate}
                         role={colleague.role}
                         state={colleague.state}
                     ></ColleagueCard>
