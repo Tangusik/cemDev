@@ -19,7 +19,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.decorators import login_required
 
+@login_required
+def check_auth(request):
+    return JsonResponse({'authenticated': True})
 
 @api_view(['POST'])             #DONE
 def log_in(request):

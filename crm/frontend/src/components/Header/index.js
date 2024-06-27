@@ -1,7 +1,6 @@
 import {Link, useNavigate} from "react-router-dom";
 import styles from './index.module.css';
 import axios from 'axios';
-import {useEffect} from "react";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -11,12 +10,12 @@ const Header = () => {
                 const port = 8000;
                 axios.defaults.baseURL = `http://localhost:${port}`;
                 axios.defaults.withCredentials = true;
-                const response = await axios.get('crm/logout');
-                navigate('/');
+                await axios.get('crm/logout');
+                navigate('/sign');
             } catch (error) {
                 console.error(error);
             }
-        };
+    };
 
     return (
         <div className={styles.nav}>

@@ -1,6 +1,6 @@
 import styles from './index.module.css';
 import iconCross from "../../Icons/cross.svg";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {fetchDelete} from "../../api/delete";
 
 const ClientCard = (props) =>{

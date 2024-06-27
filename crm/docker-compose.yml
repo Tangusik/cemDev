@@ -7,31 +7,24 @@ services:
     restart: always
     ports: 
       - 8000:8000
-
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
-
     networks:
       - testnetwork
-
     volumes:
       - .:/code
-      
+
   node:
     build: ./frontend
     container_name: react
     restart: always
     ports:
       - 3000:3000
-    
     command: npm start
-
     depends_on:
       - django
-    
     networks:
       - testnetwork
-
     volumes:
       - ./frontend:/code/frontend
 

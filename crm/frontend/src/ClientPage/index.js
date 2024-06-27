@@ -58,7 +58,7 @@ const ClientPage = () => {
         }
 
         fetchData();
-    }, []);
+    }, [id]);
 
     function filterObject(obj) {
         return Object.keys(obj).reduce((acc, key) => {

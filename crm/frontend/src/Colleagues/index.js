@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import axios from "axios";
 import styles from "../Colleagues/index.module.css";
 import ColleagueCard from "../components/ColleagueCard";
 import {fetchGet} from "../api/get";

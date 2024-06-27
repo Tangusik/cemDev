@@ -20,7 +20,7 @@ const PhotoSelect = () => {
 
     return (
         <div className={styles.photoContainer}>
-            <img src={selectedPhoto}></img>
+            <img alt={'Default option'} src={selectedPhoto}></img>
             <div className={styles.photo}></div>
             <div className={styles.gallery}>
                 {photos.map((photo, index) => (

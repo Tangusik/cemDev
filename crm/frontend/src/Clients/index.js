@@ -30,7 +30,7 @@ const Clients = () => {
     const [middleName, setMiddleName] = useState([]);
 
     const fileInputRef = React.useRef(null);
-    const [selectedFiles, setSelectedFiles] = useState(null);
+    // const [selectedFiles, setSelectedFiles] = useState(null);
 
     const [groupName, setGroupName] = useState(null);
     const [sports, setSports] = useState(null);
@@ -51,18 +51,29 @@ const Clients = () => {
     const [selectedSportFilter, setSelectedSportFilter] = useState('');
     const [selectedTrainerFilter, setSelectedTrainerFilter] = useState('');
 
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTermGroups, setSearchTermGroups] = useState('');
+
     const toggleClients = () => setShowClients(!showClients);
     const toggleAbonements = () => setShowAbonements(!showAbonements);
 
-    const handleFileSelect = (event) => {
-        const fileList = event.target.files;
-
-        if (fileList) {
-            const file = Array.from(fileList);
-
-            setSelectedFiles(file);
-        }
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
     };
+
+    const handleSearchChangeGroups = (e) => {
+        setSearchTermGroups(e.target.value);
+    };
+
+    // const handleFileSelect = (event) => {
+    //     const fileList = event.target.files;
+    //
+    //     if (fileList) {
+    //         const file = Array.from(fileList);
+    //
+    //         setSelectedFiles(file);
+    //     }
+    // };
 
     const handleAttachButton = () => {
         if (fileInputRef.current) {
@@ -174,9 +185,15 @@ const Clients = () => {
         setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     };
 
+    const getFullName = (client) => {
+        return `${client.firstName} ${client.lastName} ${client.middleName}`;
+    };
+
     const filteredClients = clients.filter(client => {
+        const fullName = getFullName(client).toLowerCase();
+        const matchesSearchTerm = fullName.includes(searchTerm.toLowerCase());
         const matchesState = selectedClientState ? client.state === selectedClientState : true;
-        return matchesState;
+        return matchesSearchTerm && matchesState;
     }).sort((a, b) => {
         if (sortOrder === 'asc') {
             return a.balance - b.balance;
@@ -186,10 +203,11 @@ const Clients = () => {
     });
 
     const filteredGroups = groups.filter(group => {
+        const matchesSearchTerm = group.title.toLowerCase().includes(searchTermGroups.toLowerCase());
         const matchesSport = selectedSportFilter ? group.sportType === selectedSportFilter : true;
         const fullName = `${group.trainer.user.first_name} ${group.trainer.user.last_name}`.toLowerCase();
         const matchesTrainerFullName = selectedTrainerFilter ? fullName.includes(selectedTrainerFilter.toLowerCase()) : true;
-        return matchesSport && matchesTrainerFullName;
+        return matchesSearchTerm && matchesSport && matchesTrainerFullName;
     });
 
     return (
@@ -206,6 +224,14 @@ const Clients = () => {
                             <Button type={"change"} title={"Добавить клиента"} onClick={handleAddClient}></Button>
                         </span>
                         <div className={styles.optionalSelects}>
+                            <div className={styles.sub}>
+                                <input
+                                    type="text"
+                                    placeholder="Кого желаете найти?"
+                                    value={searchTerm}
+                                    onChange={handleSearchChange}
+                                />
+                            </div>
                             <select value={selectedClientState} className={styles.selectFilters}
                                     onChange={handleStateChange}>
                                 <option value="" selected>все статусы</option>
@@ -265,8 +291,8 @@ const Clients = () => {
                                             )}
                                         </select>
                                         <button className={styles.addPhoto} onClick={handleAttachButton}>Добавить фото</button>
-                                        <input type="file" ref={fileInputRef} style={{display: 'none'}}
-                                               onChange={handleFileSelect} multiple/>
+                                        {/*<input type="file" ref={fileInputRef} style={{display: 'none'}}*/}
+                                        {/*       onChange={handleFileSelect} multiple/>*/}
                                         <input type="submit" value="Добавить" style={{ cursor: "pointer" }}/>
                                     </div>}
                             ></Form>}>
@@ -278,6 +304,14 @@ const Clients = () => {
                             <Button type={"change"} title={"Добавить группу"} onClick={handleAddGroup}></Button>
                          </span>
                         <div className={styles.optionalSelects}>
+                            <div className={styles.sub}>
+                                <input
+                                    type="text"
+                                    placeholder="Кого желаете найти?"
+                                    value={searchTermGroups}
+                                    onChange={handleSearchChangeGroups}
+                                />
+                            </div>
                             <select value={selectedSportFilter} className={styles.selectFilters}
                                     onChange={handleSportFilter}>
                                 <option value="" selected>все виды спорта</option>

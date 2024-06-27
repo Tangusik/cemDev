@@ -1,5 +1,4 @@
 import styles from './index.module.css';
-import Photo from "../../components/Photo";
 import Button from "../../components/Button";
 import EditModal from "../../components/EditModal";
 import Form from "../../components/Form";

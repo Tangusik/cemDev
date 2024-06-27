@@ -1,5 +1,5 @@
 import styles from './index.module.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -25,7 +25,6 @@ const Sign = () => {
 
             if (response.status === 200) {
                 const responseData = response.data;
-                console.log(responseData);
                 navigate('/main');
             } else {
                 console.error('Ошибка при отправке запроса:', response.statusText);
@@ -46,7 +45,6 @@ const Sign = () => {
                     <button id="btn" className={styles.btn} type="submit">
                         <div id="btn_img" className={styles.btn_img}></div>
                     </button>
-                    {/*<Link to={"main"}>Забыли пароль? </Link>*/}
                 </form>
             </div>
         </div>

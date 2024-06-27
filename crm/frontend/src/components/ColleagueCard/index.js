@@ -1,9 +1,5 @@
 import styles from './index.module.css';
 import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {fetchDelete} from "../../api/delete";
-import {fetchGet} from "../../api/get";
-import iconCross from "../../Icons/cross.svg";
 
 const ColleagueCard = (props) =>{
     const { firstName, lastName, middleName, birthday, role, state } = props;

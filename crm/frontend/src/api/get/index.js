@@ -9,5 +9,6 @@ export const fetchGet = async (endpoint) => {
         return response.data;
     } catch (error) {
         console.error(error);
+        return { authenticated: false };
     }
 };

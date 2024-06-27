@@ -146,3 +146,19 @@
     -moz-appearance: none;
     appearance: none;
 }
+
+
+/*ПОИСК*/
+
+.sub {
+    display: flex;
+    flex-direction: row;
+}
+
+.sub input {
+    color: #3D5A80;
+    text-align: center;
+    border: none;
+    border-radius: 1em;
+    font-size: 14px;
+}
