@@ -1,13 +1,10 @@
 .cards {
     overflow: hidden;
     width: 100%;
-    min-height: 500px;
+    min-height: 555px;
 
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: flex-start;
-    flex-wrap: wrap;
+    flex-direction: column;
     height: 100%;
     margin-bottom: 1em;
 }
@@ -50,4 +47,45 @@
     .search_div {
         flex-direction: column;
     }
+}
+
+
+/*ФИЛЬТРЫ*/
+.optionalSelects {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    width: 100%;
+    justify-content: center;
+    margin: 25px;
+}
+
+.select {
+    height: 30px;
+    width: 180px;
+
+    line-height: 30px;
+
+    padding: 0 10px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    cursor: pointer;
+
+    border-radius: 1em;
+
+    text-align: center;
+    font-size: 16px;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+    color: white;
+    background: #5b80b2;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }

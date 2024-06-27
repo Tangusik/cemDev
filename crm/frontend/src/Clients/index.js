@@ -8,6 +8,7 @@ import EditModal from "../components/EditModal";
 import Form from "../components/Form";
 import {fetchGet} from "../api/get";
 import {fetchPost} from "../api/post";
+import GroupCard from "../components/GroupCard";
 
 const Clients = () => {
     const [clients, setClients] = useState([]);
@@ -43,6 +44,12 @@ const Clients = () => {
 
     const [checkedClients, setCheckedClients] = useState({});
     const [checkedAbonements, setCheckedAbonements] = useState({});
+
+    const [selectedClientState, setSelectedClientState] = useState('');
+    const [sortOrder, setSortOrder] = useState('asc');
+
+    const [selectedSportFilter, setSelectedSportFilter] = useState('');
+    const [selectedTrainerFilter, setSelectedTrainerFilter] = useState('');
 
     const toggleClients = () => setShowClients(!showClients);
     const toggleAbonements = () => setShowAbonements(!showAbonements);
@@ -149,7 +156,41 @@ const Clients = () => {
         console.log(data);
         await fetchPost( 'group_creation', data);
 
-    }
+    };
+
+    const handleStateChange = (e) => {
+        setSelectedClientState(e.target.value);
+    };
+
+    const handleSportFilter = (e) => {
+        setSelectedSportFilter(e.target.value);
+    };
+
+    const handleTrainerFilter = (e) => {
+        setSelectedTrainerFilter(e.target.value);
+    };
+
+    const handleSortOrderChange = () => {
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    };
+
+    const filteredClients = clients.filter(client => {
+        const matchesState = selectedClientState ? client.state === selectedClientState : true;
+        return matchesState;
+    }).sort((a, b) => {
+        if (sortOrder === 'asc') {
+            return a.balance - b.balance;
+        } else {
+            return b.balance - a.balance;
+        }
+    });
+
+    const filteredGroups = groups.filter(group => {
+        const matchesSport = selectedSportFilter ? group.sportType === selectedSportFilter : true;
+        const fullName = `${group.trainer.user.first_name} ${group.trainer.user.last_name}`.toLowerCase();
+        const matchesTrainerFullName = selectedTrainerFilter ? fullName.includes(selectedTrainerFilter.toLowerCase()) : true;
+        return matchesSport && matchesTrainerFullName;
+    });
 
     return (
         <div>
@@ -161,17 +202,32 @@ const Clients = () => {
                 </div>
                 {showModalAllClients ? (
                     <div>
-                        <span style={{  display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <span className={styles.showListButton}>
                             <Button type={"change"} title={"Добавить клиента"} onClick={handleAddClient}></Button>
                         </span>
+                        <div className={styles.optionalSelects}>
+                            <select value={selectedClientState} className={styles.selectFilters}
+                                    onChange={handleStateChange}>
+                                <option value="" selected>все статусы</option>
+                                {clientsStates.map((state, id) => (
+                                    <option key={id} value={state.title}>
+                                        {state.title}
+                                    </option>
+                                ))}
+                            </select>
+                            <button onClick={handleSortOrderChange} className={styles.selectFilters}>
+                                Сортировать по балансу ({sortOrder === 'asc' ? 'возрастанию' : 'убыванию'})
+                            </button>
+                        </div>
                         <div className={styles.cards}>
-                            {clients.length === 0 && <p>Нет клиентов</p>}
-                            {clients.length !== 0 && clients.map((client) => (
+                            {filteredClients.length === 0 && <p>Нет клиентов</p>}
+                            {filteredClients.length !== 0 && filteredClients.map((client) => (
                                 <ClientCard
                                     key={client.id}
                                     id={client.id}
                                     firstName={client.firstName}
                                     lastName={client.lastName}
+                                    middleName={client.middleName}
                                     birthday={client.birthDate}
                                     state={client.state}
                                     balance={client.balance}
@@ -180,7 +236,7 @@ const Clients = () => {
                             ))}
                         </div>
                     </div>
-                ):(
+                ) : (
                     <div></div>
                 )}
                 {showModalAddClient &&
@@ -218,14 +274,45 @@ const Clients = () => {
                 }
                 {showModalGroups ? (
                     <div>
-                        {groups.map((group) => (
-                            <div>{group.title} {group.sportType} {group.trainer.user.first_name} {group.trainer.user.last_name}</div>
-                        ))}
-                         <span style={{  display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                         <span className={styles.showListButton}>
                             <Button type={"change"} title={"Добавить группу"} onClick={handleAddGroup}></Button>
                          </span>
+                        <div className={styles.optionalSelects}>
+                            <select value={selectedSportFilter} className={styles.selectFilters}
+                                    onChange={handleSportFilter}>
+                                <option value="" selected>все виды спорта</option>
+                                {sports.map((sport, id) => (
+                                    <option key={id} value={sport.title}>
+                                        {sport.title}
+                                    </option>
+                                ))}
+                            </select>
+                            <select value={selectedTrainerFilter} className={styles.selectFilters}
+                                    onChange={handleTrainerFilter}>
+                                <option value="" selected>все тренера</option>
+                                {trainers.map((trainer, id) => (
+                                    <option key={id} value={`${trainer.user.first_name} ${trainer.user.last_name}`}>
+                                        {trainer.user.first_name + ' ' + trainer.user.last_name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className={styles.cards}>
+                            {filteredGroups.length === 0 && <p>Нет групп</p>}
+                            {filteredGroups.length !== 0 && filteredGroups.map((group) => (
+                                <GroupCard
+                                    key={group.id}
+                                    id={group.id}
+                                    title={group.title}
+                                    sportType={group.sportType}
+                                    trainerFirstName={group.trainer.user.first_name}
+                                    trainerLastName={group.trainer.user.last_name}
+                                >
+                                </GroupCard>
+                            ))}
+                         </div>
                     </div>
-                ):(
+                ) : (
                     <div></div>
                 )}
                 {showModalAddGroup &&
@@ -236,13 +323,14 @@ const Clients = () => {
                                 title={'Добавление группы'}
                                 children={
                                     <div className={styles.form}>
-                                        <input type="text" placeholder="Название" onChange={(e) => setGroupName(e.target.value)}/>
+                                        <input type="text" placeholder="Название"
+                                               onChange={(e) => setGroupName(e.target.value)}/>
                                         <select
                                             className={styles.selectAbonement}
                                             value={selectedSport || ""}
                                             onChange={(e) => setSelectedSport(e.target.value)}
                                         >
-                                            <option value="" disabled>Выбрать спорт</option>
+                                        <option value="" disabled>Выбрать спорт</option>
                                             {sports && sports.map((sport) =>
                                                 (<option
                                                     key={sport.id}

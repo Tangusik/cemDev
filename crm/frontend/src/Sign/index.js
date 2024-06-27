@@ -46,7 +46,7 @@ const Sign = () => {
                     <button id="btn" className={styles.btn} type="submit">
                         <div id="btn_img" className={styles.btn_img}></div>
                     </button>
-                    <Link to={"main"}>Забыли пароль? </Link>
+                    {/*<Link to={"main"}>Забыли пароль? </Link>*/}
                 </form>
             </div>
         </div>

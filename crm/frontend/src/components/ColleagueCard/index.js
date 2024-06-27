@@ -1,9 +1,14 @@
 import styles from './index.module.css';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {fetchDelete} from "../../api/delete";
+import {fetchGet} from "../../api/get";
+import iconCross from "../../Icons/cross.svg";
 
 const ColleagueCard = (props) =>{
-    const { id, name, lastName, surname, birthdate, role, state } = props;
+    const { firstName, lastName, middleName, birthday, role, state } = props;
     const [showCake, setShowCake] = useState(false);
+
     const isBirthdaySoon = (birthdate) => {
         const today = new Date();
         const birthday = new Date(birthdate);
@@ -22,23 +27,22 @@ const ColleagueCard = (props) =>{
     };
 
     useEffect(() => {
-        setShowCake(isBirthdaySoon(birthdate));
-    }, [birthdate]);
+        setShowCake(isBirthdaySoon(birthday));
+    }, [birthday]);
 
     return (
-            <div className={styles.card}>
-                <div className={styles.front}>
-                    <div>{birthdate} {showCake && '🎂'}</div>
-                    <div className={styles.center} style={{fontWeight: 'bold', fontSize: '20px'}}>
-                        {lastName} {name} {surname}
+        <>
+            <div className={styles.summary}>
+                <div className={styles.rowClient}>
+                    <div className={styles.rowName}>
+                        <div className={styles.name}>{lastName} {firstName} {middleName}</div>
+                        <div>{showCake && '🎂'}</div>
                     </div>
-                    <div>{role}</div>
-                    <div>{state}</div>
-                </div>
-                <div className={styles.back}>
-                    <div className={styles.center} >ссылка на страничку</div>
+                    <div className={styles.balanceButton}>{role}</div>
+                    {state && <div className={styles.stateButton}>{state}</div>}
                 </div>
             </div>
+        </>
     )
 }
 export default ColleagueCard;

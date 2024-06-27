@@ -16,7 +16,7 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: flex-start;
-    margin-bottom: 4em;
+    margin-bottom: 1em;
 }
 
 .select {
@@ -107,4 +107,42 @@
     text-align: center;
 
     gap: 10px;
+}
+
+.showListButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+/*ФИЛЬТРЫ*/
+.optionalSelects {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-left: 60px;
+
+    margin-bottom: 25px;
+}
+
+.selectFilters {
+    height: 30px;
+    padding: 0 10px;
+
+    cursor: pointer;
+
+    border-radius: 1em;
+
+    text-align: center;
+    font-size: 14px;
+
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+    color: #3D5A80;
+    background: white;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }

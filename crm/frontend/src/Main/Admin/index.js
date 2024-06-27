@@ -282,23 +282,35 @@ const Admin = () => {
                         ></Form>}>
                 </EditModal>
             }
-
-
-
             <Container
-                title={"Роли сотрудников"}
+                title={"Роли и статусы сотрудников"}
                 polosa={true}
                 children={
                 <>
-                {roles && roles.map((role) =>
-                    <div key={role.id} className={styles.row}>
-                        <div style={{color: '#293241'}}>{role.title}</div>
-                        <div style={{cursor: 'pointer'}} onClick={() => {
-                            setDeletedEndpoint(`delete_role/${role.id}`);
-                        }}><img src={iconCross} alt=''/></div>
+                    <div className={styles.row} style={{gap: '50px'}}>
+                        <div>
+                            {roles && roles.map((role) =>
+                                <div key={role.id} className={styles.row}>
+                                    <div style={{color: '#293241'}}>{role.title}</div>
+                                    <div style={{cursor: 'pointer'}} onClick={() => {
+                                        setDeletedEndpoint(`delete_role/${role.id}`);
+                                    }}><img src={iconCross} alt=''/></div>
+                                </div>
+                            )}
+                            <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить роль"} onClick={handleRoles}></Button>
+                        </div>
+                        <div>
+                            {employeeStates && employeeStates.map((employeeState) =>
+                                <div key={employeeState.id} className={styles.row}>
+                                    <div style={{color: '#293241'}}>{employeeState.title}</div>
+                                    <div style={{cursor: 'pointer'}} onClick={() => {
+                                        setDeletedEndpoint(`tr_status_delete/${employeeState.id}`);
+                                    }}><img src={iconCross} alt=''/></div>
+                                </div>
+                            )}
+                             <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить статус"} onClick={handleEmployeeStates}></Button>
+                        </div>
                     </div>
-                )}
-                    <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить роль"} onClick={handleRoles}></Button>
                 </>
                 }
             ></Container>
@@ -317,23 +329,6 @@ const Admin = () => {
                         ></Form>}>
                 </EditModal>
             }
-            <Container
-                title={"Статусы сотрудников"}
-                polosa={true}
-                children={
-                <>
-                    {employeeStates && employeeStates.map((employeeState) =>
-                        <div key={employeeState.id} className={styles.row}>
-                            <div style={{color: '#293241'}}>{employeeState.title}</div>
-                            <div style={{cursor: 'pointer'}} onClick={() => {
-                                setDeletedEndpoint(`tr_status_delete/${employeeState.id}`);
-                            }}><img src={iconCross} alt=''/></div>
-                        </div>
-                    )}
-                    <Button style={{marginTop: '1em'}} type={"change"} title={"Добавить статус"} onClick={handleEmployeeStates}></Button>
-                </>
-                }
-            ></Container>
             {showModalEmployeeStates &&
                 <EditModal
                     onClose={handleEmployeeStates}

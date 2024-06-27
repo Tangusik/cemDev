@@ -76,6 +76,12 @@
     font-family: 'Roboto', sans-serif;
     align-items: center;
     color: #3D5A80;
+
+    font-size: 14px;
+}
+
+.formInner input::placeholder, .formInner textarea::placeholder{
+    color: #3D5A80;
 }
 
 input:focus, textarea:focus{

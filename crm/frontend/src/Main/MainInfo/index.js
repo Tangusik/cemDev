@@ -6,6 +6,7 @@ import Form from "../../components/Form";
 import React, {useEffect, useState} from "react";
 import { fetchGet } from '../../api/get';
 import { fetchPost } from '../../api/post';
+import PhotoSelect from "../../components/PhotoSelect";
 
 const MainInfo = ({ setUserRole }) => {
     const [showMainDataModal, setShowMainDataModal] = useState(false);
@@ -16,6 +17,7 @@ const MainInfo = ({ setUserRole }) => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [middleName, setMiddleName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
 
     const [statuses, setStatus] = useState('');
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -55,6 +57,7 @@ const MainInfo = ({ setUserRole }) => {
             last_name: lastName,
             email: email,
             middleName: middleName,
+            // phoneNumber: phoneNumber,
         };
         const data = filterObject(noFilterData);
         await fetchPost( 'user_edit', data);
@@ -76,7 +79,8 @@ const MainInfo = ({ setUserRole }) => {
     return (
         <div>
         <div className={styles.container} style={{backgroundColor:  '#98C1D9'}}>
-            <Photo></Photo>
+            {/*<Photo></Photo>*/}
+            <PhotoSelect></PhotoSelect>
             <div className={styles.containerText}>
                 {data.user && (
                     <>
@@ -104,17 +108,23 @@ const MainInfo = ({ setUserRole }) => {
                         onSubmit={handleSubmitEditUser}
                         children={
                             <div>
-                                <input type="text" placeholder="Имя" defaultValue={data.user.first_name} onChange={(e) => setFirstName(e.target.value)}/>
-                                <input type="text" placeholder="Фамилия" defaultValue={data.user.last_name} onChange={(e) => setLastName(e.target.value)}/>
-                                <input type="text" placeholder="Отчество" defaultValue={data.middleName} onChange={(e) => setMiddleName(e.target.value)}/>
-                                <input type="text" placeholder="Почта" defaultValue={data.user.email} onChange={(e) => setEmail(e.target.value)}/>
+                                <input type="text" placeholder="Имя" defaultValue={data.user.first_name}
+                                       onChange={(e) => setFirstName(e.target.value)}/>
+                                <input type="text" placeholder="Фамилия" defaultValue={data.user.last_name}
+                                       onChange={(e) => setLastName(e.target.value)}/>
+                                <input type="text" placeholder="Отчество" defaultValue={data.middleName}
+                                       onChange={(e) => setMiddleName(e.target.value)}/>
+                                <input type="text" placeholder="Почта" defaultValue={data.user.email}
+                                       onChange={(e) => setEmail(e.target.value)}/>
+                                <input type="text" placeholder="Номер телефона" defaultValue={"+7 999..."}
+                                       onChange={(e) => setPhoneNumber(e.target.value)}/>
                                 <input type="submit" value="Добавить"/>
                             </div>}
                     ></Form>}
             ></EditModal>
         }
-        {showStateDataModal &&
-            <EditModal
+            {showStateDataModal &&
+                <EditModal
                 onClose={handleEditStateData}
                 children={
                     <Form
@@ -122,8 +132,10 @@ const MainInfo = ({ setUserRole }) => {
                         onSubmit={handleSubmitEditStatus}
                         children={
                             <div>
-                                <select required className={styles.selectSport} style={{width: '100%'}} onChange={(e) => setSelectedStatus(e.target.value)} >
-                                    {statuses.map((status)=>
+                                <select required className={styles.select} style={{width: '100%'}}
+                                        onChange={(e) => setSelectedStatus(e.target.value)}>
+                                    <option value="" disabled selected>выбрать статус</option>
+                                    {statuses.map((status) =>
                                         (<option value={status.id} name={status.title}>{status.title}</option>)
                                     )}
                                 </select>

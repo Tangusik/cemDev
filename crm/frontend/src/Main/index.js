@@ -17,7 +17,7 @@ const Main = () => {
             <MainInfo setUserRole={setUserRole}></MainInfo>
             <ToDoList></ToDoList>
             {userRole === 'директор' ? <Admin></Admin> : <Trainer></Trainer>}
-            <Slider title={"Новости"} text={"Какой-то текст"}></Slider>
+            <Slider title={"Новости"} text={"Скоро вы сможете добавлять новости"}></Slider>
             <Footer></Footer>
         </div>
     );

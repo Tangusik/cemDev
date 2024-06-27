@@ -1,3 +1,13 @@
+.cards_elements {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    height: 100%;
+    margin-bottom: 1em;
+}
+
 .card {
     flex-basis: calc(33.33% - 10px);
     max-width: 200px;
@@ -35,6 +45,7 @@
 
     display: flex;
     flex-direction: column;
+    gap: 20px;
     justify-content: space-around;
 }
 
@@ -46,15 +57,96 @@
     transform: perspective(1200px) rotateY(180deg);
 }
 
-summary {
+.summary {
+    display: flex;
+    flex-direction: row;
+
     color: #3c3c3c;
     margin-top: 1em;
-    margin-left: 5em;
+    margin-left: 3em;
     font-size: 20px;
     list-style: none;
     font-weight: bold !important;
+
+    gap: 10px;
+}
+
+.summary div {
+    color: #3D5A80;
+}
+
+.rowClient {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.rowName {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    gap: 3px;
+}
+
+.name{
+    cursor: pointer;
 }
 
 .center {
     text-align: center;
+}
+
+.balanceButton {
+
+    background-color: #5b80b2;
+    border: 1px  #dddddd dashed;
+    color: white !important;
+    padding: 5px 10px;
+    border-radius: 1em;
+
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.stateButton {
+    background-color: #5b80b2;
+    color: white !important;
+    padding: 5px 10px;
+    border-radius: 1em;
+
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.abonementButton {
+    background-color: #3D5A80;
+
+    color: white !important;
+    padding: 5px 10px;
+    border-radius: 1em;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    width: fit-content;
+    max-width: 150px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.ellipsis {
+    color: white !important;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
