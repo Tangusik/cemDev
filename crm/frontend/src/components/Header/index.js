@@ -1,4 +1,4 @@
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from './index.module.css';
 import axios from 'axios';
 

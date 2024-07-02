@@ -135,7 +135,7 @@ const MainInfo = ({ setUserRole }) => {
                                         onChange={(e) => setSelectedStatus(e.target.value)}>
                                     <option value="" disabled selected>выбрать статус</option>
                                     {statuses.map((status) =>
-                                        (<option value={status.id} name={status.title}>{status.title}</option>)
+                                        (<option key={status.id} value={status.id}>{status.title}</option>)
                                     )}
                                 </select>
                                 <input type="submit" value="Изменить"/>

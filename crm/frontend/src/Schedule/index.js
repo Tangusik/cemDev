@@ -12,8 +12,8 @@ const Calendar = () => {
     const now = new Date();
     const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
-    const [showCard, setShowCard] = useState(false);
-    const [card, setCard] = useState({id: '', sport: '', area: '', trainer: '', time: '', date: '', clients: []});
+    const [showLesson, setShowLesson] = useState(false);
+    const [lesson, setLesson] = useState({id: '', sport: '', area: '', trainer: '', time: '', date: '', clients: []});
 
     const [clientId, setClientId] = useState(null);
     const [clients, setClients] = useState([]);
@@ -105,9 +105,9 @@ const Calendar = () => {
         setSelectedYear(parseInt(event.target.value));
     };
 
-    const handleShowCard = (Obj) => {
-        setShowCard(!showCard);
-        setCard(Obj);
+    const handleShowLesson = (Obj) => {
+        setShowLesson(!showLesson);
+        setLesson(Obj);
     };
 
     const getDaysInMonth = (month, year) => {
@@ -136,14 +136,14 @@ const Calendar = () => {
 
     useEffect(() => {
         const initialCheckedState = {};
-        if (card && card.clients){
-            card.clients.forEach(client => {
+        if (lesson && lesson.clients){
+            lesson.clients.forEach(client => {
                 initialCheckedState[client.id] = false;
             });
             setCheckedClients(initialCheckedState);
         }
 
-    }, [card]);
+    }, [lesson]);
 
     // const handleMark = async () => {
     //     const data = Object.keys(checkedClients).reduce((acc, clientId) => {
@@ -210,9 +210,8 @@ const Calendar = () => {
             presences: data,
         };
 
-        await fetchPost(`mark/${card.id}`, dataSend);
+        await fetchPost(`mark/${lesson.id}`, dataSend);
     };
-
 
     const renderContent = (i) => {
         let content = [];
@@ -221,29 +220,35 @@ const Calendar = () => {
             const objDay = Obj.date.getDate();
             const objMonth = Obj.date.getMonth();
             const objYear = Obj.date.getFullYear();
-            if (i === objDay-1 && selectedMonth === objMonth && selectedYear === objYear) {
-                content.push (
-                    <div className={styles.data}
-                         style={{backgroundColor: Obj.status === 'Состоится' ? 'white' : '#FFDA73'}}
-                         onClick={() => handleShowCard(Obj)}>
-                        <div className={styles.openData}>
-                            <div className={styles.sport}>{Obj.group.sportType}</div>
-                            <div className={styles.time}>
-                                <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.actTimeBegin.slice(0,5)}</span>
-                                <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.actTimeEnd.slice(0,5)}</span>
+            if (i === objDay - 1 && selectedMonth === objMonth && selectedYear === objYear) {
+                content.push({
+                    component: (
+                        <div className={styles.data}
+                             style={{backgroundColor: Obj.status === 'Состоится' ? 'white' : '#FFDA73'}}
+                             onClick={() => handleShowLesson(Obj)}>
+                            <div className={styles.openData}>
+                                <div className={styles.sport}>{Obj.group.sportType}</div>
+                                <div className={styles.time}>
+                                    <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.actTimeBegin.slice(0, 5)}</span>
+                                    <span style={{fontSize: '10px', color: '#1b1b1b'}}>{Obj.actTimeEnd.slice(0, 5)}</span>
+                                </div>
                             </div>
+                            {Obj.trainer.user &&
+                                <div className={styles.hideData}>
+                                    {Obj.status !== 'Состоится' && <span style={{color: '#1b1b1b', fontWeight: 'bold'}}>{Obj.status}</span>}
+                                    <span style={{color: '#1b1b1b'}}>{Obj.trainer.user.lastName} {Obj.trainer.user.firstName}</span>
+                                </div>}
                         </div>
-                        {Obj.trainer.user &&
-                            <div className={styles.hideData}>
-                                {Obj.status !== 'Состоится' && <span style={{color: '#1b1b1b', fontWeight: 'bold'}}>{Obj.status}</span>}
-                                <span style={{color: '#1b1b1b'}}>{Obj.trainer.user.lastName} {Obj.trainer.user.firstName}</span>
-                            </div>}
-                    </div>
-                );
-            };
+                    ),
+                    time: Obj.actTimeBegin
+                });
+            }
         });
-        return content;
-    }
+
+        content.sort((a, b) => a.time.localeCompare(b.time));
+
+        return content.map(item => item.component);
+    };
 
     const renderItems = () => {
         const items = [];
@@ -271,52 +276,60 @@ const Calendar = () => {
         <div>
             <Header></Header>
             <div className={styles.page}>
-            <div className={styles.headerShedule}>
-            <div className={styles.scheduleType}>
-                <div onClick={handleChooseOwnSchedule} className={styles.selectClient}>Мое расписание</div>
-                <div onClick={handleChooseCommonSchedule} className={styles.selectClient}>Общее расписание</div>
-            </div>
-            <div className={styles.selects}>
-                <select value={selectedMonth} onChange={handleMonthChange} className={styles.select}>
-                    {Array.from({ length: 12 }, (_, i) => (
-                        <option key={`month-${i}`} value={i}>
-                            {new Date(selectedYear, i).toLocaleString('default', { month: 'short' })}
-                        </option>
-                    ))}
-                </select>
-                <select value={selectedYear} onChange={handleYearChange} className={styles.select}>
-                    {Array.from({ length: 9 }, (_, i) => now.getFullYear() - 4 + i).map((year) => (
-                        <option key={`year-${year}`} value={year}>
-                            {year}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div className={styles.optionalSelects}>
-                <select required name="clients" className={styles.selectClient}
-                        onChange={(e) => setClientId(e.target.value)}>
-                    <option value="" selected>клиенты</option>
-                    {clients && clients.map((client) =>
-                        (<option key={client.id} value={client.id}>{client.firstName} {client.lastName}</option>)
-                    )}
-                </select>
-                <select required name="clients" className={styles.selectClient}
-                        onChange={(e) => setTrainerId(e.target.value)}>
-                    <option value="" selected>сотрудники</option>
-                    {trainers && trainers.map((trainer) =>
-                        (<option key={trainer.user.id} value={trainer.user.id}>{trainer.user.first_name} {trainer.user.last_name}</option>)
-                    )}
-                </select>
-            </div>
-            </div>
-                {showCard &&
+                <div className={styles.headerShedule}>
+                    <div className={styles.scheduleType}>
+                        <div onClick={handleChooseOwnSchedule} className={styles.selectClient}>Мое расписание</div>
+                        <div onClick={handleChooseCommonSchedule} className={styles.selectClient}>Общее расписание</div>
+                    </div>
+                    <div className={styles.selects}>
+                        <select value={selectedMonth} onChange={handleMonthChange} className={styles.select}>
+                            {Array.from({ length: 12 }, (_, i) => (
+                                <option key={`month-${i}`} value={i}>
+                                    {new Date(selectedYear, i).toLocaleString('default', { month: 'short' })}
+                                </option>
+                            ))}
+                        </select>
+                        <select value={selectedYear} onChange={handleYearChange} className={styles.select}>
+                            {Array.from({ length: 9 }, (_, i) => now.getFullYear() - 4 + i).map((year) => (
+                                <option key={`year-${year}`} value={year}>
+                                    {year}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className={styles.optionalSelects}>
+                        <select required name="clients" className={styles.selectClient}
+                                onChange={(e) => setClientId(e.target.value)}>
+                            <option value="" selected>клиенты</option>
+                            {clients && clients.map((client) =>
+                                (<option key={client.id} value={client.id}>{client.firstName} {client.lastName}</option>)
+                            )}
+                        </select>
+                        <select required name="clients" className={styles.selectClient}
+                                onChange={(e) => setTrainerId(e.target.value)}>
+                            <option value="" selected>сотрудники</option>
+                            {trainers && trainers.map((trainer) =>
+                                (<option key={trainer.user.id} value={trainer.user.id}>{trainer.user.first_name} {trainer.user.last_name}</option>)
+                            )}
+                        </select>
+                    </div>
+                </div>
+                {showLesson &&
                     <EditModal
-                        onClose={handleShowCard}
+                        onClose={handleShowLesson}
                         children={
                             <div className={styles.cardMainContainer}>
-                                <div className={styles.card} key={card.id}>
-                                    <div>{card.area && card.area}</div>
-                                    <div>{card.clients && card.clients.map((client)=> (
+                                <div className={styles.card} key={lesson.id}>
+                                    <div className={styles.row}>
+                                        <div>{lesson.trainer.user && lesson.trainer.user.first_name} {lesson.trainer.user && lesson.trainer.user.last_name}</div>
+                                        <div className={styles.status}>{lesson.status && lesson.status}</div>
+                                    </div>
+                                    <div className={styles.row}>
+                                        <div>{lesson.area && lesson.area}</div>
+                                        <div
+                                            className={styles.status}>{lesson.actTimeBegin && lesson.actTimeBegin.slice(0, 5)} - {lesson.actTimeEnd && lesson.actTimeEnd.slice(0, 5)}</div>
+                                    </div>
+                                    <div>{lesson.clients && lesson.clients.map((client) => (
                                         <div className={styles.client} key={client.id}>
                                             <input
                                                 type="checkbox"
@@ -349,12 +362,12 @@ const Calendar = () => {
                                                 </button>
                                             }
                                         </div>
-                                    ))}</div>
-                                    <Button onClick={handleMark}>Отметить</Button>
+                                        ))}</div>
+                                        <Button onClick={handleMark}>Отметить</Button>
+                                    </div>
                                 </div>
-                            </div>
-                        }>
-                    </EditModal>
+                                }>
+                            </EditModal>
                 }
                 <div className={styles.weekdays}>{renderWeekdayHeaders()}</div>
                 <div className={styles.calendar}><div className={styles.container}>{renderItems()}</div></div>
