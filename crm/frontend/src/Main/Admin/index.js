@@ -244,7 +244,7 @@ const Admin = () => {
                 children={
                     <>
                         {trainers && trainers.map((trainer) =>
-                            <div key={trainer.id} className={styles.row}>
+                            <div key={trainer.user.id} className={styles.row}>
                                 <div style={{color: '#293241'}}>{trainer.user.first_name} {trainer.user.last_name}</div>
                                 <div style={{cursor: 'pointer'}} onClick={() => {
                                     setDeletedEndpoint(`trainer_delete/${trainer.user.id}`);

@@ -109,14 +109,15 @@
 
 .day {
     height: 200px;
-    width: 200px;
+    width: 205px;
     background-color: #8DA6C6;
     color: #1b1b1b;
     margin-bottom: 1px;
     margin-right: 1px;
+    padding-right: 5px;
     text-align: right;
     opacity: 0.8;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .day:hover {
@@ -364,4 +365,22 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+}
+
+.status {
+    background-color: #5b80b2;
+    color: white !important;
+    padding: 5px 10px;
+    border-radius: 1em;
+
+    font-size: 14px;
+    font-weight: normal;
+
+    float: right !important;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }

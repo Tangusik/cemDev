@@ -72,7 +72,7 @@ const ClientCard = (props) =>{
                     <div className={styles.balanceButton}>{balance}</div>
                     {state && <div className={styles.stateButton}>{state}</div>}
                     {clientAbonements && clientAbonements.map((abonement) => (
-                        <div className={styles.abonementButton}>
+                        <div className={styles.abonementButton} key={abonement.id}>
                             <div className={styles.ellipsis}>{abonement.abonement.title}</div>
                         </div>
                     ))}
