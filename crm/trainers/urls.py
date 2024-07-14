@@ -52,6 +52,7 @@ urlpatterns = [
     path("client/<int:pk>/groups", views.client_groups),            #DONe
     path("client/<int:pk>/acts", views.client_activities),          #DONe
     path("client/<int:pk>/addbalance", views.add_balance),          #DONe
+    path("clients_for_lesson/<int:lesson_id>", views.add_client_to_lesson)
 
 
     # добавить группу 1

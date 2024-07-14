@@ -490,19 +490,20 @@ def group_creation(request):
         date1 = datetime.date.today()
         date2 = datetime.datetime.strptime(date_end, '%Y-%m-%d').date()
 
-        all_days= all_days = (date1 + timedelta(days=i) for i in range((date2 - date1).days + 1))
+        all_days = (date1 + timedelta(days=i) for i in range((date2 - date1).days + 1))
 
         for act in acts:
             for act_date in all_days:
+                print(act)
                 if act_date.weekday() == act["day_of_week"]:
-                    act = Lesson.objects.create(actDate=act_date, actTimeBegin=act["time_begin"],
+                    obj_act = Lesson.objects.create(actDate=act_date, actTimeBegin=act["time_begin"],
                                actTimeEnd=act["time_end"],
                                trainer=tr, area=area,
                                status="Состоится", group = team)
                                
                     for client in members:
-                        act.clients.add(get_object_or_404(Client, pk=client))
-                    act.save()
+                        obj_act.clients.add(get_object_or_404(Client, pk=client))
+                    obj_act.save()
         return Response(status=status.HTTP_201_CREATED)
 
     else:
@@ -561,21 +562,25 @@ def mark(request, id):
         presences = [dict(item) for item in serializer.data['presences']]
         for presence in presences:
             cl = get_object_or_404(Client, pk=presence["client"])
-            if "paid_by" in presence:
+            if presence['paid_by'] is not None:
                 cl_ab = get_object_or_404(PurchaseHistory, pk=presence["paid_by"])
-                curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
-                if curr_presence.presence != presence["presence"]:
-                    if presence['presence']:
+            else:
+                cl_ab = None
+            curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
+            if curr_presence.presence != presence["presence"]:
+                if presence['presence']:
+                    curr_presence.paid_by = cl_ab
+                    curr_presence.paid_missing = None
+                else:
+                    if presence['paid_missing']:
                         curr_presence.paid_by = cl_ab
-                        curr_presence.paid_missing = None
                     else:
-                        if presence['paid_missing']:
-                            curr_presence.paid_by = cl_ab
-                        else:
-                            curr_presence.paid_by = None
-                    curr_presence.presence = presence["presence"]
-                    curr_presence.save()
-                    check_ab(cl_ab)
+                        curr_presence.paid_by = None
+                curr_presence.presence = presence["presence"]
+                curr_presence.save()
+                check_ab(cl_ab)
+            
+            
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -596,5 +601,14 @@ def check_ab(purchase_history):
         if datetime.date.today() > purchase_history.endDate:
             purchase_history.status = inactive_status
     purchase_history.save()
-    print(purchase_history.presence_set.all().count())
+    
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def add_client_to_lesson(request, lesson_id):
+    lesson = get_object_or_404(Lesson, pk=lesson_id)
+    existing_clients = list(Client.objects.filter(lesson__id = lesson_id))
+    ex_ids = [cl.id for cl in existing_clients]
+    res = Client.objects.exclude(id__in=ex_ids)
+    serializer = ClientSerializer(res, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
