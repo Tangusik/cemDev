@@ -145,73 +145,64 @@ const Calendar = () => {
 
     }, [lesson]);
 
-    // const handleMark = async () => {
-    //     const data = Object.keys(checkedClients).reduce((acc, clientId) => {
-    //         acc[clientId] = checkedClients[clientId] ? true : false;
-    //         return acc;
-    //     }, {});
-    //
-    //
-    //     const dataSend = {
-    //         presences: data,
-    //     }
-    //     await fetchPost( `mark/${card.id}`, dataSend);
-    // }
-
     const handleSelectAbonement = (clientId, abonementId) => {
         setAbonement(prevState => ({
             ...prevState,
             [clientId]: abonementId,
         }));
     }
-    // const handleMark = async () => {
-    //     const data = Object.keys(checkedClients).map(clientId => ({
-    //         client: parseInt(clientId),
-    //         presence: checkedClients[clientId],
-    //         paid_by: abonement[clientId] || null,
-    //         paid_missing: isClicked[clientId] || false,
-    //     }));
-    //
-    //     const dataSend = {
-    //         presences: data,
-    //     };
-    //
-    //     await fetchPost(`mark/${card.id}`, dataSend);
-    //
-    //     // window.location.reload();
-    // };
     const handleMark = async () => {
-        const data = Object.keys(checkedClients).map(clientId => {
-            const presence = checkedClients[clientId];
-            let paidBy = abonement[clientId] || null;
-            let paidMissing = isClicked[clientId] || false;
-
-            if (presence) {
-                if (paidBy === null) {
-                    paidBy = null;
-                }
-                else {
-                    paidBy = parseInt(paidBy, 10);
-                }
-                paidMissing = false;
-            } else {
-                paidBy = null;
-            }
-
-            return {
-                client: parseInt(clientId),
-                presence: presence,
-                paid_by: paidBy,
-                paid_missing: paidMissing,
-            };
-        });
+        const data = Object.keys(checkedClients).map(clientId => ({
+            client: parseInt(clientId),
+            presence: checkedClients[clientId],
+            paid_by: abonement[clientId] || null,
+            paid_missing: !(isClicked[clientId] || false),
+        }));
 
         const dataSend = {
             presences: data,
         };
 
+        console.log(dataSend);
+
         await fetchPost(`mark/${lesson.id}`, dataSend);
+
+        // window.location.reload();
     };
+    // const handleMark = async () => {
+    //     const data = Object.keys(checkedClients).map(clientId => {
+    //         const presence = checkedClients[clientId];
+    //         let paidBy = abonement[clientId] || null;
+    //         let paidMissing = isClicked[clientId] || false;
+    //
+    //         if (presence) {
+    //             if (paidBy === null) {
+    //                 paidBy = null;
+    //             }
+    //             else {
+    //                 paidBy = parseInt(paidBy, 10);
+    //             }
+    //             paidMissing = false;
+    //         } else {
+    //             paidBy = null;
+    //         }
+    //
+    //         return {
+    //             client: parseInt(clientId),
+    //             presence: presence,
+    //             paid_by: paidBy,
+    //             paid_missing: !paidMissing,
+    //         };
+    //     });
+    //
+    //     const dataSend = {
+    //         presences: data,
+    //     };
+    //
+    //     console.log(dataSend);
+    //
+    //     await fetchPost(`mark/${lesson.id}`, dataSend);
+    // };
 
     const renderContent = (i) => {
         let content = [];

@@ -1,6 +1,12 @@
+.formInner div input {
+    font-family: 'Montserrat', sans-serif;
+}
+
 .form{
     padding-top: 50px;
     padding-bottom: 50px;
+
+    font-family: 'Montserrat', sans-serif;
 }
 
 .decor {
@@ -63,6 +69,7 @@
 .formInner {
     padding: 50px;
 }
+
 .formInner input, .formInner textarea {
     box-sizing: border-box;
     display: block;
