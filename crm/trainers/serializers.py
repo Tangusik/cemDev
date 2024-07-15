@@ -163,7 +163,7 @@ class PresencesSerializer(serializers.Serializer):
     client = IntegerField(required=True)
     presence = BooleanField(required=True)
     paid_by = IntegerField(required=False, allow_null=True)
-    paid_missing = BooleanField(required=False)
+    
 
 class MarkSerializer(serializers.Serializer):
     presences = ListField(child = PresencesSerializer() ,required=True)

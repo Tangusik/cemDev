@@ -562,24 +562,22 @@ def mark(request, id):
         presences = [dict(item) for item in serializer.data['presences']]
         for presence in presences:
             cl = get_object_or_404(Client, pk=presence["client"])
-            if presence['paid_by'] is not None:
-                cl_ab = get_object_or_404(PurchaseHistory, pk=presence["paid_by"])
-            else:
-                cl_ab = None
+
             curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
-            if curr_presence.presence != presence["presence"]:
-                if presence['presence']:
-                    curr_presence.paid_by = cl_ab
-                    curr_presence.paid_missing = None
-                else:
-                    if presence['paid_missing']:
-                        curr_presence.paid_by = cl_ab
-                    else:
-                        curr_presence.paid_by = None
-                curr_presence.presence = presence["presence"]
-                curr_presence.save()
-                check_ab(cl_ab)
             
+            curr_presence.presence = presence["presence"]
+            
+            
+            if presence['paid_by'] is None:
+                if curr_presence.paid_by is not None:
+                    check_ab(curr_presence.paid_by)
+                curr_presence.paid_by = None
+            else:
+                cl_ab = get_object_or_404(PurchaseHistory, pk=presence["paid_by"])
+                check_ab(cl_ab)
+                curr_presence.paid_by = cl_ab
+            
+            curr_presence.save()
             
         return Response(status=status.HTTP_202_ACCEPTED)      
     else:
