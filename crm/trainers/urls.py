@@ -3,14 +3,14 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('check-auth', views.check_auth, name='check-auth'),
+    path('check-auth', views.check_auth, name='check-auth'),        #DONe
     path('login', views.log_in, name='login'),                      #DONe
     path('logout', views.log_out, name='logout'),                   #DONe
     #___________schedule
     path("schedule", views.schedule),                               #DONe                                 
     path("scheduleAll", views.schedule_all),                        #DONe
     path("schedule_trainer/<int:id>", views.schedule_trainer),      #DONe
-    path("mark/<int:id>", views.mark),
+    path("mark/<int:id>", views.mark),                              #DONe
     path("presences/<int:id>",views.presences_lesson),              #DONe
 
     #___________clients

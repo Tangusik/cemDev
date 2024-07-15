@@ -34,10 +34,14 @@ const Clients = () => {
 
     const [groupName, setGroupName] = useState(null);
     const [sports, setSports] = useState(null);
+    const [areas, setAreas] = useState(null);
+    const [selectedArea, setSelectedArea] = useState(null);
     const [selectedSport, setSelectedSport] = useState(null);
     const [trainers, setTrainers] = useState(null);
     const [selectedTrainer, setSelectedTrainer] = useState(null);
     const [abonements, setAbonements] = useState(null);
+    const [selectedDate, setSelectedDate] = useState('');
+    const [acts, setActs] = useState([{ day_of_week: '', time_begin: '', time_end: '' }]);
 
     const [showClients, setShowClients] = useState(false);
     const [showAbonements, setShowAbonements] = useState(false);
@@ -81,6 +85,27 @@ const Clients = () => {
         }
     };
 
+    const handleChangeActs = (index, field, value) => {
+        const newActs = [...acts];
+        if (field === 'time_begin' || field === 'time_end') {
+            newActs[index][field] = value + ':00';
+        } else {
+            newActs[index][field] = value;
+        }
+        setActs(newActs);
+    };
+
+    const handleAddAct = () => {
+        setActs([...acts, { day_of_week: '', time_begin: '', time_end: '' }]);
+    };
+
+    const handleRemoveAct = (index) => {
+        if (acts.length > 1) {
+            const newActs = acts.filter((_, i) => i !== index);
+            setActs(newActs);
+        }
+    };
+
     const handleAllClients = () => {
         setShowModalAllClients(!showModalAllClients);
         setShowModalGroups(false);
@@ -113,6 +138,9 @@ const Clients = () => {
 
             const trainers = await fetchGet('trainer_list');
             setTrainers(trainers)
+
+            const areas = await fetchGet('areas');
+            setAreas(areas);
 
             const abonements = await fetchGet('abonements');
             setAbonements(abonements)
@@ -153,20 +181,22 @@ const Clients = () => {
     };
 
     const handleAddgroup = async () => {
-        const selectedAbonementsList = Object.keys(checkedAbonements).filter(id => checkedAbonements[id]);
-        const selectedMembersList = Object.keys(checkedClients).filter(id => checkedClients[id]);
+        const selectedAbonementsList = Object.keys(checkedAbonements).filter(id => checkedAbonements[id]).map(id => parseInt(id, 10));
+        const selectedMembersList = Object.keys(checkedClients).filter(id => checkedClients[id]).map(id => parseInt(id, 10));
 
         const data = {
             team_name: groupName,
             trainer: selectedTrainer,
             sport_type: selectedSport,
+            area: selectedArea,
             members: selectedMembersList,
+            date_end: selectedDate,
+            acts: acts,
             abonements: selectedAbonementsList,
         };
 
-        console.log(data);
         await fetchPost( 'group_creation', data);
-
+        window.location.reload();
     };
 
     const handleStateChange = (e) => {
@@ -357,20 +387,36 @@ const Clients = () => {
                                 title={'Добавление группы'}
                                 children={
                                     <div className={styles.form}>
-                                        <input type="text" placeholder="Название"
+                                        <input type="text" style={{fontFamily: '\'Montserrat\', sans-serif'}}
+                                               placeholder="Название"
                                                onChange={(e) => setGroupName(e.target.value)}/>
                                         <select
                                             className={styles.selectAbonement}
                                             value={selectedSport || ""}
                                             onChange={(e) => setSelectedSport(e.target.value)}
                                         >
-                                        <option value="" disabled>Выбрать спорт</option>
+                                            <option value="" disabled>Выбрать спорт</option>
                                             {sports && sports.map((sport) =>
                                                 (<option
                                                     key={sport.id}
                                                     value={sport.id}
                                                 >
                                                     {sport.title}
+                                                </option>)
+                                            )}
+                                        </select>
+                                        <select
+                                            className={styles.selectAbonement}
+                                            value={selectedArea || ""}
+                                            onChange={(e) => setSelectedArea(e.target.value)}
+                                        >
+                                            <option value="" disabled>Выбрать площадку</option>
+                                            {areas && areas.map((area) =>
+                                                (<option
+                                                    key={area.id}
+                                                    value={area.id}
+                                                >
+                                                    {area.address}
                                                 </option>)
                                             )}
                                         </select>
@@ -385,10 +431,77 @@ const Clients = () => {
                                                     key={trainer.user.id}
                                                     value={trainer.user.id}
                                                 >
-                                                    {trainer.user.first_name}  {trainer.user.last_name}
+                                                    {trainer.user.first_name} {trainer.user.last_name}
                                                 </option>)
                                             )}
                                         </select>
+                                        <input
+                                            style={{
+                                                height: '30px',
+                                                fontSize: '12px',
+                                                color: '#3D5A80',
+                                                display: 'inline-grid',
+                                                textAlign: 'center',
+                                                width: '60%',
+                                                fontFamily: '\'Montserrat\', sans-serif'
+                                            }}
+                                            type="date"
+                                            value={selectedDate}
+                                            onChange={(e) => setSelectedDate(e.target.value)}
+                                        />
+                                        {acts.map((act, index) => (
+                                            <div key={index}
+                                                 style={{display: 'flex', flexDirection: 'row', gap: '5px'}}>
+                                                <select
+                                                    style={{width: '150px'}}
+                                                    className={styles.selectAbonement}
+                                                    value={act.day_of_week}
+                                                    onChange={(e) => handleChangeActs(index, 'day_of_week', e.target.value)}
+                                                >
+                                                    <option value="">День занятия</option>
+                                                    <option value="1">Понедельник</option>
+                                                    <option value="2">Вторник</option>
+                                                    <option value="3">Среда</option>
+                                                    <option value="4">Четверг</option>
+                                                    <option value="5">Пятница</option>
+                                                    <option value="6">Суббота</option>
+                                                    <option value="7">Воскресенье</option>
+                                                </select>
+                                                <input
+                                                    style={{
+                                                        height: '30px',
+                                                        fontSize: '12px',
+                                                        color: '#3D5A80',
+                                                        display: 'inline-grid',
+                                                        textAlign: 'center',
+                                                        width: '80px',
+                                                        fontFamily: '\'Montserrat\', sans-serif'
+                                                    }}
+                                                    type="time"
+                                                    value={act.time_begin}
+                                                    onChange={(e) => handleChangeActs(index, 'time_begin', e.target.value)}
+                                                />
+                                                <input
+                                                    style={{
+                                                        height: '30px',
+                                                        fontSize: '12px',
+                                                        color: '#3D5A80',
+                                                        display: 'inline-grid',
+                                                        textAlign: 'center',
+                                                        width: '80px',
+                                                        fontFamily: '\'Montserrat\', sans-serif'
+                                                    }}
+                                                    type="time"
+                                                    value={act.time_end}
+                                                    onChange={(e) => handleChangeActs(index, 'time_end', e.target.value)}
+                                                />
+                                                {acts.length > 1 && (
+                                                    <button type="button"
+                                                            onClick={() => handleRemoveAct(index)}>Remove</button>
+                                                )}
+                                            </div>
+                                        ))}
+                                        <button type="button" onClick={handleAddAct}>Add Act</button>
                                         <Button type="button" onClick={toggleClients}>Добавить участников</Button>
                                         {showClients && (
                                             <div>
@@ -396,10 +509,10 @@ const Clients = () => {
                                                     <div key={client.id} className={styles.client}>
                                                         <input
                                                             type="checkbox"
-                                                            style={{ width: '15px', margin: '0', cursor: 'pointer'}}
+                                                            style={{width: '15px', margin: '0', cursor: 'pointer'}}
                                                             onChange={(e) => handleCheckboxClients(client.id, e.target.checked)}
                                                         ></input>
-                                                        <div style={{ display: 'flex', flexDirection: 'row'}}>
+                                                        <div style={{display: 'flex', flexDirection: 'row'}}>
                                                             <div>{client.firstName}</div>
                                                             <div>{client.lastName}</div>
                                                         </div>
@@ -414,17 +527,17 @@ const Clients = () => {
                                                     <div key={abonement.id} className={styles.client}>
                                                         <input
                                                             type="checkbox"
-                                                            style={{ width: '15px', margin: '0', cursor: 'pointer'}}
+                                                            style={{width: '15px', margin: '0', cursor: 'pointer'}}
                                                             onChange={(e) => handleCheckboxAbonements(abonement.id, e.target.checked)}
                                                         ></input>
-                                                        <div style={{ display: 'flex', flexDirection: 'row'}}>
+                                                        <div style={{display: 'flex', flexDirection: 'row'}}>
                                                             <div>{abonement.title}</div>
                                                         </div>
                                                     </div>
                                                 ))}
                                             </div>
                                         )}
-                                        <Button type="button"  onClick={handleAddgroup}>Добавить</Button>
+                                        <Button type="button" onClick={handleAddgroup}>Добавить</Button>
                                     </div>}
                             ></Form>}
                     ></EditModal>

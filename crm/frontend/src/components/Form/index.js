@@ -11,7 +11,7 @@ const Form = (props) => {
             <div className={styles.formRightDecoration}/>
             <div className={styles.circle}/>
             <div className={styles.formInner}>
-                <h3 style={{marginBottom: '25px'}}>{title}</h3>
+                <h3 style={{marginBottom: '25px',  fontFamily: '\'Montserrat\', sans-serif'}}>{title}</h3>
                 {children}
             </div>
         </form>
