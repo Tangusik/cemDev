@@ -319,13 +319,15 @@ def client_detail(request, pk):
                 client.middleName = serializer.data['middleName']
             if 'birthDate' in serializer.data:
                 client.birthDate = serializer.data['birthDate']
+#             if 'state' in serializer.data:
+#                 client.state = serializer.data['state']
             client.save()
             return Response(status=status.HTTP_202_ACCEPTED)
         else:
             return Response(serializer.errors, status=400)
 
 
-@api_view(['GET','POST'])   #детальная инфа о клиенте
+@api_view(['GET','POST'])
 @permission_classes([IsAuthenticated])
 def client_abonements(request, pk):
     if request.method == "GET":
@@ -524,7 +526,7 @@ def presences_lesson(request, id):
     for client in act.clients.all():
         presence = Presence.objects.get_or_create(lesson=act, client=client)
         presences.append(presence[0])
-    serializer = PresencesSerializer(presences, context={'request': request},many=True)
+    serializer = PrSerializer(presences, context={'request': request},many=True)
     return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
 
 @api_view(['DELETE'])
@@ -566,7 +568,6 @@ def mark(request, id):
             curr_presence = Presence.objects.get_or_create(client=cl, lesson=activity)[0]
             
             curr_presence.presence = presence["presence"]
-            
             
             if presence['paid_by'] is None:
                 if curr_presence.paid_by is not None:

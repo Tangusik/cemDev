@@ -25,7 +25,7 @@ class ClientEditSerializer(Serializer):
     lastName = CharField(required=False)
     middleName = CharField(required=False)
     birthDate = DateField(required=False)
-
+#     state = serializers.StringRelatedField(required= False)  ЗДЕСЬ НАДО ДОРАБОТАТЬ
 
 class TrainerStateEditSerializer(Serializer):
     state = IntegerField(required= True)
@@ -168,3 +168,7 @@ class PresencesSerializer(serializers.Serializer):
 class MarkSerializer(serializers.Serializer):
     presences = ListField(child = PresencesSerializer() ,required=True)
 
+class PrSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Presence
+        fields = ("__all__")

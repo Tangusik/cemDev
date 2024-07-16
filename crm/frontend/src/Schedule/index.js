@@ -29,6 +29,8 @@ const Calendar = () => {
     const [clientsAbonements, setClientsAbonements] = useState({});
     const [abonement, setAbonement] = useState({});
 
+    const [lessonPresences, setLessonPresences] = useState({});
+
     const fetchData = async (url) => {
         const response = await fetchGet(url);
         setData(response);
@@ -105,9 +107,19 @@ const Calendar = () => {
         setSelectedYear(parseInt(event.target.value));
     };
 
-    const handleShowLesson = (Obj) => {
-        setShowLesson(!showLesson);
+    const getLessonPresences = () => {
+        const responsePresences = fetchGet(`presences/${lesson.id}`);
+        setLessonPresences(responsePresences);
+    };
+
+    const handleShowLesson = async (Obj) => {
         setLesson(Obj);
+        console.log(Obj);
+        if (Obj.id !== undefined) {
+            const responsePresences = fetchGet(`presences/${Obj.id}`);
+            setLessonPresences(responsePresences);
+        }
+        setShowLesson(!showLesson);
     };
 
     const getDaysInMonth = (month, year) => {
@@ -151,58 +163,22 @@ const Calendar = () => {
             [clientId]: abonementId,
         }));
     }
+
     const handleMark = async () => {
         const data = Object.keys(checkedClients).map(clientId => ({
             client: parseInt(clientId),
-            presence: checkedClients[clientId],
-            paid_by: abonement[clientId] || null,
-            paid_missing: !(isClicked[clientId] || false),
+            presence: !(checkedClients[clientId]),
+            paid_by: abonement[clientId] ? parseInt(abonement[clientId], 10) : null,
         }));
 
         const dataSend = {
             presences: data,
         };
 
-        console.log(dataSend);
-
         await fetchPost(`mark/${lesson.id}`, dataSend);
 
-        // window.location.reload();
+        window.location.reload();
     };
-    // const handleMark = async () => {
-    //     const data = Object.keys(checkedClients).map(clientId => {
-    //         const presence = checkedClients[clientId];
-    //         let paidBy = abonement[clientId] || null;
-    //         let paidMissing = isClicked[clientId] || false;
-    //
-    //         if (presence) {
-    //             if (paidBy === null) {
-    //                 paidBy = null;
-    //             }
-    //             else {
-    //                 paidBy = parseInt(paidBy, 10);
-    //             }
-    //             paidMissing = false;
-    //         } else {
-    //             paidBy = null;
-    //         }
-    //
-    //         return {
-    //             client: parseInt(clientId),
-    //             presence: presence,
-    //             paid_by: paidBy,
-    //             paid_missing: !paidMissing,
-    //         };
-    //     });
-    //
-    //     const dataSend = {
-    //         presences: data,
-    //     };
-    //
-    //     console.log(dataSend);
-    //
-    //     await fetchPost(`mark/${lesson.id}`, dataSend);
-    // };
 
     const renderContent = (i) => {
         let content = [];
