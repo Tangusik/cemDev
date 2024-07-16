@@ -20,10 +20,12 @@ const ClientPage = () => {
     const [showModalEditClient, setShowModalEditClient] = useState(false);
     const [showModalAddBalance, setShowModalAddBalance] = useState(false);
     const [showModalAddAbonement, setShowModalAddAbonement] = useState(false);
+    const [clientsStates, setClientsStates] = useState([]);
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [birthDate, setBirthDate] = useState('');
+    const [state, setState] = useState('');
 
     const [abonementAdd, setAbonementAdd] = useState(null);
     const [balanceAdd, setBalanceAdd] = useState(null);
@@ -55,6 +57,9 @@ const ClientPage = () => {
 
             const abonements = await fetchGet('abonements');
             setAbonements(abonements)
+
+            const clientsStates = await fetchGet('cl_statuses');
+            setClientsStates(clientsStates)
         }
 
         fetchData();
@@ -73,9 +78,10 @@ const ClientPage = () => {
         event.preventDefault();
 
         let noFilterData = {
-            first_name: firstName,
-            last_name: lastName,
-            birth_date: birthDate,
+            firstName: firstName,
+            lastName: lastName,
+            birthDate: birthDate,
+            // state: state,
         };
         const data = filterObject(noFilterData);
         await fetchPost( `client/${id}`, data);
@@ -87,7 +93,6 @@ const ClientPage = () => {
         event.preventDefault();
 
         let data = {
-            client: id,
             abonement: abonementAdd,
         };
         await fetchPost( `client/${id}/abonements`, data);
@@ -260,9 +265,21 @@ const ClientPage = () => {
                             title={'Редактирование профиля'}
                             children={
                                 <div>
-                                    <input type="text" name="first_name" id="first_name" placeholder="Имя"  defaultValue={client.first_name} onChange={(e) => setFirstName(e.target.value)}/>
-                                    <input type="text" name="last_name" id="last_name" placeholder="Фамилия"  defaultValue={client.last_name} onChange={(e) => setLastName(e.target.value)}/>
-                                    <input type="date" name="birth_date" id="birth_date" placeholder="Дата рождения"  defaultValue={client.birth_date} onChange={(e) => setBirthDate(e.target.value)}/>
+                                    <input type="text" placeholder={client.firstName}
+                                           defaultValue={client.firstName}
+                                           onChange={(e) => setFirstName(e.target.value)}/>
+                                    <input type="text" placeholder={client.lastName}
+                                           defaultValue={client.lastName}
+                                           onChange={(e) => setLastName(e.target.value)}/>
+                                    <input type="date" placeholder={client.birthDate}
+                                           defaultValue={client.birthDate}
+                                           onChange={(e) => setBirthDate(e.target.value)}/>
+                                    <select required className={styles.select}
+                                            onChange={(e) => setState(e.target.value)}>
+                                        {clientsStates.map((state) =>
+                                            (<option key={state.id} value={state.id}>{state.title}</option>)
+                                        )}
+                                    </select>
                                     <input type="submit" value="Добавить"/>
                                 </div>}
                         ></Form>}>

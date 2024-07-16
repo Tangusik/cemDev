@@ -11,7 +11,7 @@ urlpatterns = [
     path("scheduleAll", views.schedule_all),                        #DONe
     path("schedule_trainer/<int:id>", views.schedule_trainer),      #DONe
     path("mark/<int:id>", views.mark),                              #DONe
-    path("presences/<int:id>",views.presences_lesson),              #DONe
+    path("presences/<int:id>",views.presences_lesson),              #СДЕЛАТЬ!
 
     #___________clients
     path('client_list', views.client_list),                         #DONe

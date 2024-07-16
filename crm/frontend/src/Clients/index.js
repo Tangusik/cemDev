@@ -175,9 +175,10 @@ const Clients = () => {
             state: chosenClientState,
             balance: balance,
         };
+        console.log(data);
         await fetchPost( 'add_client', data);
         setShowModalAddClient(false)
-        window.location.reload();
+        // window.location.reload();
     };
 
     const handleAddgroup = async () => {
