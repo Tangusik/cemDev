@@ -9,6 +9,7 @@ import Form from "../components/Form";
 import {fetchGet} from "../api/get";
 import {fetchPost} from "../api/post";
 import GroupCard from "../components/GroupCard";
+import iconCross from "../Icons/cross.svg";
 
 const Clients = () => {
     const [clients, setClients] = useState([]);
@@ -174,11 +175,11 @@ const Clients = () => {
             address: 'Address',
             state: chosenClientState,
             balance: balance,
+            // phone
         };
-        console.log(data);
         await fetchPost( 'add_client', data);
         setShowModalAddClient(false)
-        // window.location.reload();
+        window.location.reload();
     };
 
     const handleAddgroup = async () => {
@@ -197,6 +198,7 @@ const Clients = () => {
         };
 
         await fetchPost( 'group_creation', data);
+        console.log(data);
         window.location.reload();
     };
 
@@ -277,7 +279,9 @@ const Clients = () => {
                             </button>
                         </div>
                         <div className={styles.cards}>
-                            {filteredClients.length === 0 && <p>Нет клиентов</p>}
+                            {filteredClients.length === 0 &&
+                                <div style={{marginLeft: '60px'}}>Клиентов пока нет :(</div>
+                            }
                             {filteredClients.length !== 0 && filteredClients.map((client) => (
                                 <ClientCard
                                     key={client.id}
@@ -363,7 +367,9 @@ const Clients = () => {
                             </select>
                         </div>
                         <div className={styles.cards}>
-                            {filteredGroups.length === 0 && <p>Нет групп</p>}
+                            {filteredGroups.length === 0 &&
+                                <div style={{marginLeft: '60px'}}>Групп пока нет :(</div>
+                            }
                             {filteredGroups.length !== 0 && filteredGroups.map((group) => (
                                 <GroupCard
                                     key={group.id}
@@ -436,6 +442,7 @@ const Clients = () => {
                                                 </option>)
                                             )}
                                         </select>
+                                        <div>Дата окончания занятий:</div>
                                         <input
                                             style={{
                                                 height: '30px',
@@ -450,6 +457,7 @@ const Clients = () => {
                                             value={selectedDate}
                                             onChange={(e) => setSelectedDate(e.target.value)}
                                         />
+                                        <div>Дни занятий:</div>
                                         {acts.map((act, index) => (
                                             <div key={index}
                                                  style={{display: 'flex', flexDirection: 'row', gap: '5px'}}>
@@ -460,13 +468,13 @@ const Clients = () => {
                                                     onChange={(e) => handleChangeActs(index, 'day_of_week', e.target.value)}
                                                 >
                                                     <option value="">День занятия</option>
-                                                    <option value="1">Понедельник</option>
-                                                    <option value="2">Вторник</option>
-                                                    <option value="3">Среда</option>
-                                                    <option value="4">Четверг</option>
-                                                    <option value="5">Пятница</option>
-                                                    <option value="6">Суббота</option>
-                                                    <option value="7">Воскресенье</option>
+                                                    <option value="0">Понедельник</option>
+                                                    <option value="1">Вторник</option>
+                                                    <option value="2">Среда</option>
+                                                    <option value="3">Четверг</option>
+                                                    <option value="4">Пятница</option>
+                                                    <option value="5">Суббота</option>
+                                                    <option value="6">Воскресенье</option>
                                                 </select>
                                                 <input
                                                     style={{
@@ -497,12 +505,11 @@ const Clients = () => {
                                                     onChange={(e) => handleChangeActs(index, 'time_end', e.target.value)}
                                                 />
                                                 {acts.length > 1 && (
-                                                    <button type="button"
-                                                            onClick={() => handleRemoveAct(index)}>Remove</button>
+                                                    <div onClick={() => handleRemoveAct(index)}> <img src={iconCross} alt=''/></div>
                                                 )}
                                             </div>
                                         ))}
-                                        <button type="button" onClick={handleAddAct}>Add Act</button>
+                                        <Button type="button" onClick={handleAddAct}>Добавить еще занятие</Button>
                                         <Button type="button" onClick={toggleClients}>Добавить участников</Button>
                                         {showClients && (
                                             <div>

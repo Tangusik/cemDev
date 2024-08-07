@@ -96,8 +96,8 @@ const Calendar = () => {
 
     const getFirstDayOfMonth = (month, year) => {
         const day = new Date(year, month, 1).getDay();
-        return day - 1;
-    }
+        return day === 0 ? 6 : day - 1;
+    };
 
     const handleMonthChange = (event) => {
         setSelectedMonth(parseInt(event.target.value));
@@ -336,8 +336,10 @@ const Calendar = () => {
                                 }>
                             </EditModal>
                 }
+                <div className={styles.common}>
                 <div className={styles.weekdays}>{renderWeekdayHeaders()}</div>
                 <div className={styles.calendar}><div className={styles.container}>{renderItems()}</div></div>
+                </div>
             </div>
             <Footer></Footer>
         </div>

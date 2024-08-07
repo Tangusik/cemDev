@@ -108,8 +108,8 @@
 
 
 .day {
-    height: 200px;
-    width: 205px;
+    height: 9rem;
+    width: 9rem;
     background-color: #8DA6C6;
     color: #1b1b1b;
     margin-bottom: 1px;
@@ -142,37 +142,44 @@
 }
 
 .emptyDay {
-    height: 200px;
-    width: 200px;
+    height: 9rem;
     background-color: white;
     margin-bottom: 1px;
     margin-right: 1px;
     text-align: right;
 }
 
+.common {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .calendar {
-     width: 1400px;
+    width: 100%;
+    margin-left: 5rem;
 }
 
 .weekdays {
-    width: 1400px;
+    margin-left: 5rem;
+    background: white;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    overflow: hidden;
-    justify-content: center;
+
+    width: fit-content;
 
     margin-top: 40px;
 }
 
 .weekday {
     height: 20px;
-    width: 200px;
-    background-color: white;
+    width: 9rem;
+    background-color: ;
     color: #1b1b1b;
     margin-bottom: 10px;
     margin-right: 1px;
     text-align: center;
+    padding-right: 5px;
 }
 
 .data {
