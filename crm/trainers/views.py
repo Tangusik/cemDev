@@ -69,20 +69,20 @@ def create_trainer(request):
 @permission_classes([IsAuthenticated])
 def roles(request):                         
     trainer = request.user.trainer
-    if trainer.role.title.lower() == "директор":
-        if request.method == "POST":
-            serializer = RoleSerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     if trainer.role.title.lower() == "директор":
+    if request.method == "POST":
+        serializer = RoleSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
         else:
-            roles = Role.objects.all()
-            serializer = RoleSerializer(roles, context={'request': request},many=True)
-            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        roles = Role.objects.all()
+        serializer = RoleSerializer(roles, context={'request': request},many=True)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+#     else:
+#         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -96,20 +96,20 @@ def delete_role(request, id):
 @permission_classes([IsAuthenticated])
 def tr_statuses(request):                         
     trainer = request.user.trainer
-    if trainer.role.title.lower() == "директор":
-        if request.method == "POST":
-            serializer = TrainerStateSerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     if trainer.role.title.lower() == "директор":
+    if request.method == "POST":
+        serializer = TrainerStateSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
         else:
-            tr_statuses = TrainerState.objects.all()
-            serializer = TrainerStateSerializer(tr_statuses, context={'request': request},many=True)
-            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        tr_statuses = TrainerState.objects.all()
+        serializer = TrainerStateSerializer(tr_statuses, context={'request': request},many=True)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+#     else:
+#         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['DELETE'])
@@ -125,20 +125,20 @@ def delete_tr_status(request, id):
 @permission_classes([IsAuthenticated])
 def cl_statuses(request):                         
     trainer = request.user.trainer
-    if trainer.role.title.lower() == "директор":
-        if request.method == "POST":
-            serializer = ClientStateSerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     if trainer.role.title.lower() == "директор":
+    if request.method == "POST":
+        serializer = ClientStateSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
         else:
-            cl_statuses = ClientState.objects.all()
-            serializer = ClientStateSerializer(cl_statuses, context={'request': request},many=True)
-            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        cl_statuses = ClientState.objects.all()
+        serializer = ClientStateSerializer(cl_statuses, context={'request': request},many=True)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+#     else:
+#         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['DELETE'])
@@ -152,20 +152,20 @@ def delete_cl_status(request, id):
 @permission_classes([IsAuthenticated])
 def areas(request):                         
     trainer = request.user.trainer
-    if trainer.role.title.lower() == "директор":
-        if request.method == "POST":
-            serializer = AreaSerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     if trainer.role.title.lower() == "директор":
+    if request.method == "POST":
+        serializer = AreaSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
         else:
-            areas = Area.objects.all()
-            serializer = AreaSerializer(areas, context={'request': request},many=True)
-            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        areas = Area.objects.all()
+        serializer = AreaSerializer(areas, context={'request': request},many=True)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+#     else:
+#         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['DELETE'])
@@ -180,20 +180,20 @@ def delete_area(request, id):
 @permission_classes([IsAuthenticated])
 def sport_types(request):                         
     trainer = request.user.trainer
-    if trainer.role.title.lower() == "директор":
-        if request.method == "POST":
-            serializer = SportTypeSerializer(data = request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     if trainer.role.title.lower() == "директор":
+    if request.method == "POST":
+        serializer = SportTypeSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
         else:
-            sport_types = SportType.objects.all()
-            serializer = SportTypeSerializer(sport_types, context={'request': request},many=True)
-            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        sport_types = SportType.objects.all()
+        serializer = SportTypeSerializer(sport_types, context={'request': request},many=True)
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+#     else:
+#         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['DELETE'])
@@ -209,43 +209,43 @@ def delete_sport_type(request, id):
 @permission_classes([IsAuthenticated])
 def abonements(request):                         
     trainer = request.user.trainer
-    if trainer.role.title.lower() == "директор":
-        if request.method == "POST":
-            serializer = AbonementCreationSerializer(data = request.data)
-            if serializer.is_valid():
-                data = serializer.validated_data
+#     if trainer.role.title.lower() == "директор":
+    if request.method == "POST":
+        serializer = AbonementCreationSerializer(data = request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
 
-                if data['is_lesson_count']:
-                    count = data['lesson_count']
-                else:
-                    count = None
-
-                if data['is_duration']:
-                    duration = data['duration']
-                    duration_type = data['duration_type']
-
-                    if duration_type == 'days':
-                        dur = timedelta(days=int(duration))
-                    elif duration_type == 'weeks':
-                        dur = timedelta(weeks=int(duration))
-                    elif duration_type == 'month':
-                        dur = timedelta(days=int(duration) * 30)
-                else:
-                    dur = None
-
-                sport_type = get_object_or_404(SportType, pk=data['sport_type'])
-                abonement = Abonement.objects.create(title=data['title'], price=data['price'], lessonCount=count, duration=dur, sportType=sport_type)
-                return Response(status=status.HTTP_201_CREATED)
-
+            if data['is_lesson_count']:
+                count = data['lesson_count']
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                count = None
+
+            if data['is_duration']:
+                duration = data['duration']
+                duration_type = data['duration_type']
+
+                if duration_type == 'days':
+                    dur = timedelta(days=int(duration))
+                elif duration_type == 'weeks':
+                    dur = timedelta(weeks=int(duration))
+                elif duration_type == 'month':
+                    dur = timedelta(days=int(duration) * 30)
+            else:
+                dur = None
+
+            sport_type = get_object_or_404(SportType, pk=data['sport_type'])
+            abonement = Abonement.objects.create(title=data['title'], price=data['price'], lessonCount=count, duration=dur, sportType=sport_type)
+            return Response(status=status.HTTP_201_CREATED)
+
         else:
-            abonements = Abonement.objects.all()
-            serializer = AbonementSerializer(abonements, context={'request': request},many=True)
-            
-            return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        abonements = Abonement.objects.all()
+        serializer = AbonementSerializer(abonements, context={'request': request},many=True)
+
+        return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+#     else:
+#         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 @api_view(['DELETE'])
