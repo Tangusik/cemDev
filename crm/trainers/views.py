@@ -57,7 +57,7 @@ def create_trainer(request):
 
         role = get_object_or_404(Role, pk=serializer.data['role'])
         Trainer.objects.create(user = user, middleName=serializer.data['middleName'],
-                               birthDate = serializer.data['birthDate'], role=role)
+                               birthDate = serializer.data['birthDate'], phone = serializer.data['phone'] ,role=role)
         return Response(status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -247,6 +247,14 @@ def abonements(request):
 #     else:
 #         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+@api_view(['GET'])                           #Получение всех абонементов и создание новых
+@permission_classes([IsAuthenticated])
+def abonements_by_sport(request, id): 
+    abonements = Abonement.objects.filter(sportType__id = id)
+    serializer = AbonementSerializer(abonements, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe = False, json_dumps_params={'ensure_ascii': False})
+     
+
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -274,6 +282,8 @@ def user_edit(request):
             User.objects.filter(pk=user.id).update(username = data['email'])
         if "otchestv" in data:
             Trainer.objects.filter(pk = request.user.id).update(middleName = data['otchestv'])
+        if "phone" in data:
+            Trainer.objects.filter(pk = request.user.id).update(phone = data['phone'])
         return Response(status=status.HTTP_202_ACCEPTED)
     else:
         return Response(serializer.errors, status=400)
@@ -319,8 +329,14 @@ def client_detail(request, pk):
                 client.middleName = serializer.data['middleName']
             if 'birthDate' in serializer.data:
                 client.birthDate = serializer.data['birthDate']
-#             if 'state' in serializer.data:
-#                 client.state = serializer.data['state']
+            if 'state' in serializer.data:
+                state = get_object_or_404(ClientState, pk = serializer.data['state'])
+                client.state = state
+            if 'phone' in serializer.data:
+                client.phone = serializer.data['phone']
+            if 'email' in serializer.data:
+                client.email = serializer.data['email']
+
             client.save()
             return Response(status=status.HTTP_202_ACCEPTED)
         else:
@@ -417,7 +433,17 @@ def client_list(request):
 def add_client(request):
     serializer = ClientSerializer(data = request.data)
     if serializer.is_valid():
-        serializer.save()
+        print(serializer.data)
+        state = get_object_or_404(ClientState, pk = serializer.data['state'])
+        cl = Client.objects.create(firstName = serializer.data['firstName'], 
+                                    lastName = serializer.data['lastName'], 
+                                    birthDate=serializer.data['birthDate'], 
+                                    balance= serializer.data['balance'], 
+                                    middleName = serializer.data['middleName'], 
+                                    phone = serializer.data['phone'],
+                                    email = serializer.data['email'],
+                                    address = serializer.data['address'],
+                                    state = state)
         return Response(status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -472,9 +498,8 @@ def all_groups(request):
 @permission_classes([IsAuthenticated])
 def group_creation(request):
     serializer = GroupCreationSerializer(data=request.data)
-
+    
     if serializer.is_valid():
-
         team_name = serializer.data['team_name']
         members = serializer.data['members']
         tr = get_object_or_404(Trainer, pk=serializer.data['trainer'])
@@ -487,16 +512,17 @@ def group_creation(request):
 
 
         date_end = serializer.data['date_end']
-        acts = serializer.data['acts']
+        acts = []
+        for act in serializer.data['acts']:
+            acts.append(dict(act))
 
         date1 = datetime.date.today()
         date2 = datetime.datetime.strptime(date_end, '%Y-%m-%d').date()
 
-        all_days = (date1 + timedelta(days=i) for i in range((date2 - date1).days + 1))
-
         for act in acts:
+            
+            all_days = (date1 + timedelta(days=i) for i in range((date2 - date1).days + 1))
             for act_date in all_days:
-                print(act)
                 if act_date.weekday() == act["day_of_week"]:
                     obj_act = Lesson.objects.create(actDate=act_date, actTimeBegin=act["time_begin"],
                                actTimeEnd=act["time_end"],
@@ -506,10 +532,43 @@ def group_creation(request):
                     for client in members:
                         obj_act.clients.add(get_object_or_404(Client, pk=client))
                     obj_act.save()
+
         return Response(status=status.HTTP_201_CREATED)
 
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def group_detail(request, id):
+    group = get_object_or_404(Group, pk=id)
+
+    if request.method == "POST":
+        serializer = GroupEditSerializer(data=request.data)
+        if serializer.is_valid():
+            if 'title' in serializer.data:
+                group.title = serializer.data['title']
+            if 'clients' in serializer.data:
+                group.clients.clear()
+                for cl_id in serializer.data['clients']:
+                    client = get_object_or_404(Client, pk = cl_id)
+                    group.clients.add(client)
+                
+            if 'sportType' in serializer.data:
+                sp_type = get_object_or_404(SportType, pk=serializer.data['sportType'])
+                group.sportType = sp_type
+            if 'trainer' in serializer.data:
+                trainer = get_object_or_404(Trainer, pk=serializer.data['trainer'])
+                group.trainer = trainer
+
+            group.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "DELETE":
+        group.delete()
+        return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -610,4 +669,26 @@ def add_client_to_lesson(request, lesson_id):
     ex_ids = [cl.id for cl in existing_clients]
     res = Client.objects.exclude(id__in=ex_ids)
     serializer = ClientSerializer(res, context={'request': request},many=True)
+    return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def trainer_lessons(request, trainer_id):
+    last_lessons = Lesson.objects.filter(trainer = trainer_id) & Lesson.objects.filter(status = "Проведено").order_by("actDate")
+    try:
+        last_lessons = last_lessons[:5]
+    except:
+        last_lessons = last_lessons
+    
+    fut_lessons = Lesson.objects.filter(trainer = trainer_id) & Lesson.objects.filter(status = "Состоится").order_by("-actDate")
+    try:
+        fut_lessons = fut_lessons[:5]
+    except:
+        fut_lessons = fut_lessons
+
+    res={'fut_lessons':fut_lessons, "last_lessons":last_lessons}
+    
+    serializer = TarinerLessonsSerializer(res, context={'request': request})
+    print(serializer.data)
     return JsonResponse(serializer.data, safe=False , json_dumps_params={'ensure_ascii': False})

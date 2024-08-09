@@ -18,13 +18,14 @@ urlpatterns = [
     path('add_client', views.add_client),                           #DONe
     path('all_groups', views.all_groups),                           #DONe
     path('group_creation', views.group_creation),                   #DONe
+    path('group/<int:id>', views.group_detail),
 
     #___________colleagues
     path('trainer_list', views.trainer_list),                       #DONe
     path("trainer_groups", views.trainers_groups),                  #DONe
     path("trainer_create", views.create_trainer),                   #DONe
     path("trainer_delete/<int:id>", views.delete_trainer),          #DONe
-
+    path("trainer_lessons/<int:trainer_id>", views.trainer_lessons),
 
     #___________main_info
     path("trainer_card", views.trainer_info_card),                  #DONe
@@ -42,7 +43,8 @@ urlpatterns = [
     path("area_delete/<int:id>", views.delete_area),                #DONe
     path("sport_types", views.sport_types),                         #DONe
     path("sport_type_delete/<int:id>", views.delete_sport_type),    #DONe
-    path("abonements", views.abonements),                           #DO     тут как создать если абонемент по времнеи, а не количесвту уроков
+    path("abonements", views.abonements),
+    path("abonements/sport/<int:id>", views.abonements_by_sport),                            #DO     тут как создать если абонемент по времнеи, а не количесвту уроков
     path("abonement_delete/<int:id>", views.delete_abonement),      #DONe
 
     #___________client_detail_info

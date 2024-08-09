@@ -5,10 +5,10 @@ from rest_framework.serializers import ListField, CharField, Serializer, EmailFi
 
 
 class ClientSerializer(serializers.ModelSerializer):
-    state = serializers.StringRelatedField()
+    state = serializers.IntegerField(required= False)
     class Meta:
         model = Client
-        fields = ('firstName', 'lastName', 'birthDate', 'state', 'balance',"id",'middleName', 'avatar')
+        fields = ("__all__")
 
 class UserAuthSerializer(Serializer):
     username = CharField(required=True)
@@ -25,7 +25,9 @@ class ClientEditSerializer(Serializer):
     lastName = CharField(required=False)
     middleName = CharField(required=False)
     birthDate = DateField(required=False)
-#     state = serializers.StringRelatedField(required= False)  ЗДЕСЬ НАДО ДОРАБОТАТЬ
+    state = serializers.IntegerField(required= False)
+    phone = CharField(required=False)
+    email = CharField(required=False)
 
 class TrainerStateEditSerializer(Serializer):
     state = IntegerField(required= True)
@@ -41,7 +43,7 @@ class TrainerSerializer(serializers.ModelSerializer):
     state = serializers.StringRelatedField()
     class Meta:
         model = Trainer
-        fields = ['user', 'middleName', 'birthDate', 'role', 'state']
+        fields = ['user', 'middleName', 'birthDate', 'role', 'state', 'phone']
         depth = 1
 
 
@@ -70,6 +72,14 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('title','clients', 'trainer','sportType')
+
+class GroupEditSerializer(serializers.Serializer):
+    title = CharField(required=False)
+    clients = ListField(child = IntegerField(), required=False)
+    sportType = IntegerField(required = False)
+    trainer = IntegerField(required = False)
+    
+
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -172,3 +182,7 @@ class PrSerializer(serializers.ModelSerializer):
     class Meta:
         model = Presence
         fields = ("__all__")
+
+class TarinerLessonsSerializer(serializers.Serializer):
+    fut_lessons = ListField(child = LessonSerializer())
+    last_lessons = ListField(child = LessonSerializer())

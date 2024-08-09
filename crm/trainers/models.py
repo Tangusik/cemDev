@@ -29,6 +29,8 @@ class Client(models.Model):
     birthDate = models.DateField(auto_now=False, blank=False, default=datetime.date(2023, 1, 1))
     state = models.ForeignKey(ClientState, models.CASCADE, blank=True, null=True)
     balance = models.IntegerField(default=0, blank=False)
+    phone = models.CharField(blank=True, max_length=20)
+    email = models.CharField(blank=True, max_length=254)
     def __str__(self):
         return self.firstName + self.lastName
 
@@ -46,7 +48,7 @@ class Trainer(models.Model):
     birthDate = models.DateField(auto_now=False)
     role = models.ForeignKey(Role, models.CASCADE, blank=True, null=True)
     state = models.ForeignKey(TrainerState, models.CASCADE, blank=True, null=True)
-
+    phone = models.CharField(blank=True, max_length=20)
     def __str__(self):
         return self.user.first_name
 
@@ -108,7 +110,6 @@ class Presence(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     presence = models.BooleanField(blank=False, default=False)
     paid_by = models.ForeignKey(PurchaseHistory, on_delete=models.SET_NULL, null=True)
-
 
 
 
