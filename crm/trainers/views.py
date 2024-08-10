@@ -433,8 +433,7 @@ def client_list(request):
 def add_client(request):
     serializer = ClientSerializer(data = request.data)
     if serializer.is_valid():
-        print(serializer.data)
-        state = get_object_or_404(ClientState, pk = serializer.data['state'])
+        #state = get_object_or_404(ClientState, pk = serializer.data['state'])
         cl = Client.objects.create(firstName = serializer.data['firstName'], 
                                     lastName = serializer.data['lastName'], 
                                     birthDate=serializer.data['birthDate'], 
@@ -443,7 +442,7 @@ def add_client(request):
                                     phone = serializer.data['phone'],
                                     email = serializer.data['email'],
                                     address = serializer.data['address'],
-                                    state = state)
+                                    state = serializer.data['state'])
         return Response(status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

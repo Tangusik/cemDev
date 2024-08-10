@@ -5,7 +5,7 @@ from rest_framework.serializers import ListField, CharField, Serializer, EmailFi
 
 
 class ClientSerializer(serializers.ModelSerializer):
-    state = serializers.IntegerField(required= False)
+    #state = serializers.IntegerField(required= False)
     class Meta:
         model = Client
         fields = ("__all__")
