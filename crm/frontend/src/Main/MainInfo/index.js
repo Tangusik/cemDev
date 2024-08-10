@@ -16,7 +16,7 @@ const MainInfo = ({ setUserRole }) => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [middleName, setMiddleName] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [phone, setPhone] = useState('');
 
     const [statuses, setStatus] = useState('');
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -56,9 +56,10 @@ const MainInfo = ({ setUserRole }) => {
             last_name: lastName,
             email: email,
             middleName: middleName,
-            // phoneNumber: phoneNumber,
+            phone: phone,
         };
         const data = filterObject(noFilterData);
+        console.log(data);
         await fetchPost( 'user_edit', data);
         setShowMainDataModal(false)
         window.location.reload();
@@ -90,7 +91,7 @@ const MainInfo = ({ setUserRole }) => {
                         <div className={styles.role}>{data.role}</div>
                         <div className={styles.mainData}>
                             <div>{data.user.email}</div>
-                            <div>phone number</div>
+                            <div>{data.phone}</div>
                         </div>
                     </>
                 )}
@@ -115,8 +116,8 @@ const MainInfo = ({ setUserRole }) => {
                                        onChange={(e) => setMiddleName(e.target.value)}/>
                                 <input type="text" placeholder="Почта" defaultValue={data.user.email}
                                        onChange={(e) => setEmail(e.target.value)}/>
-                                <input type="text" placeholder="Номер телефона" defaultValue={"+7 999..."}
-                                       onChange={(e) => setPhoneNumber(e.target.value)}/>
+                                <input type="text" placeholder="Номер телефона" defaultValue={data.phone}
+                                       onChange={(e) => setPhone(e.target.value)}/>
                                 <input type="submit" value="Добавить"/>
                             </div>}
                     ></Form>}

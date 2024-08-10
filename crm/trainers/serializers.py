@@ -17,7 +17,7 @@ class UserAuthSerializer(Serializer):
 class UserEditSerializer(Serializer):
     first_name = CharField(required=False)
     last_name = CharField(required=False)
-    otchestv = CharField(required=False)
+    otchestv = CharField(required=False) #зачем тут ? оно же в тренере
     email = EmailField(required=False)
 
 class ClientEditSerializer(Serializer):

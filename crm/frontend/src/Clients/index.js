@@ -29,6 +29,8 @@ const Clients = () => {
     const [birthDate, setBirthDate] = useState([]);
     const [balance, setBalance] = useState([]);
     const [middleName, setMiddleName] = useState([]);
+    const [phone, setPhone] = useState([]);
+    const [email, setEmail] = useState([]);
 
     const fileInputRef = React.useRef(null);
     // const [selectedFiles, setSelectedFiles] = useState(null);
@@ -175,7 +177,8 @@ const Clients = () => {
             address: 'Address',
             state: chosenClientState,
             balance: balance,
-            // phone
+            phone: phone,
+            email: email,
         };
         await fetchPost( 'add_client', data);
         setShowModalAddClient(false)
@@ -292,6 +295,8 @@ const Clients = () => {
                                     birthday={client.birthDate}
                                     state={client.state}
                                     balance={client.balance}
+                                    phone={client.phone}
+                                    email={client.email}
                                 >
                                 </ClientCard>
                             ))}
@@ -317,6 +322,10 @@ const Clients = () => {
                                                onChange={(e) => setMiddleName(e.target.value)}/>
                                         <input className={styles.date} type="date" required placeholder="Дата рождения"
                                                onChange={(e) => setBirthDate(e.target.value)}/>
+                                        <input type="text" required placeholder="Телефон"
+                                               onChange={(e) => setPhone(e.target.value)}/>
+                                        <input type="text" required placeholder="Почта"
+                                               onChange={(e) => setEmail(e.target.value)}/>
                                         <input type="text" required placeholder="Баланс"
                                                onChange={(e) => setBalance(e.target.value)}/>
                                         <select required className={styles.select}
@@ -325,10 +334,11 @@ const Clients = () => {
                                                 (<option key={state.id} value={state.id}>{state.title}</option>)
                                             )}
                                         </select>
-                                        <button className={styles.addPhoto} onClick={handleAttachButton}>Добавить фото</button>
+                                        <button className={styles.addPhoto} onClick={handleAttachButton}>Добавить фото
+                                        </button>
                                         {/*<input type="file" ref={fileInputRef} style={{display: 'none'}}*/}
                                         {/*       onChange={handleFileSelect} multiple/>*/}
-                                        <input type="submit" value="Добавить" style={{ cursor: "pointer" }}/>
+                                        <input type="submit" value="Добавить" style={{cursor: "pointer"}}/>
                                     </div>}
                             ></Form>}>
                     </EditModal>

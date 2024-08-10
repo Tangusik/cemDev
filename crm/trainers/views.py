@@ -279,9 +279,8 @@ def user_edit(request):
             User.objects.filter(pk=user.id).update(last_name = data['last_name'])
         if "email" in data:
             User.objects.filter(pk=user.id).update(email = data['email'])
-            User.objects.filter(pk=user.id).update(username = data['email'])
-        if "otchestv" in data:
-            Trainer.objects.filter(pk = request.user.id).update(middleName = data['otchestv'])
+        if "middleName" in data:
+            Trainer.objects.filter(pk = request.user.id).update(middleName = data['middleName'])
         if "phone" in data:
             Trainer.objects.filter(pk = request.user.id).update(phone = data['phone'])
         return Response(status=status.HTTP_202_ACCEPTED)

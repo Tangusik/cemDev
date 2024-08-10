@@ -6,7 +6,7 @@ import {fetchDelete} from "../../api/delete";
 import {fetchGet} from "../../api/get";
 
 const ClientCard = (props) =>{
-    const { id, firstName, lastName, middleName, birthday, state, balance } = props;
+    const { id, firstName, lastName, middleName, birthday, state, balance, phone, email } = props;
     const [clientAbonements, setClientAbonements] = useState(null);
     const [showCake, setShowCake] = useState(false);
 
@@ -71,6 +71,8 @@ const ClientCard = (props) =>{
                     </div>
                     <div className={styles.balanceButton}>{balance}</div>
                     {state && <div className={styles.stateButton}>{state}</div>}
+                    {phone && <div className={styles.stateButton}>{phone}</div>}
+                    {email && <div className={styles.stateButton}>{email}</div>}
                     {clientAbonements && clientAbonements.map((abonement) => (
                         <div className={styles.abonementButton} key={abonement.id}>
                             <div className={styles.ellipsis}>{abonement.abonement.title}</div>
